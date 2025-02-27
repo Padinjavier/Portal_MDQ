@@ -12,39 +12,44 @@
 </head>
 <body class="hold-transition register-page">
     <div class="register-box">
-        <div class="register-logo">
-            <a href="/internet/"><b>Admin</b>LTE</a>
-        </div>
         <!-- /.register-logo -->
         <div class="card">
-            <div class="card-body register-card-body">
-                <p class="login-box-msg">Regístrate para comenzar</p>
+            <div class="card-body register-card-body p-2 m-2">
+                
+                <h3 class="login-box-msg p-2">Regístrate para comenzar</h3>
 
                 <form action="/internet/controladores/RegistroControlador.php" method="POST">
                     <!-- Campo de Usuario -->
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" name="usuario" placeholder="Usuario" required>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-user"></span>
-                            </div>
-                        </div>
+                    <div class="form-group mb-2">
+                        <label for="usuario">Usuario</label>
+                        <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Usuario" required>
                     </div>
                     <!-- Campo de Correo -->
-                    <div class="input-group mb-3">
-                        <input type="email" class="form-control" name="correo" placeholder="Correo Electrónico" required>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
+                    <div class="form-group mb-2">
+                        <label for="correo">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo Electrónico" required>
+                    </div>
+                    <!-- Campo de Contraseña -->
+                    <div class="form-group mb-2">
+                        <label for="contrasena">Contraseña</label>
+                        <div class="input-group mb-3">
+                            <input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Contraseña" required>
+                            <div class="input-group-append">
+                                <div class="input-group-text" onclick="togglePasswordVisibility('contrasena')">
+                                    <span class="fas fa-eye" id="eye-icon-contrasena"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Campo de Contraseña -->
-                    <div class="input-group mb-3">
-                        <input type="password" class="form-control" name="contrasena" placeholder="Contraseña" required>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
+                    <!-- Campo de Confirmar Contraseña -->
+                    <div class="form-group">
+                        <label for="confirmar_contrasena">Confirmar Contraseña</label>
+                        <div class="input-group mb-3">
+                            <input type="password" class="form-control" id="confirmar_contrasena" name="confirmar_contrasena" placeholder="Confirmar Contraseña" required>
+                            <div class="input-group-append">
+                                <div class="input-group-text" onclick="togglePasswordVisibility('confirmar_contrasena')">
+                                    <span class="fas fa-eye" id="eye-icon-confirmar_contrasena"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -72,5 +77,20 @@
     <script src="/internet/vistas/assets/plugins/bootstrap/js/bootstrap.bundle.js"></script>
     <!-- AdminLTE App -->
     <script src="/internet/vistas/assets/dist/js/adminlte.js"></script>
+    <script>
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            const eyeIcon = document.getElementById(`eye-icon-${inputId}`);
+            if (input.type === "password") {
+                input.type = "text";
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash");
+            } else {
+                input.type = "password";
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye");
+            }
+        }
+    </script>
 </body>
 </html>
