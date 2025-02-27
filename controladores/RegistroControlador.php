@@ -17,14 +17,16 @@ class RegistroControlador {
             $usuario = $_POST['usuario'];
             $correo = $_POST['correo'];
             $contrasena = $_POST['contrasena'];
-
-            if ($this->usuarioModelo->registrarUsuario($usuario, $correo, $contrasena)) {
-                header('Location: /internet/modulos/login.php');
+        
+            $resultado = $this->usuarioModelo->registrarUsuario($usuario, $correo, $contrasena);
+        
+            if ($resultado === true) {
+                header('Location: /internet/');
                 exit();
             } else {
-                echo "Error al registrar el usuario";
+                echo $resultado;
             }
-        }
+        }        
     }
 }
 

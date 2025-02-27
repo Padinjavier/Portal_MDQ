@@ -1,8 +1,15 @@
 <?php
 // C:\wamp64\www\internet\controladores\LogoutControlador.php
 
-session_start();
+session_start(); // Iniciar la sesión
+
+// Destruir todas las variables de sesión
+session_unset();
+
+// Destruir la sesión
 session_destroy();
-header('Location: /internet/modulos/login.php');
+
+// Redirigir al login
+header('Location: /internet/index.php');
 exit();
 ?>

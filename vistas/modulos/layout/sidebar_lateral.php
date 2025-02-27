@@ -1,15 +1,13 @@
-<!-- Main Sidebar Container -->
+<!-- C:\wamp64\www\internet\vistas\modulos\layout\sidebar_lateral.php -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4 menu_lateral">
-
     <!-- Brand Logo -->
-    <a href="index.php" class="brand-link">
+    <!-- <a href="index.php" class="brand-link">
         <img src="vistas/assets/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">ADMINISTRATIVO</span>
-    </a>
+    </a> -->
 
     <!-- Sidebar -->
     <div class="sidebar">
-
         <!-- Sidebar user (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
@@ -21,54 +19,59 @@
         </div>
 
         <!-- Sidebar Menu -->
-        <nav class="mt-2 ">
-            
-            <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
-                
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu"
+                data-accordion="false">
                 <li class="nav-item">
-                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-chart-pie"></i>
-                        <p>
-                          Gestor Tienda
-                          <i class="right fas fa-angle-left"></i>
+                <a onclick="cargarContenido('content-wrapper','vistas/modulos/Dashboard.php')" class="nav-link"
+                        style="cursor: pointer;">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>Dashboard
                         </p>
                     </a>
-
-                    <ul class="nav nav-treeview">
-
-                        <li class="nav-item">
-                            <a onclick="cargarContenido('content-wrapper','vistas/modulos/categorias.php')" class="nav-link" style="cursor: pointer;">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Categorias</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a onclick="cargarContenido('content-wrapper','vistas/modulos/productos.php')" class="nav-link" style="cursor: pointer;">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Productos</p>
-                            </a>
-                        </li>
-
-                    </ul>
-
                 </li>
-                
+
+            </ul>
+            <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu"
+                data-accordion="false">
+                <li class="nav-item">
+                    <a onclick="cargarContenido('content-wrapper','vistas/modulos/clientes.php')" class="nav-link"
+                        style="cursor: pointer;">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Gestión de Clientes
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a onclick="cargarContenido('content-wrapper','vistas/modulos/usuarios.php')"
+                                class="nav-link" style="cursor: pointer;">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Usuarios</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a onclick="cargarContenido('content-wrapper','vistas/modulos/reportes.php')"
+                                class="nav-link" style="cursor: pointer;">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Reportes</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
 
+            <!-- Opción para Cerrar Sesión -->
             <ul class="nav nav-pills nav-sidebar nav_profile">
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-sign-out-alt"></i>                        
-                        <p>
-                            Cerrar Sesion
-                        </p>
+                    <a href="/internet/controladores/LogoutControlador.php" class="nav-link">
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                        <p>Cerrar Sesión</p>
                     </a>
                 </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
-
     </div>
     <!-- /.sidebar -->
 </aside>

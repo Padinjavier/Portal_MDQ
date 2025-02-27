@@ -16,18 +16,16 @@ class LoginControlador {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $usuario = $_POST['usuario'];
             $contrasena = $_POST['contrasena'];
-
-            $usuarioId = $this->usuarioModelo->verificarCredenciales($usuario, $contrasena);
-
-            if ($usuarioId) {
-                session_start();
-                $_SESSION['usuario_id'] = $usuarioId;
+        
+            $resultado = $this->usuarioModelo->loginUsuario($usuario, $contrasena);
+        
+            if ($resultado === true) {
                 header('Location: /internet/');
                 exit();
             } else {
-                echo "Credenciales incorrectas";
+                echo $resultado;
             }
-        }
+        }        
     }
 }
 
