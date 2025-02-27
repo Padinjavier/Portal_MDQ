@@ -1,4 +1,15 @@
 <!-- C:\wamp64\www\internet\vistas\modulos\clientes.php -->
+<head>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- jQuery y Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+</head>
+
 <section class="content-header mb-4">
     <div class="app-title">
         <div>
@@ -173,13 +184,15 @@ function cargarClientes() {
                 `;
                 tbody.append(row);
             });
+
+            // Inicializar DataTables después de cargar los datos
+            $('#tableClientes').DataTable(); // Inicializar DataTables
         },
         error: function (xhr, status, error) {
             console.error("Error al cargar clientes:", error);
         }
     });
 }
-
 
 // Función para abrir el modal
 function openModal(id = null) {
