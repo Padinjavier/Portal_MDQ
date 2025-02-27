@@ -1,10 +1,11 @@
 <!-- C:\wamp64\www\internet\vistas\modulos\layout\sidebar_lateral.php -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4 menu_lateral">
     <!-- Brand Logo -->
-    <!-- <a href="index.php" class="brand-link">
-        <img src="vistas/assets/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">ADMINISTRATIVO</span>
-    </a> -->
+    <p href="index.php" class="brand-link">
+        <!-- <img src="vistas/assets/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">ADMINISTRATIVO</span> -->
+        
+    </p>
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -35,7 +36,7 @@
             <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu"
                 data-accordion="false">
                 <li class="nav-item">
-                    <a onclick="cargarContenido('content-wrapper','vistas/modulos/clientes.php')" class="nav-link"
+                    <a class="nav-link"
                         style="cursor: pointer;">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Gestión de Clientes
@@ -44,10 +45,10 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a onclick="cargarContenido('content-wrapper','vistas/modulos/usuarios.php')"
+                            <a onclick="cargarContenido('content-wrapper','vistas/modulos/clientes.php')"
                                 class="nav-link" style="cursor: pointer;">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Usuarios</p>
+                                <p>Clientes</p>
                             </a>
                         </li>
                         <li class="nav-item">
