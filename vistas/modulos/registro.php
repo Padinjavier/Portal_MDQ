@@ -58,7 +58,7 @@
 
                 <!-- Enlace para Iniciar Sesión -->
                 <p class="mb-1 mt-3 text-center">
-                    ¿Ya tienes una cuenta? <a href="/internet/modulos/login.php" class="text-center">Inicia sesión aquí</a>
+                    ¿Ya tienes una cuenta? <a href="/internet/index.php?action=login"  class="text-center">Inicia sesión aquí</a>
                 </p>
             </div>
             <!-- /.register-card-body -->

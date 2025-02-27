@@ -8,9 +8,13 @@ class PlantillaControlador {
     public function plantilla() {
         // Verificar si la sesión está iniciada
         if (!isset($_SESSION['usuario_id'])) {
-            // Crear o actualizar la variable de sesión login_register
-            if (!isset($_SESSION['login_register'])) {
-                $_SESSION['login_register'] = 1; // Valor inicial: 1 (login)
+            // Manejar acciones desde la URL
+            if (isset($_GET['action'])) {
+                if ($_GET['action'] == 'register') {
+                    $_SESSION['login_register'] = 2; // Cambiar a registro
+                } else {
+                    $_SESSION['login_register'] = 1; // Cambiar a login
+                }
             }
 
             // Redirigir según el valor de login_register

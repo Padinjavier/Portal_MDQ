@@ -1,8 +1,5 @@
 <!-- C:\wamp64\www\internet\vistas\modulos\login.php -->
- <?php
 
-
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -53,7 +50,8 @@
 
                 <!-- Enlace para Registrarse -->
                 <p class="mb-1 mt-3 text-center">
-                    ¿No tienes una cuenta? <a href="/internet/modulos/registro.php" class="text-center">Regístrate aquí</a>
+                    ¿No tienes una cuenta? 
+                    <a href="/internet/index.php?action=register" class="text-center">Regístrate aquí</a>
                 </p>
             </div>
             <!-- /.login-card-body -->
