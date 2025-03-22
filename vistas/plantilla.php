@@ -1,6 +1,5 @@
+<!-- C:\wamp64\www\helpmdq\vistas\Plantilla.php -->
 <?php
-// C:\wamp64\www\helpmdq\vistas\Plantilla.php
-
 // Incluir el archivo de configuración
 require_once __DIR__ . '/../Config/Config.php';
 ?>
@@ -17,6 +16,8 @@ require_once __DIR__ . '/../Config/Config.php';
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
+<!-- iconos boostrap  -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 
     <!-- CSS STYLES -->
     <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->

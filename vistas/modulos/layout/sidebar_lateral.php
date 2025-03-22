@@ -1,8 +1,14 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4 menu_lateral">
+<!-- C:\wamp64\www\helpmdq\vistas\modulos\layout\sidebar_lateral.php -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4 menu_lateral h-100 d-flex flex-column position-fixed">
     <!-- Sidebar -->
-    <div class="sidebar">
-        <!-- Sidebar user (optional) -->
-        <div class="user-panel d-flex align-items-center">
+    <div class="sidebar d-flex flex-column h-100 p-0">
+        <!-- Sidebar user-->
+        <div class="user-panel d-flex align-items-center h-58px flex-shrink-0">
+        <style>
+            .h-58px {
+                height: 58px !important; /* Fuerza el alto a 58px */
+            }
+        </style>
             <!-- Iniciales en un círculo -->
             <div class="image">
                 <div class="rounded-circle bg-success d-flex align-items-center justify-content-center"
@@ -25,9 +31,10 @@
         </div>
 
         <!-- Resto del código del sidebar -->
-        <nav class="mt-2">
+        <nav class="mt-2 flex-grow-1 overflow-auto">
             <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu"
                 data-accordion="false">
+                <!-- Contenido del menú lateral -->
                 <!-- Dashboard -->
                 <li class="nav-item">
                     <a onclick="cargarContenido('content-wrapper','vistas/modulos/dashboard.php')" class="nav-link"

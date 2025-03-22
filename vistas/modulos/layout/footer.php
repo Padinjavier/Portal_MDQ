@@ -1,3 +1,4 @@
+<!-- C:\wamp64\www\helpmdq\vistas\modulos\layout\footer.php -->
 <footer class="main-footer">
     <!-- Información de la versión -->
     <div class="float-right d-none d-sm-block">

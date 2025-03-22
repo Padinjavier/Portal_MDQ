@@ -1,4 +1,5 @@
 <?php
+// C:\wamp64\www\helpmdq\controladores\DashboardControlador.php
 require_once '../modelos/DashboardModelo.php';
 require_once '../Config/Config.php'; // Incluir la configuración
 

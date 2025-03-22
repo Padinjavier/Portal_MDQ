@@ -1,4 +1,5 @@
 <?php
+//C:\wamp64\www\helpmdq\modelos\DashboardModelo.php
 
 class DashboardModelo {
     private $db;
