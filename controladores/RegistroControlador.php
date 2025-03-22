@@ -33,7 +33,8 @@ class RegistroControlador {
             $resultado = $this->RegistroModelo->registrarUsuario($nombres, $apellidos, $telefono, $dni, $correo, $username, $password);
         
             if ($resultado === true) {
-                header('Location: ' . BASE_URL); // Usar BASE_URL
+                // Redirigir al login con un mensaje de éxito
+                header('Location: ' . BASE_URL . '/index.php?action=login&registro=exitoso');
                 exit();
             } else {
                 echo $resultado;

@@ -14,7 +14,7 @@ class LoginControlador {
 
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $usuario = $_POST['usuario'];
+            $usuario = $_POST['username'];
             $contrasena = $_POST['contrasena'];
         
             $resultado = $this->LoginModelo->loginUsuario($usuario, $contrasena);

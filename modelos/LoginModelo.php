@@ -11,7 +11,7 @@ class LoginModelo {
     // Inicia sesión y verifica las credenciales del usuario
     public function loginUsuario($username, $contrasena) {
         // Obtiene los datos del usuario
-        $sql = "SELECT id, nombres, apellidos, username, correo, password, rol, estado FROM usuarios WHERE username = ?";
+        $sql = "SELECT id, nombres, apellidos, username, correo, password, rol, status FROM usuarios WHERE username = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$username]);
         $usuarioData = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -26,7 +26,7 @@ class LoginModelo {
             $_SESSION['username'] = $usuarioData['username'];
             $_SESSION['correo'] = $usuarioData['correo'];
             $_SESSION['rol'] = $usuarioData['rol'];
-            $_SESSION['estado'] = $usuarioData['estado'];
+            $_SESSION['status'] = $usuarioData['status'];
 
             return true; // Inicio de sesión exitoso
         }
