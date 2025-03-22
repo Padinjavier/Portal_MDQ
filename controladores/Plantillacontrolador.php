@@ -7,30 +7,33 @@ class PlantillaControlador {
 
     public function plantilla() {
         // Verificar si la sesión está iniciada
-        if (!isset($_SESSION['usuario_id'])) {
-            // Inicializar la variable de sesión login_register si no existe
-            if (!isset($_SESSION['login_register'])) {
-                $_SESSION['login_register'] = 1; // Valor por defecto: 1 (login)
-            }
-
-            // Manejar acciones desde la URL
+        if (!isset($_SESSION['Login_IdUsuario'])) {
+            // Manejar acciones desde la URL para login/registro
             if (isset($_GET['action'])) {
                 if ($_GET['action'] == 'register') {
-                    $_SESSION['login_register'] = 2; // Cambiar a registro
+                    include 'vistas/modulos/registro.php';
                 } else {
-                    $_SESSION['login_register'] = 1; // Cambiar a login
+                    include 'vistas/modulos/login.php';
                 }
-            }
-
-            // Redirigir según el valor de login_register
-            if ($_SESSION['login_register'] == 1) {
+            } else {
                 include 'vistas/modulos/login.php';
-            } elseif ($_SESSION['login_register'] == 2) {
-                include 'vistas/modulos/registro.php';
             }
         } else {
-            // Si el usuario está autenticado, cargar la plantilla principal
-            include 'vistas/Plantilla.php';
+            // Si el usuario está autenticado, manejar rutas específicas
+            $ruta = isset($_GET['ruta']) ? $_GET['ruta'] : 'dashboard';
+
+            switch ($ruta) {
+                case 'usuarios':
+                    include 'vistas/modulos/usuarios.php';
+                    break;
+                case 'roles':
+                    include 'vistas/modulos/roles.php';
+                    break;
+                case 'dashboard':
+                default:
+                    include 'vistas/Plantilla.php';
+                    break;
+            }
         }
     }
 }

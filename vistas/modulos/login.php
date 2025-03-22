@@ -84,9 +84,9 @@ require_once __DIR__ . '/../../Config/Config.php';
                 <form action="<?php echo BASE_URL; ?>/controladores/LoginControlador.php" method="POST">
                     <!-- Campo de Usuario -->
                     <div class="form-group mb-3">
-                        <label for="username">Nombre de Usuario</label>
+                        <label for="usernameusuario">Nombre de Usuario</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="username" name="username" placeholder="Nombre de Usuario" required>
+                            <input type="text" class="form-control" id="usernameusuario" name="usernameusuario" placeholder="Nombre de Usuario" required>
                             <div class="input-group-append">
                                 <span class="input-group-text">
                                     <i class="bi bi-person-fill"></i>
@@ -97,12 +97,12 @@ require_once __DIR__ . '/../../Config/Config.php';
 
                     <!-- Campo de Contraseña -->
                     <div class="form-group mb-3">
-                        <label for="contrasena">Contraseña</label>
+                        <label for="passwordusuario">Contraseña</label>
                         <div class="input-group">
-                            <input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Contraseña" required>
+                            <input type="password" class="form-control" id="passwordusuario" name="passwordusuario" placeholder="Contraseña" required>
                             <div class="input-group-append">
-                                <span class="input-group-text" onclick="togglePasswordVisibility('contrasena')">
-                                    <i class="bi bi-eye-fill" id="eye-icon-contrasena"></i>
+                                <span class="input-group-text" onclick="togglePasswordVisibility('passwordusuario')">
+                                    <i class="bi bi-eye-fill" id="eye-icon-passwordusuario"></i>
                                 </span>
                             </div>
                         </div>

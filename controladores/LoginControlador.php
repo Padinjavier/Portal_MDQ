@@ -1,6 +1,5 @@
 <?php
 // C:\wamp64\www\helpmdq\controladores\LoginControlador.php
-
 require_once '../modelos/LoginModelo.php';
 require_once '../Config/Config.php'; // Incluir Config.php
 
@@ -14,11 +13,9 @@ class LoginControlador {
 
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $usuario = $_POST['username'];
-            $contrasena = $_POST['contrasena'];
-        
-            $resultado = $this->LoginModelo->loginUsuario($usuario, $contrasena);
-        
+            $usernameusuario = $_POST['usernameusuario'];
+            $passwordusuario = $_POST['passwordusuario'];
+            $resultado = $this->LoginModelo->loginUsuario($usernameusuario, $passwordusuario);
             if ($resultado === true) {
                 header('Location: ' . BASE_URL); // Usar BASE_URL
                 exit();
@@ -28,7 +25,6 @@ class LoginControlador {
         }        
     }
 }
-
 $loginControlador = new LoginControlador();
 $loginControlador->login();
 ?>

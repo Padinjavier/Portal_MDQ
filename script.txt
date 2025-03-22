@@ -1,0 +1,15 @@
+C:\wamp64\www\helpmdq\script.txt
+
+1️⃣ Reasignar IDs de la tabla usuarios de forma secuencial:
+SET @new_id = 0;
+UPDATE `usuarios` 
+SET `IdUsuario` = (@new_id := @new_id + 1) 
+ORDER BY `IdUsuario`;
+✅ Esto reinicia los IDs de usuarios, asegurando que comiencen en 1 y aumenten secuencialmente.
+
+
+
+2️⃣ Otorgar acceso total al administrador (IdRol = 1) en todos los módulos:
+INSERT INTO `helpdesk`.`permisos` (`IdRol`, `IdModulo`, `R`, `W`, `U`, `D`)
+SELECT 1, `IdModulo`, 1, 1, 1, 1 FROM `modulos`;
+✅ Este código asigna permisos de lectura (R), escritura (W), actualización (U) y eliminación (D) a todos los módulos para el administrador.

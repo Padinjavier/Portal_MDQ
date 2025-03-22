@@ -10,8 +10,8 @@ class DashboardModelo {
 
     public function getDashboardData() {
         $sql = "SELECT 
-                (SELECT COUNT(*) FROM usuarios u, rol r WHERE r.idrol = u.rol AND r.nombre_rol = 'trabajadores') AS total_trabajadores,
-                (SELECT COUNT(*) FROM usuarios u, rol r WHERE r.idrol = u.rol AND r.nombre_rol = 'soporte') AS total_soporte,
+                (SELECT COUNT(*) FROM usuarios u, rol r WHERE r.IdRol = u.RolUsuario AND r.NombreRol = 'Trabajador') AS total_trabajadores,
+                (SELECT COUNT(*) FROM usuarios u, rol r WHERE r.IdRol = u.RolUsuario AND r.NombreRol = 'Soporte') AS total_soporte,
                 (SELECT COUNT(*) FROM rol) AS total_roles,
                 (SELECT COUNT(*) FROM computadoras) AS total_inventario,
                 (SELECT COUNT(*) FROM problema) AS total_problemas,

@@ -1,7 +1,7 @@
 <?php
-// C:\wamp64\www\internet\modelos\ClienteModelo.php
+// C:\wamp64\www\helpmdq\modelos\TrabajadoresModelo.php
 
-class ClienteModelo {
+class TrabajadoresModelo {
     private $db;
 
     public function __construct($db) {
