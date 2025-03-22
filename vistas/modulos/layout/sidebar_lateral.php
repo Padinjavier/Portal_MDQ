@@ -41,12 +41,10 @@
 
 
 
-
                 <!-- Dashboard -->
                 <?php if ($_SESSION['Login_Permisos']['Dashboard']['Leer'] == 1): ?>
                     <li class="nav-item">
-                        <a onclick="cargarContenido('content-wrapper','vistas/modulos/dashboard.php')" class="nav-link"
-                            style="cursor: pointer;">
+                        <a href="index.php?ruta=dashboard" class="nav-link">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>Dashboard</p>
                         </a>
@@ -60,8 +58,7 @@
                 <!-- Gestión de Trabajadores -->
                 <?php if ($_SESSION['Login_Permisos']['Trabajadores']['Leer'] == 1): ?>
                     <li class="nav-item">
-                        <a onclick="cargarContenido('content-wrapper','vistas/modulos/trabajadores.php')" class="nav-link"
-                            style="cursor: pointer;">
+                    <a href="index.php?ruta=trabajadores" class="nav-link">
                             <i class="nav-icon fas fa-users"></i>
                             <p>Trabajadores</p>
                         </a>
@@ -75,8 +72,7 @@
                 <!-- Gestión de Técnicos -->
                 <?php if ($_SESSION['Login_Permisos']['Técnicos']['Leer'] == 1): ?>
                     <li class="nav-item">
-                        <a onclick="cargarContenido('content-wrapper','vistas/modulos/tecnicos.php')" class="nav-link"
-                            style="cursor: pointer;">
+                    <a href="index.php?ruta=tecnicos" class="nav-link">
                             <i class="nav-icon fas fa-tools"></i>
                             <p>Técnicos</p>
                         </a>
@@ -86,7 +82,6 @@
 
 
 
-                
                 <!-- Gestión de Roles y Permisos (Menú desplegable) -->
                 <?php if ($_SESSION['Login_Permisos']['Roles']['Leer'] == 1 && $_SESSION['Login_Permisos']['Permisos']['Leer'] == 1): ?>
                     <li class="nav-item">
@@ -98,8 +93,7 @@
 
                             <?php if ($_SESSION['Login_Permisos']['Roles']['Leer'] == 1): ?>
                                 <li class="nav-item">
-                                    <a onclick="cargarContenido('content-wrapper','vistas/modulos/roles.php')" class="nav-link"
-                                        style="cursor: pointer;">
+                                <a href="index.php?ruta=roles" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Roles</p>
                                     </a>
@@ -109,8 +103,7 @@
 
                             <?php if ($_SESSION['Login_Permisos']['Permisos']['Leer'] == 1): ?>
                                 <li class="nav-item">
-                                    <a onclick="cargarContenido('content-wrapper','vistas/modulos/permisos.php')"
-                                        class="nav-link" style="cursor: pointer;">
+                                <a href="index.php?ruta=permisos" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Permisos</p>
                                     </a>
@@ -136,8 +129,7 @@
 
                             <?php if ($_SESSION['Login_Permisos']['Gestión de Inventario']['Leer'] == 1): ?>
                                 <li class="nav-item">
-                                    <a onclick="cargarContenido('content-wrapper','vistas/modulos/gestion_inventario.php')"
-                                        class="nav-link" style="cursor: pointer;">
+                                    <a href="index.php?ruta=gestioninventario" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Gestión de Inventario</p>
                                     </a>
@@ -147,8 +139,7 @@
 
                             <?php if ($_SESSION['Login_Permisos']['Reportes de Inventario']['Leer'] == 1): ?>
                                 <li class="nav-item">
-                                    <a onclick="cargarContenido('content-wrapper','vistas/modulos/reporte_inventario.php')"
-                                        class="nav-link" style="cursor: pointer;">
+                                <a href="index.php?ruta=reporteinventario" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Reportes</p>
                                     </a>
@@ -174,8 +165,7 @@
 
                             <?php if ($_SESSION['Login_Permisos']['Gestión de Tickets']['Leer'] == 1): ?>
                                 <li class="nav-item">
-                                    <a onclick="cargarContenido('content-wrapper','vistas/modulos/gestion_tickets.php')"
-                                        class="nav-link" style="cursor: pointer;">
+                                <a href="index.php?ruta=gestiontickets" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Gestión de Tickets</p>
                                     </a>
@@ -185,8 +175,7 @@
 
                             <?php if ($_SESSION['Login_Permisos']['Reportes de Tickets']['Leer'] == 1): ?>
                                 <li class="nav-item">
-                                    <a onclick="cargarContenido('content-wrapper','vistas/modulos/reporte_tickets.php')"
-                                        class="nav-link" style="cursor: pointer;">
+                                <a href="index.php?ruta=reportetickets" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Reportes</p>
                                     </a>
@@ -204,8 +193,7 @@
                 <!-- Problemas -->
                 <?php if ($_SESSION['Login_Permisos']['Problemas']['Leer'] == 1): ?>
                     <li class="nav-item">
-                        <a onclick="cargarContenido('content-wrapper','vistas/modulos/problemas.php')" class="nav-link"
-                            style="cursor: pointer;">
+                    <a href="index.php?ruta=problemas" class="nav-link">
                             <i class="nav-icon fas fa-exclamation-triangle"></i>
                             <p>Problemas</p>
                         </a>
@@ -219,8 +207,7 @@
                 <!-- Tips -->
                 <?php if ($_SESSION['Login_Permisos']['Tips']['Leer'] == 1): ?>
                     <li class="nav-item">
-                        <a onclick="cargarContenido('content-wrapper','vistas/modulos/tips.php')" class="nav-link"
-                            style="cursor: pointer;">
+                    <a href="index.php?ruta=tips" class="nav-link">
                             <i class="nav-icon fas fa-lightbulb"></i>
                             <p>Tips</p>
                         </a>
@@ -234,8 +221,7 @@
                 <!-- Preguntas Frecuentes -->
                 <?php if ($_SESSION['Login_Permisos']['Preguntas Frecuentes']['Leer'] == 1): ?>
                     <li class="nav-item">
-                        <a onclick="cargarContenido('content-wrapper','vistas/modulos/preguntas_frecuentes.php')"
-                            class="nav-link" style="cursor: pointer;">
+                    <a href="index.php?ruta=preguntasfrecuentes" class="nav-link">
                             <i class="nav-icon fas fa-question-circle"></i>
                             <p>Preguntas Frecuentes</p>
                         </a>
@@ -249,8 +235,7 @@
                 <!-- Manuales -->
                 <?php if ($_SESSION['Login_Permisos']['Manuales']['Leer'] == 1): ?>
                     <li class="nav-item">
-                        <a onclick="cargarContenido('content-wrapper','vistas/modulos/manuales.php')" class="nav-link"
-                            style="cursor: pointer;">
+                    <a href="index.php?ruta=manuales" class="nav-link">
                             <i class="nav-icon fas fa-book"></i>
                             <p>Manuales</p>
                         </a>

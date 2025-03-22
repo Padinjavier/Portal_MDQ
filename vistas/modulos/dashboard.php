@@ -9,28 +9,32 @@
 </section>
 
 <script>
-    var dataticket = {};
     document.addEventListener("DOMContentLoaded", function () {
+        // Hacer la solicitud fetch cada vez que se carga la página
         fetch("<?php echo BASE_URL; ?>/controladores/DashboardControlador.php")
             .then(response => response.json())
             .then(data => {
-                dataticket = data;
-                document.getElementById("total_trabajadores").textContent = data.total_trabajadores;
-                document.getElementById("total_soporte").textContent = data.total_soporte;
-                document.getElementById("total_roles").textContent = data.total_roles;
-                document.getElementById("total_inventario").textContent = data.total_inventario;
-                document.getElementById("total_problemas").textContent = data.total_problemas;
-                document.getElementById("total_tickets").textContent = data.total_tickets;
-                document.getElementById("abiertos").textContent = data.abiertos;
-                document.getElementById("en_atencion").textContent = data.en_atencion;
-                document.getElementById("resueltos").textContent = data.resueltos;
-                document.getElementById("reabiertos").textContent = data.reabiertos;
-                document.getElementById("cerrados").textContent = data.cerrados;
-
-                // Actualizar gráficos
-                updateCharts(data);
+                updateDashboard(data); // Actualizar el dashboard con los datos obtenidos
             })
             .catch(error => console.error("Error cargando datos:", error));
+
+        function updateDashboard(data) {
+            // Actualizar los valores en la interfaz
+            document.getElementById("total_trabajadores").textContent = data.total_trabajadores;
+            document.getElementById("total_soporte").textContent = data.total_soporte;
+            document.getElementById("total_roles").textContent = data.total_roles;
+            document.getElementById("total_inventario").textContent = data.total_inventario;
+            document.getElementById("total_problemas").textContent = data.total_problemas;
+            document.getElementById("total_tickets").textContent = data.total_tickets;
+            document.getElementById("abiertos").textContent = data.abiertos;
+            document.getElementById("en_atencion").textContent = data.en_atencion;
+            document.getElementById("resueltos").textContent = data.resueltos;
+            document.getElementById("reabiertos").textContent = data.reabiertos;
+            document.getElementById("cerrados").textContent = data.cerrados;
+
+            // Actualizar gráficos
+            updateCharts(data);
+        }
     });
 </script>
 

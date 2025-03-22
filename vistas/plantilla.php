@@ -1,109 +1,59 @@
-<!-- C:\wamp64\www\helpmdq\vistas\Plantilla.php -->
 <?php
 // Incluir el archivo de configuración
 require_once __DIR__ . '/../Config/Config.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Administrar Sistema| Inicio </title>
-    <!-- ------------ -->
-
+    <title>Administrar Sistema | Inicio</title>
     <link rel="icon" type="image/x-icon" href="<?php echo BASE_URL; ?>/vistas/assets/dist/img/escudo.png">
-    <!-- ------------ -->
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-
-<!-- iconos boostrap  -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Iconos Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <!-- CSS STYLES -->
-    <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
-        <!-- Font Awesome -->
-        <link rel="stylesheet" href="vistas/assets/plugins/fontawesome-free/css/all.min.css">
-        <!-- Theme style -->
-        <link rel="stylesheet" href="vistas/assets/dist/css/adminlte.css">
-
-        <link rel="stylesheet" href="vistas/assets/dist/css/index.css">
-
-        <!-- CSS PARA DATATABLES -->    
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
-
-    <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
-
-
-    <!-- SCRIPT -->
-    <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
-
-        <!-- jQuery -->
-        <script src="vistas/assets/plugins/jquery/jquery.min.js"></script>
-        <!-- Bootstrap 4 -->
-        <script src="vistas/assets/plugins/bootstrap/js/bootstrap.bundle.js"></script>
-        <!-- AdminLTE App -->
-        <script src="vistas/assets/dist/js/adminlte.js"></script>
-        
-        <!-- Datatable js -->
-        <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
-  
-
-    <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
-
-
-
+    <link rel="stylesheet" href="vistas/assets/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="vistas/assets/dist/css/adminlte.css">
+    <link rel="stylesheet" href="vistas/assets/dist/css/index.css">
+    <!-- CSS PARA DATATABLES -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+    <!-- Toastify JS -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <!-- Notificaciones personalizadas -->
+    <script src="<?php echo BASE_URL; ?>/vistas/assets/dist/js/toastNotifications.js"></script>
 </head>
 
 <body class="hold-transition sidebar-mini">
-
-    <!-- Site wrapper -->
     <div class="wrapper">
-        
+        <?php
+        // Incluir el header
+        include "modulos/layout/header_navbar.php";
 
-       <?php
+        // Incluir el menú lateral
+        include "modulos/layout/sidebar_lateral.php";
 
-            /*===================================================================
-            HEADER
-            ====================================================================*/
-            include "modulos/layout/header_navbar.php";
+        // Contenido de la página
+        echo '<div class="content-wrapper pt-5">';
+        // Cargar el contenido según la ruta
+        $ruta = isset($_GET['ruta']) ? $_GET['ruta'] : 'dashboard';
+        include "modulos/$ruta.php";
+        echo '</div>';
 
-            /*===================================================================
-            MENU LATERAL
-            ====================================================================*/
-            include "modulos/layout/sidebar_lateral.php";
-      
-            /*===================================================================
-            CONTENIDO DE LA PAGINA
-            ====================================================================*/
-            
-            // content-wrapper
-            echo '<div class="content-wrapper pt-5">';
-        
-                include "modulos/dashboard.php";
-                
-            echo '</div>';
-
-            // .content-wrapper
-
-
-            // ===================================================================
-            // FOOTER
-            // ====================================================================
-            include "modulos/layout/footer.php";
-            
-        ?> 
-
+        // Incluir el footer
+        include "modulos/layout/footer.php";
+        ?>
     </div>
-
-    <!-- ./wrapper -->
+    <!-- Scripts -->
+    <script src="vistas/assets/plugins/jquery/jquery.min.js"></script>
+    <script src="vistas/assets/plugins/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="vistas/assets/dist/js/adminlte.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
     <script src="vistas/assets/dist/js/demo.js"></script>
-
-    <script>
-      function cargarContenido(contenedor,contenido){
-        $("."+contenedor).load(contenido);
-      }
-  </script>
-
 </body>
+
 </html>

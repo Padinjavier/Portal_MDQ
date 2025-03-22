@@ -6,6 +6,7 @@ require_once __DIR__ . '/../../Config/Config.php';
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,11 +19,12 @@ require_once __DIR__ . '/../../Config/Config.php';
     <!-- AdminLTE CSS -->
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/vistas/assets/dist/css/adminlte.css">
     <!-- Estilos personalizados -->
-     <!-- Toastify CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-
-<!-- Toastify JS -->
-<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <!-- Toastify JS -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <!-- Notificaciones personalizadas -->
+    <script src="<?php echo BASE_URL; ?>/vistas/assets/dist/js/toastNotifications.js"></script>
     <style>
         .register-page {
             background: rgb(41, 48, 64);
@@ -32,45 +34,55 @@ require_once __DIR__ . '/../../Config/Config.php';
             min-height: 100vh;
             padding: 20px;
         }
+
         .register-box {
             width: 100%;
             max-width: 800px;
         }
+
         .register-logo {
             text-align: center;
             margin-bottom: 20px;
         }
+
         .register-logo img {
             width: 100px;
             height: auto;
         }
+
         .register-logo h3 {
             color: #fff;
             font-weight: bold;
             margin-top: 10px;
         }
+
         .register-card-body {
             background: #fff;
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         .form-group {
             margin-bottom: 1.5rem;
         }
+
         .input-group-text {
             cursor: pointer;
         }
+
         .btn-primary {
             background-color: #007bff;
             border-color: #007bff;
         }
+
         .btn-primary:hover {
             background-color: #0056b3;
             border-color: #004085;
         }
     </style>
 </head>
+
 <body class="hold-transition register-page">
     <div class="register-box">
         <!-- Logo y título -->
@@ -92,7 +104,8 @@ require_once __DIR__ . '/../../Config/Config.php';
                             <div class="form-group mb-3">
                                 <label for="nombres">Nombres</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres" required>
+                                    <input type="text" class="form-control" id="nombres" name="nombres"
+                                        placeholder="Nombres" required>
                                     <div class="input-group-append">
                                         <span class="input-group-text">
                                             <i class="bi bi-person-fill"></i>
@@ -105,7 +118,8 @@ require_once __DIR__ . '/../../Config/Config.php';
                             <div class="form-group mb-3">
                                 <label for="apellidos">Apellidos</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Apellidos" required>
+                                    <input type="text" class="form-control" id="apellidos" name="apellidos"
+                                        placeholder="Apellidos" required>
                                     <div class="input-group-append">
                                         <span class="input-group-text">
                                             <i class="bi bi-person-fill"></i>
@@ -118,7 +132,8 @@ require_once __DIR__ . '/../../Config/Config.php';
                             <div class="form-group mb-3">
                                 <label for="telefono">Teléfono</label>
                                 <div class="input-group">
-                                    <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Teléfono" required>
+                                    <input type="tel" class="form-control" id="telefono" name="telefono"
+                                        placeholder="Teléfono" required>
                                     <div class="input-group-append">
                                         <span class="input-group-text">
                                             <i class="bi bi-telephone-fill"></i>
@@ -131,7 +146,8 @@ require_once __DIR__ . '/../../Config/Config.php';
                             <div class="form-group mb-3">
                                 <label for="dni">DNI</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="dni" name="dni" placeholder="DNI" required>
+                                    <input type="text" class="form-control" id="dni" name="dni" placeholder="DNI"
+                                        required>
                                     <div class="input-group-append">
                                         <span class="input-group-text">
                                             <i class="bi bi-card-text"></i>
@@ -147,7 +163,8 @@ require_once __DIR__ . '/../../Config/Config.php';
                             <div class="form-group mb-3">
                                 <label for="correo">Correo Electrónico</label>
                                 <div class="input-group">
-                                    <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo Electrónico" required>
+                                    <input type="email" class="form-control" id="correo" name="correo"
+                                        placeholder="Correo Electrónico" required>
                                     <div class="input-group-append">
                                         <span class="input-group-text">
                                             <i class="bi bi-envelope-fill"></i>
@@ -160,7 +177,8 @@ require_once __DIR__ . '/../../Config/Config.php';
                             <div class="form-group mb-3">
                                 <label for="username">Nombre de Usuario</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="username" name="username" placeholder="Nombre de Usuario" required>
+                                    <input type="text" class="form-control" id="username" name="username"
+                                        placeholder="Nombre de Usuario" required>
                                     <div class="input-group-append">
                                         <span class="input-group-text">
                                             <i class="bi bi-person-badge-fill"></i>
@@ -173,7 +191,8 @@ require_once __DIR__ . '/../../Config/Config.php';
                             <div class="form-group mb-3">
                                 <label for="password">Contraseña</label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required>
+                                    <input type="password" class="form-control" id="password" name="password"
+                                        placeholder="Contraseña" required>
                                     <div class="input-group-append">
                                         <span class="input-group-text" onclick="togglePasswordVisibility('password')">
                                             <i class="bi bi-eye-fill" id="eye-icon-password"></i>
@@ -186,9 +205,11 @@ require_once __DIR__ . '/../../Config/Config.php';
                             <div class="form-group mb-3">
                                 <label for="confirmar_password">Confirmar Contraseña</label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control" id="confirmar_password" name="confirmar_password" placeholder="Confirmar Contraseña" required>
+                                    <input type="password" class="form-control" id="confirmar_password"
+                                        name="confirmar_password" placeholder="Confirmar Contraseña" required>
                                     <div class="input-group-append">
-                                        <span class="input-group-text" onclick="togglePasswordVisibility('confirmar_password')">
+                                        <span class="input-group-text"
+                                            onclick="togglePasswordVisibility('confirmar_password')">
                                             <i class="bi bi-eye-fill" id="eye-icon-confirmar_password"></i>
                                         </span>
                                     </div>
@@ -209,7 +230,8 @@ require_once __DIR__ . '/../../Config/Config.php';
 
                 <!-- Enlace para Iniciar Sesión -->
                 <p class="mb-1 mt-3 text-center">
-                    ¿Ya tienes una cuenta? <a href="<?php echo BASE_URL; ?>/index.php?action=login" class="text-center">Inicia sesión aquí</a>
+                    ¿Ya tienes una cuenta? <a href="<?php echo BASE_URL; ?>/index.php?ruta=login"
+                        class="text-center">Inicia sesión aquí</a>
                 </p>
             </div>
             <!-- /.register-card-body -->
@@ -240,4 +262,5 @@ require_once __DIR__ . '/../../Config/Config.php';
         }
     </script>
 </body>
+
 </html>

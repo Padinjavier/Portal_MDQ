@@ -6,6 +6,7 @@ require_once __DIR__ . '/../../Config/Config.php';
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,6 +20,10 @@ require_once __DIR__ . '/../../Config/Config.php';
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/vistas/assets/dist/css/adminlte.css">
     <!-- Toastify CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <!-- Toastify JS -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <!-- Notificaciones personalizadas -->
+    <script src="<?php echo BASE_URL; ?>/vistas/assets/dist/js/toastNotifications.js"></script>
     <!-- Estilos personalizados -->
     <style>
         .login-page {
@@ -29,45 +34,55 @@ require_once __DIR__ . '/../../Config/Config.php';
             min-height: 100vh;
             padding: 20px;
         }
+
         .login-box {
             width: 100%;
             max-width: 400px;
         }
+
         .login-logo {
             text-align: center;
             margin-bottom: 20px;
         }
+
         .login-logo img {
             width: 100px;
             height: auto;
         }
+
         .login-logo h3 {
             color: #fff;
             font-weight: bold;
             margin-top: 10px;
         }
+
         .login-card-body {
             background: #fff;
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         .form-group {
             margin-bottom: 1.5rem;
         }
+
         .input-group-text {
             cursor: pointer;
         }
+
         .btn-primary {
             background-color: #007bff;
             border-color: #007bff;
         }
+
         .btn-primary:hover {
             background-color: #0056b3;
             border-color: #004085;
         }
     </style>
 </head>
+
 <body class="hold-transition login-page">
     <div class="login-box">
         <!-- Logo y título -->
@@ -86,7 +101,8 @@ require_once __DIR__ . '/../../Config/Config.php';
                     <div class="form-group mb-3">
                         <label for="usernameusuario">Nombre de Usuario</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="usernameusuario" name="usernameusuario" placeholder="Nombre de Usuario" required>
+                            <input type="text" class="form-control" id="usernameusuario" name="usernameusuario"
+                                placeholder="Nombre de Usuario" required>
                             <div class="input-group-append">
                                 <span class="input-group-text">
                                     <i class="bi bi-person-fill"></i>
@@ -99,7 +115,8 @@ require_once __DIR__ . '/../../Config/Config.php';
                     <div class="form-group mb-3">
                         <label for="passwordusuario">Contraseña</label>
                         <div class="input-group">
-                            <input type="password" class="form-control" id="passwordusuario" name="passwordusuario" placeholder="Contraseña" required>
+                            <input type="password" class="form-control" id="passwordusuario" name="passwordusuario"
+                                placeholder="Contraseña" required>
                             <div class="input-group-append">
                                 <span class="input-group-text" onclick="togglePasswordVisibility('passwordusuario')">
                                     <i class="bi bi-eye-fill" id="eye-icon-passwordusuario"></i>
@@ -116,8 +133,8 @@ require_once __DIR__ . '/../../Config/Config.php';
 
                 <!-- Enlace para Registrarse -->
                 <p class="mb-1 mt-3 text-center register-link">
-                    ¿No tienes una cuenta? 
-                    <a href="<?php echo BASE_URL; ?>/index.php?action=register" class="text-center">Regístrate aquí</a>
+                    ¿No tienes una cuenta?
+                    <a href="<?php echo BASE_URL; ?>/index.php?ruta=registro" class="text-center">Regístrate aquí</a>
                 </p>
             </div>
             <!-- /.login-card-body -->
@@ -152,16 +169,12 @@ require_once __DIR__ . '/../../Config/Config.php';
         // Mostrar notificación si el registro fue exitoso
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('registro') && urlParams.get('registro') === 'exitoso') {
-            Toastify({
-                text: "Registro exitoso. Ahora inicia sesión.",
-                duration: 3000, // Duración de la notificación en milisegundos
-                close: false, // Mostrar botón de cierre
-                gravity: "top", // Posición de la notificación (top, bottom)
-                position: "right", // Alineación (left, center, right)
-                backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)", // Color de fondo
-                stopOnFocus: true, // Detener el temporizador al hacer hover
-            }).showToast();
+            showToast(
+                'correcto',
+                'Registro exitoso. Ahora inicia sesión.'
+            );
         }
     </script>
 </body>
+
 </html>
