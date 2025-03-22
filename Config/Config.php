@@ -1,11 +1,25 @@
 <?php
-// C:\wamp64\www\internet\config\conexion.php
+// C:\wamp64\www\internet\Config\Config.php
+
+$ip = $_SERVER['SERVER_ADDR'];
+$link = 'http://' . $ip . '/helpmdq';
+define('BASE_URL', $link);
+
+//Zona horaria
+date_default_timezone_set('America/Lima');
+//Datos de conexión a Base de Datos
+const DB_HOST = "localhost";
+const DB_NAME = "helpdesk";
+const DB_USER = "root";
+const DB_PASSWORD = "javier20";
+const DB_CHARSET = "utf8";
+
 
 class Conexion {
-    private $host = 'localhost'; // Servidor de la base de datos
-    private $dbname = 'helpdesk'; // Nombre de la base de datos
-    private $user = 'root'; // Usuario de la base de datos
-    private $password = 'javier20'; // Contraseña de la base de datos
+    private $host = DB_HOST;
+    private $dbname = DB_NAME;
+    private $user = DB_USER;
+    private $password = DB_PASSWORD;
     private $conexion;
 
     public function __construct() {

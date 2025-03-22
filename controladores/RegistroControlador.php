@@ -2,7 +2,7 @@
 // C:\wamp64\www\internet\controladores\RegistroControlador.php
 
 require_once '../modelos/RegistroModelo.php';
-require_once '../config/conexion.php';
+require_once '../Config/Config.php';
 
 class RegistroControlador {
     private $RegistroModelo;
@@ -14,14 +14,26 @@ class RegistroControlador {
 
     public function registro() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $usuario = $_POST['usuario'];
+            $nombres = $_POST['nombres'];
+            $apellidos = $_POST['apellidos'];
+            $telefono = $_POST['telefono'];
+            $dni = $_POST['dni'];
             $correo = $_POST['correo'];
-            $contrasena = $_POST['contrasena'];
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+            $confirmar_password = $_POST['confirmar_password'];
         
-            $resultado = $this->RegistroModelo->registrarUsuario($usuario, $correo, $contrasena);
+            // Validar que las contraseñas coincidan
+            if ($password !== $confirmar_password) {
+                echo "Las contraseñas no coinciden.";
+                return;
+            }
+
+            // Registrar el usuario
+            $resultado = $this->RegistroModelo->registrarUsuario($nombres, $apellidos, $telefono, $dni, $correo, $username, $password);
         
             if ($resultado === true) {
-                header('Location: /internet/');
+                header('Location: ' . BASE_URL); // Usar BASE_URL
                 exit();
             } else {
                 echo $resultado;

@@ -9,25 +9,26 @@ class RegistroModelo {
     }
 
     // Registra un nuevo usuario en la base de datos
-    public function registrarUsuario($usuario, $correo, $contrasena) {
-        // Verifica si el usuario o correo ya existen
+    public function registrarUsuario($nombres, $apellidos, $telefono, $dni, $correo, $username, $password) {
+        // Verifica si el username o correo ya existen
         $sql = "SELECT id FROM usuarios WHERE username = ? OR correo = ?";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([$usuario, $correo]);
+        $stmt->execute([$username, $correo]);
 
         if ($stmt->fetch()) {
-            return "El usuario o correo ya están registrados.";
+            return "El nombre de usuario o correo ya están registrados.";
         }
 
         // Hashea la contraseña (usa password_hash para mayor seguridad)
-        $contrasenaHash = password_hash($contrasena, PASSWORD_BCRYPT);
+        $contrasenaHash = password_hash($password, PASSWORD_BCRYPT);
 
         // Inserta el nuevo usuario en la base de datos
-        $sql = "INSERT INTO usuarios (username, correo, password) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO usuarios (nombres, apellidos, telefono, dni, correo, username, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
 
-        if ($stmt->execute([$usuario, $correo, $contrasenaHash])) {
-            return "Usuario registrado correctamente.";
+        // Ejecuta la inserción con los datos del usuario
+        if ($stmt->execute([$nombres, $apellidos, $telefono, $dni, $correo, $username, $contrasenaHash])) {
+            return true; // Registro exitoso
         }
 
         return "Error al registrar el usuario.";
