@@ -2,7 +2,7 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Sidebar user (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center">
+        <div class="user-panel d-flex align-items-center">
             <!-- Iniciales en un círculo -->
             <div class="image">
                 <div class="rounded-circle bg-success d-flex align-items-center justify-content-center"

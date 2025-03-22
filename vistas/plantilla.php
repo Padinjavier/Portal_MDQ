@@ -77,7 +77,7 @@ require_once __DIR__ . '/../Config/Config.php';
             ====================================================================*/
             
             // content-wrapper
-            echo '<div class="content-wrapper">';
+            echo '<div class="content-wrapper pt-5">';
         
                 include "modulos/dashboard.php";
                 
