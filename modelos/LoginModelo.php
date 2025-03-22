@@ -8,7 +8,7 @@ class LoginModelo {
         $this->db = $db->getConexion();
     }
 
-    // Inicia sesión y verifica las credenciales del usuario
+    // Inicia sesión y verifica las credenciales del usuario con SHA-256
     public function loginUsuario($username, $contrasena) {
         // Obtiene los datos del usuario
         $sql = "SELECT id, nombres, apellidos, username, correo, password, rol, status FROM usuarios WHERE username = ?";
@@ -16,8 +16,11 @@ class LoginModelo {
         $stmt->execute([$username]);
         $usuarioData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Verifica si la contraseña es correcta
-        if ($usuarioData && password_verify($contrasena, $usuarioData['password'])) {
+        // Hashea la contraseña ingresada con SHA-256
+        $contrasenaHash = hash('sha256', $contrasena);
+
+        // Verifica si la contraseña coincide
+        if ($usuarioData && $contrasenaHash === $usuarioData['password']) {
             // Inicia la sesión y guarda los datos del usuario
             session_start();
             $_SESSION['usuario_id'] = $usuarioData['id'];

@@ -8,7 +8,7 @@ class RegistroModelo {
         $this->db = $db->getConexion();
     }
 
-    // Registra un nuevo usuario en la base de datos
+    // Registra un nuevo usuario en la base de datos con SHA-256
     public function registrarUsuario($nombres, $apellidos, $telefono, $dni, $correo, $username, $password) {
         // Verifica si el username o correo ya existen
         $sql = "SELECT id FROM usuarios WHERE username = ? OR correo = ?";
@@ -19,8 +19,8 @@ class RegistroModelo {
             return "El nombre de usuario o correo ya están registrados.";
         }
 
-        // Hashea la contraseña (usa password_hash para mayor seguridad)
-        $contrasenaHash = password_hash($password, PASSWORD_BCRYPT);
+        // Hashea la contraseña con SHA-256
+        $contrasenaHash = hash('sha256', $password);
 
         // Inserta el nuevo usuario en la base de datos
         $sql = "INSERT INTO usuarios (nombres, apellidos, telefono, dni, correo, username, password) VALUES (?, ?, ?, ?, ?, ?, ?)";

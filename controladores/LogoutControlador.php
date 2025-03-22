@@ -2,7 +2,7 @@
 // C:\wamp64\www\internet\controladores\LogoutControlador.php
 
 // Incluir el archivo de configuración
-require_once __DIR__ . '/../../Config/Config.php';
+require_once __DIR__ . '/../Config/Config.php';
 session_start(); // Iniciar la sesión
 
 // Destruir todas las variables de sesión

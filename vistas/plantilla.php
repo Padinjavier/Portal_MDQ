@@ -1,11 +1,19 @@
+<?php
+// C:\wamp64\www\helpmdq\vistas\Plantilla.php
+
+// Incluir el archivo de configuración
+require_once __DIR__ . '/../Config/Config.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Administrar Sistema| Inicio </title>
+    <!-- ------------ -->
 
-    <link rel="shortcut icon" href="vistas/assets/dist/img/logo_sistema_favicon.png" type="image/x-icon">
+    <link rel="icon" type="image/x-icon" href="<?php echo BASE_URL; ?>/vistas/assets/dist/img/escudo.png">
+    <!-- ------------ -->
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
