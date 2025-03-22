@@ -1,6 +1,6 @@
 <?php
 require_once "../modelos/ClienteModelo.php";
-require_once "../modelos/Conexion.php"; // Asegúrate de que tienes la clase de conexión
+require_once "../config/Conexion.php"; // Asegúrate de que tienes la clase de conexión
 
 $conexion = new Conexion();
 $clienteModelo = new ClienteModelo($conexion);

@@ -30,7 +30,7 @@ class PlantillaControlador {
             }
         } else {
             // Si el usuario está autenticado, cargar la plantilla principal
-            include 'vistas/plantilla.php';
+            include 'vistas/Plantilla.php';
         }
     }
 }

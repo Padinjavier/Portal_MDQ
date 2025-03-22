@@ -1,9 +1,9 @@
 <?php
-// C:\wamp64\www\internet\modelos\conexion.php
+// C:\wamp64\www\internet\config\conexion.php
 
 class Conexion {
     private $host = 'localhost'; // Servidor de la base de datos
-    private $dbname = 'internet'; // Nombre de la base de datos
+    private $dbname = 'helpdesk'; // Nombre de la base de datos
     private $user = 'root'; // Usuario de la base de datos
     private $password = 'javier20'; // Contraseña de la base de datos
     private $conexion;

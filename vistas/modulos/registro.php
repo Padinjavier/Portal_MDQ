@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
     <!-- Font Awesome -->
+    <link rel="icon" type="image/x-icon" href="vistas/assets/dist/img/escudo.png">
     <link rel="stylesheet" href="/internet/vistas/assets/plugins/fontawesome-free/css/all.min.css">
     <!-- AdminLTE CSS -->
     <link rel="stylesheet" href="/internet/vistas/assets/dist/css/adminlte.css">

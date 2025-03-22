@@ -1,15 +1,15 @@
 <?php
 // C:\wamp64\www\internet\controladores\RegistroControlador.php
 
-require_once '../modelos/UsuarioModelo.php';
-require_once '../modelos/conexion.php';
+require_once '../modelos/RegistroModelo.php';
+require_once '../config/conexion.php';
 
 class RegistroControlador {
-    private $usuarioModelo;
+    private $RegistroModelo;
 
     public function __construct() {
         $db = new Conexion();
-        $this->usuarioModelo = new UsuarioModelo($db);
+        $this->RegistroModelo = new RegistroModelo($db);
     }
 
     public function registro() {
@@ -18,7 +18,7 @@ class RegistroControlador {
             $correo = $_POST['correo'];
             $contrasena = $_POST['contrasena'];
         
-            $resultado = $this->usuarioModelo->registrarUsuario($usuario, $correo, $contrasena);
+            $resultado = $this->RegistroModelo->registrarUsuario($usuario, $correo, $contrasena);
         
             if ($resultado === true) {
                 header('Location: /internet/');

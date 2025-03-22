@@ -1,15 +1,15 @@
 <?php
 // C:\wamp64\www\internet\controladores\LoginControlador.php
 
-require_once '../modelos/UsuarioModelo.php';
-require_once '../modelos/conexion.php';
+require_once '../modelos/LoginModelo.php';
+require_once '../config/conexion.php';
 
 class LoginControlador {
-    private $usuarioModelo;
+    private $LoginModelo;
 
     public function __construct() {
         $db = new Conexion();
-        $this->usuarioModelo = new UsuarioModelo($db);
+        $this->LoginModelo = new LoginModelo($db);
     }
 
     public function login() {
@@ -17,7 +17,7 @@ class LoginControlador {
             $usuario = $_POST['usuario'];
             $contrasena = $_POST['contrasena'];
         
-            $resultado = $this->usuarioModelo->loginUsuario($usuario, $contrasena);
+            $resultado = $this->LoginModelo->loginUsuario($usuario, $contrasena);
         
             if ($resultado === true) {
                 header('Location: /internet/');
