@@ -5,102 +5,70 @@
 </script>
 
 <section class="content-header ml-3 mr-3">
-    <div class="app-title">
+    <div class="app-title mb-3">
         <div>
             <h1>Trabajadores <small></small>
-                <button class="btn btn-primary btn-sm" type="button" onclick="openModal();">
+                <button class="btn btn-success btn-sm " type="button" onclick="openModal();">
                     <i class="fas fa-plus-circle"></i> Nuevo
                 </button>
             </h1>
         </div>
     </div>
 
-    <!-- Inicio Filtros -->
-    <div class="row mb-3">
-        <div class="col-md-12">
-            <h5 class="text-muted">Filtros</h5>
-        </div>
-        <div class="col-md-2">
-            <label for="filtroNombre" class="form-label">Nombre</label>
-            <input type="text" id="filtroNombre" class="form-control form-control-sm" placeholder="Nombre">
-        </div>
-        <div class="col-md-2">
-            <label for="filtroApellido" class="form-label">Apellido</label>
-            <input type="text" id="filtroApellido" class="form-control form-control-sm" placeholder="Apellido">
-        </div>
-        <div class="col-md-2">
-            <label for="filtroDNI" class="form-label">DNI</label>
-            <input type="text" id="filtroDNI" class="form-control form-control-sm" placeholder="DNI">
-        </div>
-        <div class="col-md-2">
-            <label for="filtroTelefono" class="form-label">Teléfono</label>
-            <input type="text" id="filtroTelefono" class="form-control form-control-sm" placeholder="Teléfono">
-        </div>
-        <div class="col-md-2">
-            <label for="filtroCorreo" class="form-label">Correo</label>
-            <input type="text" id="filtroCorreo" class="form-control form-control-sm" placeholder="Correo">
-        </div>
-        <div class="col-md-2 d-flex align-items-end">
-            <button class="btn btn-primary btn-sm btn-block" onclick="buscarTrabajadores()">
-                <i class="fas fa-search"></i> Buscar
-            </button>
-        </div>
-    </div>
-    <!-- Fin Filtros -->
 
     <!-- Tabla de Trabajadores -->
     <div class="row">
-        <div class="col-md-12">
-            <div class="tile">
-                <div class="tile-body p-3">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered w-100" id="tableTrabajadores">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nombre</th>
-                                    <th>Apellido</th>
-                                    <th>DNI</th>
-                                    <th>Teléfono</th>
-                                    <th>Correo</th>
-                                    <th>Usuario</th>
-                                    <th>Rol</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Datos de ejemplo en texto plano -->
-                                <tr>
-                                    <td>1</td>
-                                    <td>example</td>
-                                    <td>example</td>
-                                    <td>12345678</td>
-                                    <td>12345678</td>
-                                    <td>example@example.com</td>
-                                    <td>example</td>
-                                    <td>example</td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button"
-                                                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
-                                                <i class="fas fa-cog"></i> Opciones
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item" href="#">Ver</a>
-                                                <a class="dropdown-item" href="#">Editar</a>
-                                                <a class="dropdown-item" href="#">Eliminar</a>
-                                            </div>
+    <div class="col-md-12">
+        <div class="card shadow-sm"> <!-- Agregamos sombra y bordes redondeados -->
+            <div class="card-body p-4"> <!-- Ajustamos el padding -->
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered w-100" id="tableTrabajadores" style="background-color: white; border-radius: 10px;">
+                    <thead class="bg-success"> <!-- (bg-primary success warning danger info) -->
+                            <tr>
+                                <th class="font-weight-bold">ID</th> <!-- Texto en negrita -->
+                                <th class="font-weight-bold">Nombre</th>
+                                <th class="font-weight-bold">Apellido</th>
+                                <th class="font-weight-bold">DNI</th>
+                                <th class="font-weight-bold">Teléfono</th>
+                                <th class="font-weight-bold">Correo</th>
+                                <th class="font-weight-bold">Usuario</th>
+                                <th class="font-weight-bold">Rol</th>
+                                <th class="font-weight-bold">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Datos de ejemplo en texto plano -->
+                            <tr>
+                                <td class="font-weight-bold">1</td> <!-- Texto en negrita -->
+                                <td>example</td>
+                                <td>example</td>
+                                <td>12345678</td>
+                                <td>12345678</td>
+                                <td>example@example.com</td>
+                                <td>example</td>
+                                <td>example</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                            <i class="fas fa-cog"></i> Opciones
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="#">Ver</a>
+                                            <a class="dropdown-item" href="#">Editar</a>
+                                            <a class="dropdown-item" href="#">Eliminar</a>
                                         </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+</div>
     <!-- Fin Tabla de Trabajadores -->
 </section>
 
@@ -113,7 +81,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalFormTrabajadorLabel">Trabajador</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -140,13 +108,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="dni">DNI</label>
-                                <input type="text" class="form-control form-control-sm" id="dni" name="dni" required>
+                                <input type="text" class="form-control form-control-sm" id="dni" name="dni" minlength="8" maxlength="8" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="telefono">Teléfono</label>
-                                <input type="text" class="form-control form-control-sm" id="telefono" name="telefono">
+                                <input type="text" class="form-control form-control-sm" id="telefono" name="telefono" minlength="9" maxlength="9" required>
                             </div>
                         </div>
                     </div>
@@ -166,11 +134,12 @@
                         </div>
                     </div>
                     <div class="row">
-                    <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label for="password">Contraseña</label>
-                                <input type="text" class="form-control form-control-sm" id="password" name="password"
-                                    required>
+                                <br>
+                                <small class="text-danger" id="alerpassword">(*)</small>
+                                <input type="text" class="form-control form-control-sm" id="password" name="password">
                             </div>
                         </div>
                     </div>
@@ -193,23 +162,21 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalViewTrabajadorLabel">Ver Trabajador</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <p><strong>ID:</strong> <span id="viewId"></span></p>
                         <p><strong>Nombre:</strong> <span id="viewNombre"></span></p>
-                        <p><strong>Apellido:</strong> <span id="viewApellido"></span></p>
+                        <p><strong>DNI:</strong> <span id="viewDni"></span></p>
+                        <p><strong>Correo:</strong> <span id="viewCorreo"></span></p>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>DNI:</strong> <span id="viewDni"></span></p>
+                        <p><strong>Apellido:</strong> <span id="viewApellido"></span></p>
                         <p><strong>Teléfono:</strong> <span id="viewTelefono"></span></p>
-                        <p><strong>Correo:</strong> <span id="viewCorreo"></span></p>
                         <p><strong>Usuario:</strong> <span id="viewUsuario"></span></p>
-                        <p><strong>Rol:</strong> <span id="viewRol"></span></p>
                     </div>
                 </div>
             </div>

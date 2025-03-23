@@ -9,7 +9,12 @@ class TrabajadoresModelo
         $this->db = $db->getConexion();
     }
 
-    // Obtener todos los trabajadores (rol = 3)
+
+
+
+
+
+    // inicio Obtener todos los trabajadores (rol = 3)
     public function CargarTablaTrabajadores()
     {
         $sql = "SELECT * FROM usuarios WHERE RolUsuario = 3 AND StatusUsuario = 1";
@@ -17,6 +22,13 @@ class TrabajadoresModelo
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+  // fin Obtener todos los trabajadores (rol = 3)
+
+
+
+
+
+    // inicio funcion obtenerporid 
     public function obtenerPorId($id)
     {
         $sql = "SELECT * FROM usuarios WHERE IdUsuario = ? AND RolUsuario = 3";
@@ -24,14 +36,24 @@ class TrabajadoresModelo
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+   // fin funcion obtenerporid 
 
-    // Eliminar (desactivar) un trabajador (cambiar StatusUsuario a 0)
+
+
+
+
+    // inicio Eliminar (desactivar) un trabajador (cambiar StatusUsuario a 0)
     public function eliminarTrabajador($id)
     {
         $sql = "UPDATE usuarios SET StatusUsuario = 0 WHERE IdUsuario = ? AND RolUsuario = 3";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([$id]);
     }
+    // fin Eliminar (desactivar) un trabajador (cambiar StatusUsuario a 0)
+
+
+
+
 
     // Crear un nuevo trabajador
     public function crearTrabajador($datos)
@@ -39,7 +61,7 @@ class TrabajadoresModelo
         $sql = "INSERT INTO usuarios (NombresUsuario, ApellidosUsuario, TelefonoUsuario, DNIUsuario, CorreoUsuario, UsernameUsuario, PasswordUsuario, RolUsuario) 
             VALUES (?, ?, ?, ?, ?, ?, ?, 3)";
         $stmt = $this->db->prepare($sql);
-        $passwordHash = hash('sha256', $datos['PasswordUsuario']); // Hashear la contraseña
+        $passwordHash = hash('sha256', $datos['PasswordUsuario']);
         return $stmt->execute([
             $datos['NombresUsuario'],
             $datos['ApellidosUsuario'],
@@ -53,19 +75,43 @@ class TrabajadoresModelo
 
     public function editarTrabajador($id, $datos)
     {
-        $sql = "UPDATE usuarios 
-            SET NombresUsuario = ?, ApellidosUsuario = ?, TelefonoUsuario = ?, DNIUsuario = ?, CorreoUsuario = ?, UsernameUsuario = ? 
-            WHERE IdUsuario = ? AND RolUsuario = 3";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute([
-            $datos['NombresUsuario'],
-            $datos['ApellidosUsuario'],
-            $datos['TelefonoUsuario'],
-            $datos['DNIUsuario'],
-            $datos['CorreoUsuario'],
-            $datos['UsernameUsuario'],
-            $id
-        ]);
+        // Verificar si el campo "PasswordUsuario" está presente y no está vacío
+        if (!empty($datos['PasswordUsuario'])) {
+            // Si hay contraseña, actualizarla junto con los demás campos
+            $sql = "UPDATE usuarios 
+                    SET NombresUsuario = ?, ApellidosUsuario = ?, TelefonoUsuario = ?, DNIUsuario = ?, CorreoUsuario = ?, UsernameUsuario = ?, PasswordUsuario = ? 
+                    WHERE IdUsuario = ? AND RolUsuario = 3";
+            $stmt = $this->db->prepare($sql);
+            $passwordHash = hash('sha256', $datos['PasswordUsuario']); // Hashear la contraseña
+            $params = [
+                $datos['NombresUsuario'],
+                $datos['ApellidosUsuario'],
+                $datos['TelefonoUsuario'],
+                $datos['DNIUsuario'],
+                $datos['CorreoUsuario'],
+                $datos['UsernameUsuario'],
+                $passwordHash,
+                $id
+            ];
+        } else {
+            // Si no hay contraseña, actualizar solo los demás campos
+            $sql = "UPDATE usuarios 
+                    SET NombresUsuario = ?, ApellidosUsuario = ?, TelefonoUsuario = ?, DNIUsuario = ?, CorreoUsuario = ?, UsernameUsuario = ? 
+                    WHERE IdUsuario = ? AND RolUsuario = 3";
+            $stmt = $this->db->prepare($sql);
+            $params = [
+                $datos['NombresUsuario'],
+                $datos['ApellidosUsuario'],
+                $datos['TelefonoUsuario'],
+                $datos['DNIUsuario'],
+                $datos['CorreoUsuario'],
+                $datos['UsernameUsuario'],
+                $id
+            ];
+        }
+    
+        // Ejecutar la consulta
+        return $stmt->execute($params);
     }
 
     // Buscar trabajadores según filtros

@@ -12,7 +12,11 @@ class TrabajadoresControlador
         $this->modelo = new TrabajadoresModelo($db);
     }
 
-    // Obtener todos los trabajadores
+
+
+
+
+    // inicio Obtener todos los trabajadores
     public function CargarTablaTrabajadores()
     {
         try {
@@ -22,22 +26,36 @@ class TrabajadoresControlador
             echo json_encode(['success' => false, 'msg' => 'Error al obtener trabajadores: ' . $e->getMessage()]);
         }
     }
+    // fin Obtener todos los trabajadores
 
-    // Eliminar un trabajador
-    public function eliminarTrabajador($id)
+
+
+
+
+    // inicio Obtener un trabajador por ID
+    public function obtenerTrabajador($id)
     {
         try {
             if (empty($id)) {
                 throw new Exception('ID no proporcionado');
             }
-            $resultado = $this->modelo->eliminarTrabajador($id);
-            echo json_encode(['success' => $resultado, 'msg' => $resultado ? 'Trabajador eliminado correctamente.' : 'Error al eliminar el trabajador.']);
+            $trabajador = $this->modelo->obtenerPorId($id);
+            if ($trabajador) {
+                echo json_encode(['success' => true, 'data' => $trabajador]);
+            } else {
+                echo json_encode(['success' => false, 'msg' => 'Trabajador no encontrado']);
+            }
         } catch (Exception $e) {
-            echo json_encode(['success' => false, 'msg' => 'Error al eliminar el trabajador: ' . $e->getMessage()]);
+            echo json_encode(['success' => false, 'msg' => 'Error al obtener el trabajador: ' . $e->getMessage()]);
         }
     }
+    // fin Obtener un trabajador por ID
 
-    // Crear un nuevo trabajador
+
+
+
+
+    // inicio Crear un nuevo trabajador
     public function crearTrabajador()
     {
         try {
@@ -68,80 +86,85 @@ class TrabajadoresControlador
             echo json_encode(['success' => false, 'msg' => 'Error al crear el trabajador: ' . $e->getMessage()]);
         }
     }
+    // fin Crear un nuevo trabajador
+
+
+
+
+  
+
 
     // Editar un trabajador
     public function editarTrabajador($id)
     {
         try {
-            // Verificar que la solicitud sea POST
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                throw new Exception('Método no permitido. Se esperaba una solicitud POST.');
+                throw new Exception('Método no permitido');
             }
-    
-            // Verificar que el ID no esté vacío
-            if (empty($id)) {
-                throw new Exception('ID no proporcionado.');
-            }
-    
-            // Sanitizar y recopilar datos del formulario
             $datos = [
-                'NombresUsuario' => filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_STRING),
-                'ApellidosUsuario' => filter_input(INPUT_POST, 'apellido', FILTER_SANITIZE_STRING),
-                'TelefonoUsuario' => filter_input(INPUT_POST, 'telefono', FILTER_SANITIZE_STRING),
-                'DNIUsuario' => filter_input(INPUT_POST, 'dni', FILTER_SANITIZE_STRING),
-                'CorreoUsuario' => filter_input(INPUT_POST, 'correo', FILTER_SANITIZE_EMAIL),
-                'UsernameUsuario' => filter_input(INPUT_POST, 'usuario', FILTER_SANITIZE_STRING)
+                'NombresUsuario' => $_POST['nombre'] ?? null,
+                'ApellidosUsuario' => $_POST['apellido'] ?? null,
+                'TelefonoUsuario' => $_POST['telefono'] ?? null,
+                'DNIUsuario' => $_POST['dni'] ?? null,
+                'CorreoUsuario' => $_POST['correo'] ?? null,
+                'UsernameUsuario' => $_POST['usuario'] ?? null,
             ];
-    
-            // Validar que ningún campo esté vacío
+            if (!empty($_POST['password'])) {
+                $datos['PasswordUsuario'] = $_POST['password'];
+            }
             foreach ($datos as $key => $value) {
-                if (empty($value)) {
-                    throw new Exception("El campo $key es requerido.");
+                if ($key !== 'PasswordUsuario' && empty($value)) {
+                    throw new Exception("El campo $key es requerido");
                 }
             }
-    
-            // Validar que el DNI sea numérico
-            if (!is_numeric($datos['DNIUsuario'])) {
-                throw new Exception("El DNI debe ser un valor numérico.");
-            }
-    
-            // Validar que el teléfono sea numérico
-            if (!is_numeric($datos['TelefonoUsuario'])) {
-                throw new Exception("El teléfono debe ser un valor numérico.");
-            }
-    
-            // Actualizar el trabajador en la base de datos
             $resultado = $this->modelo->editarTrabajador($id, $datos);
-    
-            // Devolver respuesta JSON
-            if ($resultado) {
-                echo json_encode(['success' => true, 'msg' => 'Trabajador editado exitosamente.']);
-            } else {
-                throw new Exception('Error al editar el trabajador en la base de datos.');
-            }
+            echo json_encode([
+                'success' => $resultado,
+                'msg' => $resultado ? 'Trabajador editado exitosamente.' : 'Error al editar el trabajador.'
+            ]);
         } catch (Exception $e) {
-            // Manejar excepciones y devolver respuesta JSON
-            echo json_encode(['success' => false, 'msg' => 'Error al editar el trabajador: ' . $e->getMessage()]);
+            echo json_encode([
+                'success' => false,
+                'msg' => 'Error al editar el trabajador: ' . $e->getMessage()
+            ]);
         }
     }
 
-    // Obtener un trabajador por ID
-    public function obtenerTrabajador($id)
+
+
+
+
+  
+    // Eliminar un trabajador
+    public function eliminarTrabajador($id)
     {
         try {
             if (empty($id)) {
                 throw new Exception('ID no proporcionado');
             }
-            $trabajador = $this->modelo->obtenerPorId($id);
-            if ($trabajador) {
-                echo json_encode(['success' => true, 'data' => $trabajador]);
-            } else {
-                echo json_encode(['success' => false, 'msg' => 'Trabajador no encontrado']);
-            }
+            $resultado = $this->modelo->eliminarTrabajador($id);
+            echo json_encode(['success' => $resultado, 'msg' => $resultado ? 'Trabajador eliminado correctamente.' : 'Error al eliminar el trabajador.']);
         } catch (Exception $e) {
-            echo json_encode(['success' => false, 'msg' => 'Error al obtener el trabajador: ' . $e->getMessage()]);
+            echo json_encode(['success' => false, 'msg' => 'Error al eliminar el trabajador: ' . $e->getMessage()]);
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // Buscar trabajadores según filtros
     public function buscarTrabajador()
@@ -165,6 +188,11 @@ class TrabajadoresControlador
         }
     }
 }
+
+
+
+
+
 
 // Ejecutar la acción correspondiente
 if (isset($_GET['action'])) {

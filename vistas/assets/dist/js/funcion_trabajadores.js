@@ -1,27 +1,35 @@
 // C:\wamp64\www\helpmdq\vistas\assets\dist\js\funcion_trabajadores.js
-
 // inicio funcionamiento de tabla trabajadores
 $(document).ready(function () {
     const table = $('#tableTrabajadores').DataTable({
         "language": {
-            "url": `${BASE_URL}/assets/i18n/Spanish.json`
+            "url": `${BASE_URL}/assets/i18n/Spanish.json` // Asegúrate de que esta URL sea correcta
         },
         "columnDefs": [
-            { "orderable": true, "targets": [0, 1, 2, 3, 4, 5, 6, 7] },
-            { "orderable": false, "targets": [8] }
+            { "orderable": true, "targets": [0, 1, 2, 3, 4, 5, 6, 7] }, // Columnas ordenables
+            { "orderable": false, "targets": [8] } // Columna de acciones no ordenable
         ],
-        "paging": true,
-        "pageLength": 10,
-        "lengthChange": false,
-        "searching": false,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true
+        "paging": true, // Habilitar paginación
+        "pageLength": 10, // Número de filas por página
+        "lengthChange": false, // Deshabilitar cambio de longitud de página
+        "searching": true, // Habilitar búsqueda
+        "ordering": true, // Habilitar ordenación
+        "info": true, // Mostrar información de paginación
+        "autoWidth": false, // Deshabilitar ajuste automático de ancho
+        "responsive": true, // Hacer la tabla responsive
+        "dom": 'Bfrtip', // Posición de los elementos de la tabla (B: botones, f: filtro, r: procesamiento, t: tabla, i: información, p: paginación)
+        "buttons": [
+            'copy', 'csv', 'excel', 'pdf', 'print' // Botones de exportación
+        ]
     });
+    // Función para cargar datos en la tabla (debes implementarla)
     CargarTablaTrabajadores();
 });
 // fin funcionamiento de tabla trabajadores
+
+
+
+
 
 // inicio completar trabajadores 
 window.CargarTablaTrabajadores = function () {
@@ -33,12 +41,7 @@ window.CargarTablaTrabajadores = function () {
         CorreoUsuario: $('#filtroCorreo').val()
     };
     fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarTablaTrabajadores&${new URLSearchParams(filtros)}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la solicitud: ' + response.statusText);
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(response => {
             if (!response.success) {
                 throw new Error(response.msg || 'Error al cargar los datos');
@@ -71,128 +74,43 @@ window.CargarTablaTrabajadores = function () {
             });
         })
         .catch(error => {
-            Swal.fire("Error", "No se pudo cargar la tabla de trabajadores: " + error.message, "error");
+            Swal.fire("Error", error.message, "error");
         });
 };
 // fin completar trabajadores 
 
-//  inico guardar trabajador
-function guardarTrabajador() {
-    // Obtener los datos del formulario
-    const formData = new FormData(document.getElementById('formTrabajador'));
-    console.log("Datos del formulario:", formData); // Verificar los datos del formulario
 
-    // Determinar si es una acción de creación o edición
-    const accion = document.getElementById('idTrabajador').value ? 'editarTrabajador' : 'crearTrabajador';
-    console.log("Acción a realizar:", accion); // Verificar la acción
 
-    // Realizar la solicitud fetch
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=${accion}`, {
-        method: 'POST',
-        body: formData
-    })
-        .then(response => {
-            console.log("Respuesta del servidor:", response); // Verificar la respuesta del servidor
-            return response.json(); // Intentar convertir la respuesta a JSON
-        })
-        .then(data => {
-            console.log("Datos procesados:", data); // Verificar los datos procesados
-            if (data.success) {
-                Swal.fire("Éxito", data.msg, "success").then(() => {
-                    $('#modalFormTrabajador').modal('hide');
-                    CargarTablaTrabajadores(); // Recargar la tabla
-                });
-            } else {
-                Swal.fire("Error", data.msg, "error");
-            }
-        })
-        .catch(error => {
-            console.error('Error al guardar el trabajador:', error); // Capturar errores
-            console.log("Respuesta del servidor (texto):", error.responseText); // Verificar la respuesta en texto plano
-        });
-}
-//  fin guardar trabajador
+
 
 // inicio ver trabajador
 function verTrabajador(id) {
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=obtenerTrabajador&id=${id}`, {
-        method: 'GET' // Cambiado a GET
-    })
+    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=obtenerTrabajador&id=${id}`, { method: 'GET' })
+        .then(response => response.json())
         .then(response => {
-            if (!response.ok) {
+            if (!response.success) {
                 throw new Error('Error en la solicitud: ' + response.statusText);
             }
-            return response.json();
-        })
-        .then(response => {
-            if (response.success) {
-                // Acceder directamente a las propiedades del trabajador
-                document.getElementById('viewId').textContent = response.data.IdUsuario;
-                document.getElementById('viewNombre').textContent = response.data.NombresUsuario;
-                document.getElementById('viewApellido').textContent = response.data.ApellidosUsuario;
-                document.getElementById('viewDni').textContent = response.data.DNIUsuario;
-                document.getElementById('viewTelefono').textContent = response.data.TelefonoUsuario;
-                document.getElementById('viewCorreo').textContent = response.data.CorreoUsuario;
-                document.getElementById('viewUsuario').textContent = response.data.UsernameUsuario;
-                document.getElementById('viewRol').textContent = response.data.RolUsuario;
-                $('#modalViewTrabajador').modal('show');
-            } else {
-                Swal.fire("Error", response.msg, "error");
-            }
+            const trabajador = response.data;
+            document.getElementById('viewNombre').textContent = trabajador.NombresUsuario;
+            document.getElementById('viewApellido').textContent = trabajador.ApellidosUsuario;
+            document.getElementById('viewDni').textContent = trabajador.DNIUsuario;
+            document.getElementById('viewTelefono').textContent = trabajador.TelefonoUsuario;
+            document.getElementById('viewCorreo').textContent = trabajador.CorreoUsuario;
+            document.getElementById('viewUsuario').textContent = trabajador.UsernameUsuario;
+            $('#modalViewTrabajador').modal('show');
         })
         .catch(error => {
-            Swal.fire("Error", "No se pudo obtener el trabajador: " + error.message, "error");
+            Swal.fire("Error", error.message, "error");
         });
 }
 // fin ver trabajador
 
 
-function crearTrabajador() {
-    document.getElementById('formTrabajador').reset();
-    document.getElementById('idTrabajador').value = "";
-    document.getElementById('modalFormTrabajadorLabel').innerText = 'Crear Trabajador';
-    $('#modalFormTrabajador').modal('show');
-}
-
-// inicio editar trabajador
-function editarTrabajador(id) {
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=obtenerTrabajador&id=${id}`, {
-        method: 'GET' // Cambiado a GET
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la solicitud: ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(response => {
-            if (response.success) {
-                // Acceder directamente a las propiedades del trabajador
-                document.getElementById('idTrabajador').value = response.data.IdUsuario;
-                document.getElementById('nombre').value = response.data.NombresUsuario;
-                document.getElementById('apellido').value = response.data.ApellidosUsuario;
-                document.getElementById('dni').value = response.data.DNIUsuario;
-                document.getElementById('telefono').value = response.data.TelefonoUsuario;
-                document.getElementById('correo').value = response.data.CorreoUsuario;
-                document.getElementById('usuario').value = response.data.UsernameUsuario;
-                document.getElementById('modalFormTrabajadorLabel').innerText = 'Editar Trabajador';
-
-                // Mostrar modal (para Bootstrap 5)
-                let modal = new bootstrap.Modal(document.getElementById('modalFormTrabajador'));
-                modal.show();
-            } else {
-                Swal.fire("Error", trabajador.msg, "error");
-            }
-        })
-        .catch(error => {
-            console.error('Error al obtener el trabajador:', error);
-            Swal.fire("Error", "No se pudo obtener la información del trabajador.", "error");
-        });
-}
-
-// fin editar trabajador
 
 
+
+// inicio eliminar trabajador 
 function eliminarTrabajador(id) {
     Swal.fire({
         title: "Eliminar Trabajador",
@@ -214,12 +132,74 @@ function eliminarTrabajador(id) {
         }
     });
 }
+// fin eliminar trabajador 
+
+
+
+
+
+// inicio editar trabajador
+function editarTrabajador(id) {
+    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=obtenerTrabajador&id=${id}`, { method: 'GET' })
+        .then(response => response.json())
+        .then(response => {
+            if (response.success) {
+                document.getElementById('formTrabajador').reset();
+                document.getElementById('idTrabajador').value = response.data.IdUsuario;
+                document.getElementById('nombre').value = response.data.NombresUsuario;
+                document.getElementById('apellido').value = response.data.ApellidosUsuario;
+                document.getElementById('dni').value = response.data.DNIUsuario;
+                document.getElementById('telefono').value = response.data.TelefonoUsuario;
+                document.getElementById('correo').value = response.data.CorreoUsuario;
+                document.getElementById('usuario').value = response.data.UsernameUsuario;
+                document.getElementById('alerpassword').innerText = '(*) Ingrese una nueva contraseña solo si desea cambiarla. De lo contrario, déjelo vacío.';
+                document.getElementById('modalFormTrabajadorLabel').innerText = 'Editar Trabajador';
+                $('#modalFormTrabajador').modal('show');
+            } else {
+                Swal.fire("Error", trabajador.msg, "error");
+            }
+        })
+        .catch(error => {
+            console.error('Error al obtener el trabajador:', error);
+            Swal.fire("Error", "No se pudo obtener la información del trabajador.", "error");
+        });
+}
+// fin editar trabajador
+
+
+
+
+
+// inicio guardar trabajador
+function guardarTrabajador() {
+    const formData = new FormData(document.getElementById('formTrabajador'));
+    const accion = document.getElementById('idTrabajador').value ? 'editarTrabajador' : 'crearTrabajador';
+    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=${accion}`, { method: 'POST', body: formData })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire("Éxito", data.msg, "success").then(() => {
+                    $('#modalFormTrabajador').modal('hide');
+                    CargarTablaTrabajadores(); // Recargar la tabla
+                });
+            } else {
+                Swal.fire("Error", data.msg, "error");
+            }
+        })
+        .catch(error => Swal.fire("Error", "Hubo un problema al procesar la solicitud: " + error.message, "error"));
+}
+// fin guardar trabajador
+
+
+
+
 
 // inicio editar trabajador
 function openModal() {
-
-                $('#modalFormTrabajador').modal('show');
-            
-    
+    document.getElementById('formTrabajador').reset();
+    document.getElementById('idTrabajador').value = "";
+    document.getElementById('alerpassword').innerText = '(*) Ingrese una nueva contraseña segura.';
+    document.getElementById('modalFormTrabajadorLabel').innerText = 'Nuevo Trabajador';
+    $('#modalFormTrabajador').modal('show');
 }
 // fin editar trabajador
