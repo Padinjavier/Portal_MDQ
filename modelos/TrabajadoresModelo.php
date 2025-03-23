@@ -10,7 +10,7 @@ class TrabajadoresModelo
     }
 
     // Obtener todos los trabajadores (rol = 3)
-    public function obtenerTrabajadoresTotal()
+    public function CargarTablaTrabajadores()
     {
         $sql = "SELECT * FROM usuarios WHERE RolUsuario = 3 AND StatusUsuario = 1";
         $stmt = $this->db->prepare($sql);

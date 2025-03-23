@@ -165,6 +165,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                    <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="password">Contraseña</label>
+                                <input type="text" class="form-control form-control-sm" id="password" name="password"
+                                    required>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">

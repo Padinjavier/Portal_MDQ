@@ -32,14 +32,22 @@ window.CargarTablaTrabajadores = function () {
         TelefonoUsuario: $('#filtroTelefono').val(),
         CorreoUsuario: $('#filtroCorreo').val()
     };
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=buscarTrabajador&${new URLSearchParams(filtros)}`)
+    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarTablaTrabajadores&${new URLSearchParams(filtros)}`)
         .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la solicitud: ' + response.statusText);
+            }
             return response.json();
         })
-        .then(data => {
+        .then(response => {
+            if (!response.success) {
+                throw new Error(response.msg || 'Error al cargar los datos');
+            }
+
             const table = $('#tableTrabajadores').DataTable();
-            table.clear(); // Limpiar la tabla
-            data.forEach(trabajador => {
+            table.clear();
+
+            response.data.forEach(trabajador => {
                 table.row.add([
                     trabajador.IdUsuario,
                     trabajador.NombresUsuario,
@@ -50,35 +58,45 @@ window.CargarTablaTrabajadores = function () {
                     trabajador.UsernameUsuario,
                     trabajador.RolUsuario,
                     `<div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-cog"></i> Opciones
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="#" onclick="verTrabajador(${trabajador.IdUsuario})">Ver</a>
-    <a class="dropdown-item" href="#" onclick="editarTrabajador(${trabajador.IdUsuario})">Editar</a>
-    <a class="dropdown-item" href="#" onclick="eliminarTrabajador(${trabajador.IdUsuario})">Eliminar</a>
-</div>
-                        </div>`
+                        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-cog"></i> Opciones
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#" onclick="verTrabajador(${trabajador.IdUsuario})">Ver</a>
+                            <a class="dropdown-item" href="#" onclick="editarTrabajador(${trabajador.IdUsuario})">Editar</a>
+                            <a class="dropdown-item" href="#" onclick="eliminarTrabajador(${trabajador.IdUsuario})">Eliminar</a>
+                        </div>
+                    </div>`
                 ]).draw(false);
             });
         })
         .catch(error => {
-            console.error('Error al buscar trabajadores:', error);
+            Swal.fire("Error", "No se pudo cargar la tabla de trabajadores: " + error.message, "error");
         });
 };
 // fin completar trabajadores 
 
 //  inico guardar trabajador
 function guardarTrabajador() {
+    // Obtener los datos del formulario
     const formData = new FormData(document.getElementById('formTrabajador'));
-    const accion = document.getElementById('idTrabajador').value ? 'editarTrabajador' : 'crearTrabajador';
+    console.log("Datos del formulario:", formData); // Verificar los datos del formulario
 
+    // Determinar si es una acción de creación o edición
+    const accion = document.getElementById('idTrabajador').value ? 'editarTrabajador' : 'crearTrabajador';
+    console.log("Acción a realizar:", accion); // Verificar la acción
+
+    // Realizar la solicitud fetch
     fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=${accion}`, {
         method: 'POST',
         body: formData
     })
-        .then(response => response.json())
+        .then(response => {
+            console.log("Respuesta del servidor:", response); // Verificar la respuesta del servidor
+            return response.json(); // Intentar convertir la respuesta a JSON
+        })
         .then(data => {
+            console.log("Datos procesados:", data); // Verificar los datos procesados
             if (data.success) {
                 Swal.fire("Éxito", data.msg, "success").then(() => {
                     $('#modalFormTrabajador').modal('hide');
@@ -89,32 +107,41 @@ function guardarTrabajador() {
             }
         })
         .catch(error => {
-            console.error('Error al guardar el trabajador:', error);
+            console.error('Error al guardar el trabajador:', error); // Capturar errores
+            console.log("Respuesta del servidor (texto):", error.responseText); // Verificar la respuesta en texto plano
         });
 }
 //  fin guardar trabajador
 
 // inicio ver trabajador
 function verTrabajador(id) {
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=obtenerTrabajador&id=${id}`)
-        .then(response => response.json())
-        .then(trabajador => {
-            if (trabajador.status) {
-                document.getElementById('viewId').textContent = trabajador.data.IdUsuario;
-                document.getElementById('viewNombre').textContent = trabajador.data.NombresUsuario;
-                document.getElementById('viewApellido').textContent = trabajador.data.ApellidosUsuario;
-                document.getElementById('viewDni').textContent = trabajador.data.DNIUsuario;
-                document.getElementById('viewTelefono').textContent = trabajador.data.TelefonoUsuario;
-                document.getElementById('viewCorreo').textContent = trabajador.data.CorreoUsuario;
-                document.getElementById('viewUsuario').textContent = trabajador.data.UsernameUsuario;
-                document.getElementById('viewRol').textContent = trabajador.data.RolUsuario;
+    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=obtenerTrabajador&id=${id}`, {
+        method: 'GET' // Cambiado a GET
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la solicitud: ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(response => {
+            if (response.success) {
+                // Acceder directamente a las propiedades del trabajador
+                document.getElementById('viewId').textContent = response.data.IdUsuario;
+                document.getElementById('viewNombre').textContent = response.data.NombresUsuario;
+                document.getElementById('viewApellido').textContent = response.data.ApellidosUsuario;
+                document.getElementById('viewDni').textContent = response.data.DNIUsuario;
+                document.getElementById('viewTelefono').textContent = response.data.TelefonoUsuario;
+                document.getElementById('viewCorreo').textContent = response.data.CorreoUsuario;
+                document.getElementById('viewUsuario').textContent = response.data.UsernameUsuario;
+                document.getElementById('viewRol').textContent = response.data.RolUsuario;
                 $('#modalViewTrabajador').modal('show');
             } else {
-                Swal.fire("Error", trabajador.msg, "error");
+                Swal.fire("Error", response.msg, "error");
             }
         })
         .catch(error => {
-            console.error('Error al obtener el trabajador:', error);
+            Swal.fire("Error", "No se pudo obtener el trabajador: " + error.message, "error");
         });
 }
 // fin ver trabajador
@@ -129,27 +156,40 @@ function crearTrabajador() {
 
 // inicio editar trabajador
 function editarTrabajador(id) {
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=obtenerTrabajador&id=${id}`)
-        .then(response => response.json())
-        .then(trabajador => {
-            if (trabajador.status) {
-                document.getElementById('idTrabajador').value = trabajador.data.IdUsuario;
-                document.getElementById('nombre').value = trabajador.data.NombresUsuario;
-                document.getElementById('apellido').value = trabajador.data.ApellidosUsuario;
-                document.getElementById('dni').value = trabajador.data.DNIUsuario;
-                document.getElementById('telefono').value = trabajador.data.TelefonoUsuario;
-                document.getElementById('correo').value = trabajador.data.CorreoUsuario;
-                document.getElementById('usuario').value = trabajador.data.UsernameUsuario;
+    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=obtenerTrabajador&id=${id}`, {
+        method: 'GET' // Cambiado a GET
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la solicitud: ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(response => {
+            if (response.success) {
+                // Acceder directamente a las propiedades del trabajador
+                document.getElementById('idTrabajador').value = response.data.IdUsuario;
+                document.getElementById('nombre').value = response.data.NombresUsuario;
+                document.getElementById('apellido').value = response.data.ApellidosUsuario;
+                document.getElementById('dni').value = response.data.DNIUsuario;
+                document.getElementById('telefono').value = response.data.TelefonoUsuario;
+                document.getElementById('correo').value = response.data.CorreoUsuario;
+                document.getElementById('usuario').value = response.data.UsernameUsuario;
                 document.getElementById('modalFormTrabajadorLabel').innerText = 'Editar Trabajador';
-                $('#modalFormTrabajador').modal('show');
+
+                // Mostrar modal (para Bootstrap 5)
+                let modal = new bootstrap.Modal(document.getElementById('modalFormTrabajador'));
+                modal.show();
             } else {
                 Swal.fire("Error", trabajador.msg, "error");
             }
         })
         .catch(error => {
             console.error('Error al obtener el trabajador:', error);
+            Swal.fire("Error", "No se pudo obtener la información del trabajador.", "error");
         });
 }
+
 // fin editar trabajador
 
 

@@ -1,5 +1,4 @@
 <?php
-// C:\wamp64\www\helpmdq\controladores\TrabajadoresControlador.php
 require_once '../modelos/TrabajadoresModelo.php';
 require_once '../Config/Config.php'; // Incluir Config.php
 
@@ -14,92 +13,155 @@ class TrabajadoresControlador
     }
 
     // Obtener todos los trabajadores
-    public function obtenerTrabajadoresTotal()
+    public function CargarTablaTrabajadores()
     {
-        $trabajadores = $this->modelo->obtenerTrabajadoresTotal();
-        echo json_encode($trabajadores);
-    }
-
-    // Función para eliminar un trabajador
-    public function eliminarTrabajador($id)
-    {
-        $resultado = $this->modelo->eliminarTrabajador($id);
-        if ($resultado) {
-            echo json_encode(['success' => true, 'msg' => 'Trabajador eliminado correctamente.']);
-        } else {
-            echo json_encode(['success' => false, 'msg' => 'Error al eliminar el trabajador.']);
+        try {
+            $trabajadores = $this->modelo->CargarTablaTrabajadores();
+            echo json_encode(['success' => true, 'data' => $trabajadores]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'msg' => 'Error al obtener trabajadores: ' . $e->getMessage()]);
         }
     }
 
-
+    // Eliminar un trabajador
+    public function eliminarTrabajador($id)
+    {
+        try {
+            if (empty($id)) {
+                throw new Exception('ID no proporcionado');
+            }
+            $resultado = $this->modelo->eliminarTrabajador($id);
+            echo json_encode(['success' => $resultado, 'msg' => $resultado ? 'Trabajador eliminado correctamente.' : 'Error al eliminar el trabajador.']);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'msg' => 'Error al eliminar el trabajador: ' . $e->getMessage()]);
+        }
+    }
 
     // Crear un nuevo trabajador
     public function crearTrabajador()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new Exception('Método no permitido');
+            }
+
             $datos = [
-                'NombresUsuario' => $_POST['nombre'],
-                'ApellidosUsuario' => $_POST['apellido'],
-                'TelefonoUsuario' => $_POST['telefono'],
-                'DNIUsuario' => $_POST['dni'],
-                'CorreoUsuario' => $_POST['correo'],
-                'UsernameUsuario' => $_POST['usuario'],
-                'PasswordUsuario' => $_POST['password'] // Si es necesario
+                'NombresUsuario' => $_POST['nombre'] ?? null,
+                'ApellidosUsuario' => $_POST['apellido'] ?? null,
+                'TelefonoUsuario' => $_POST['telefono'] ?? null,
+                'DNIUsuario' => $_POST['dni'] ?? null,
+                'CorreoUsuario' => $_POST['correo'] ?? null,
+                'UsernameUsuario' => $_POST['usuario'] ?? null,
+                'PasswordUsuario' => $_POST['password'] ?? null // Si es necesario
             ];
+
+            // Validar datos
+            foreach ($datos as $key => $value) {
+                if (empty($value)) {
+                    throw new Exception("El campo $key es requerido");
+                }
+            }
+
             $resultado = $this->modelo->crearTrabajador($datos);
-            echo json_encode(['success' => $resultado]);
+            echo json_encode(['success' => $resultado, 'msg' => $resultado ? 'Trabajador creado exitosamente.' : 'Error al crear el trabajador.']);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'msg' => 'Error al crear el trabajador: ' . $e->getMessage()]);
         }
     }
 
+    // Editar un trabajador
     public function editarTrabajador($id)
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Verificar que el ID esté presente
-            if (empty($_POST['idTrabajador'])) {
-                echo json_encode(['success' => false, 'msg' => 'ID no proporcionado']);
-                return;
+        try {
+            // Verificar que la solicitud sea POST
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new Exception('Método no permitido. Se esperaba una solicitud POST.');
             }
-
+    
+            // Verificar que el ID no esté vacío
+            if (empty($id)) {
+                throw new Exception('ID no proporcionado.');
+            }
+    
+            // Sanitizar y recopilar datos del formulario
             $datos = [
-                'NombresUsuario' => $_POST['nombre'],
-                'ApellidosUsuario' => $_POST['apellido'],
-                'TelefonoUsuario' => $_POST['telefono'],
-                'DNIUsuario' => $_POST['dni'],
-                'CorreoUsuario' => $_POST['correo'],
-                'UsernameUsuario' => $_POST['usuario']
+                'NombresUsuario' => filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_STRING),
+                'ApellidosUsuario' => filter_input(INPUT_POST, 'apellido', FILTER_SANITIZE_STRING),
+                'TelefonoUsuario' => filter_input(INPUT_POST, 'telefono', FILTER_SANITIZE_STRING),
+                'DNIUsuario' => filter_input(INPUT_POST, 'dni', FILTER_SANITIZE_STRING),
+                'CorreoUsuario' => filter_input(INPUT_POST, 'correo', FILTER_SANITIZE_EMAIL),
+                'UsernameUsuario' => filter_input(INPUT_POST, 'usuario', FILTER_SANITIZE_STRING)
             ];
-
-            $resultado = $this->modelo->editarTrabajador($_POST['idTrabajador'], $datos);
-            if ($resultado) {
-                echo json_encode(['success' => true, 'msg' => 'Trabajador editado exitosamente']);
-            } else {
-                echo json_encode(['success' => false, 'msg' => 'Error al editar el trabajador']);
+    
+            // Validar que ningún campo esté vacío
+            foreach ($datos as $key => $value) {
+                if (empty($value)) {
+                    throw new Exception("El campo $key es requerido.");
+                }
             }
+    
+            // Validar que el DNI sea numérico
+            if (!is_numeric($datos['DNIUsuario'])) {
+                throw new Exception("El DNI debe ser un valor numérico.");
+            }
+    
+            // Validar que el teléfono sea numérico
+            if (!is_numeric($datos['TelefonoUsuario'])) {
+                throw new Exception("El teléfono debe ser un valor numérico.");
+            }
+    
+            // Actualizar el trabajador en la base de datos
+            $resultado = $this->modelo->editarTrabajador($id, $datos);
+    
+            // Devolver respuesta JSON
+            if ($resultado) {
+                echo json_encode(['success' => true, 'msg' => 'Trabajador editado exitosamente.']);
+            } else {
+                throw new Exception('Error al editar el trabajador en la base de datos.');
+            }
+        } catch (Exception $e) {
+            // Manejar excepciones y devolver respuesta JSON
+            echo json_encode(['success' => false, 'msg' => 'Error al editar el trabajador: ' . $e->getMessage()]);
         }
     }
 
     // Obtener un trabajador por ID
     public function obtenerTrabajador($id)
     {
-        $trabajador = $this->modelo->obtenerPorId($id);
-        if ($trabajador) {
-            echo json_encode(['status' => true, 'data' => $trabajador]);
-        } else {
-            echo json_encode(['status' => false, 'msg' => 'Trabajador no encontrado']);
+        try {
+            if (empty($id)) {
+                throw new Exception('ID no proporcionado');
+            }
+            $trabajador = $this->modelo->obtenerPorId($id);
+            if ($trabajador) {
+                echo json_encode(['success' => true, 'data' => $trabajador]);
+            } else {
+                echo json_encode(['success' => false, 'msg' => 'Trabajador no encontrado']);
+            }
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'msg' => 'Error al obtener el trabajador: ' . $e->getMessage()]);
         }
     }
+
     // Buscar trabajadores según filtros
     public function buscarTrabajador()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+                throw new Exception('Método no permitido');
+            }
+
             $filtros = [
                 'NombresUsuario' => $_GET['NombresUsuario'] ?? null,
                 'ApellidosUsuario' => $_GET['ApellidosUsuario'] ?? null,
                 'DNIUsuario' => $_GET['DNIUsuario'] ?? null,
                 'CorreoUsuario' => $_GET['CorreoUsuario'] ?? null
             ];
+
             $resultado = $this->modelo->buscarTrabajador($filtros);
-            echo json_encode($resultado);
+            echo json_encode(['success' => true, 'data' => $resultado]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'msg' => 'Error al buscar trabajadores: ' . $e->getMessage()]);
         }
     }
 }
@@ -108,43 +170,31 @@ class TrabajadoresControlador
 if (isset($_GET['action'])) {
     $controlador = new TrabajadoresControlador();
     switch ($_GET['action']) {
-        case 'obtenerTrabajadoresTotal':
-            $controlador->obtenerTrabajadoresTotal();
+        case 'CargarTablaTrabajadores':
+            $controlador->CargarTablaTrabajadores();
             break;
         case 'eliminarTrabajador':
             $id = $_GET['id'] ?? null;
-            if ($id) {
-                $controlador->eliminarTrabajador($id);
-            } else {
-                echo json_encode(['error' => 'ID no proporcionado']);
-            }
+            $controlador->eliminarTrabajador($id);
             break;
         case 'crearTrabajador':
             $controlador->crearTrabajador();
             break;
         case 'editarTrabajador':
             $id = $_POST['idTrabajador'] ?? null;
-            if ($id) {
-                $controlador->editarTrabajador($id);
-            } else {
-                echo json_encode(['error' => 'ID no proporcionado']);
-            }
+            $controlador->editarTrabajador($id);
             break;
         case 'buscarTrabajador':
             $controlador->buscarTrabajador();
             break;
         case 'obtenerTrabajador':
             $id = $_GET['id'] ?? null;
-            if ($id) {
-                $controlador->obtenerTrabajador($id);
-            } else {
-                echo json_encode(['error' => 'ID no proporcionado']);
-            }
+            $controlador->obtenerTrabajador($id);
             break;
         default:
-            echo json_encode(['error' => 'Acción no válida']);
+            echo json_encode(['success' => false, 'msg' => 'Acción no válida']);
             break;
     }
 } else {
-    echo json_encode(['error' => 'Acción no especificada']);
+    echo json_encode(['success' => false, 'msg' => 'Acción no especificada']);
 }
