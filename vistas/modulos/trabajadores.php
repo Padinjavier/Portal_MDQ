@@ -5,70 +5,74 @@
 </script>
 
 <section class="content-header ml-3 mr-3">
-    <div class="app-title mb-3">
-        <div>
-            <h1>Trabajadores <small></small>
-                <button class="btn btn-success btn-sm " type="button" onclick="openModal();">
-                    <i class="fas fa-plus-circle"></i> Nuevo
-                </button>
-            </h1>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm" style="border-radius: 30px;">
+                <div class="card-body">
+                    <h1 class="mb-0">Trabajadores
+                        <small></small>
+                        <button class="btn btn-success btn-sm" type="button" onclick="openModal();">
+                            <i class="fas fa-plus-circle"></i> Nuevo
+                        </button>
+                    </h1>
+                </div>
+            </div>
         </div>
     </div>
 
 
     <!-- Tabla de Trabajadores -->
     <div class="row">
-    <div class="col-md-12">
-        <div class="card shadow-sm"> <!-- Agregamos sombra y bordes redondeados -->
-            <div class="card-body p-4"> <!-- Ajustamos el padding -->
-                <div class="table-responsive">
-                    <table class="table table-hover table-bordered w-100" id="tableTrabajadores" style="background-color: white; border-radius: 10px;">
-                    <thead class="bg-success"> <!-- (bg-primary success warning danger info) -->
-                            <tr>
-                                <th class="font-weight-bold">ID</th> <!-- Texto en negrita -->
-                                <th class="font-weight-bold">Nombre</th>
-                                <th class="font-weight-bold">Apellido</th>
-                                <th class="font-weight-bold">DNI</th>
-                                <th class="font-weight-bold">Teléfono</th>
-                                <th class="font-weight-bold">Correo</th>
-                                <th class="font-weight-bold">Usuario</th>
-                                <th class="font-weight-bold">Rol</th>
-                                <th class="font-weight-bold">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Datos de ejemplo en texto plano -->
-                            <tr>
-                                <td class="font-weight-bold">1</td> <!-- Texto en negrita -->
-                                <td>example</td>
-                                <td>example</td>
-                                <td>12345678</td>
-                                <td>12345678</td>
-                                <td>example@example.com</td>
-                                <td>example</td>
-                                <td>example</td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button"
-                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false">
-                                            <i class="fas fa-cog"></i> Opciones
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="#">Ver</a>
-                                            <a class="dropdown-item" href="#">Editar</a>
-                                            <a class="dropdown-item" href="#">Eliminar</a>
+        <div class="col-md-12">
+            <div class="card shadow-sm" style="border-radius: 30px;">
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered w-100" id="tableTrabajadores"
+                            style="background-color: white;">
+                            <thead class="bg-success"> <!-- (bg-primary success warning danger info) -->
+                                <tr>
+                                    <th class="font-weight-bold">ID</th>
+                                    <th class="font-weight-bold">Nombre</th>
+                                    <th class="font-weight-bold">Apellido</th>
+                                    <th class="font-weight-bold">DNI</th>
+                                    <th class="font-weight-bold">Teléfono</th>
+                                    <th class="font-weight-bold">Correo</th>
+                                    <th class="font-weight-bold">Usuario</th>
+                                    <th class="font-weight-bold">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Datos de ejemplo en texto plano -->
+                                <tr>
+                                    <td class="font-weight-bold">1</td> <!-- Texto en negrita -->
+                                    <td>example</td>
+                                    <td>example</td>
+                                    <td>12345678</td>
+                                    <td>12345678</td>
+                                    <td>example@example.com</td>
+                                    <td>example</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button"
+                                                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                                <i class="fas fa-cog"></i> Opciones
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item" href="#">Ver</a>
+                                                <a class="dropdown-item" href="#">Editar</a>
+                                                <a class="dropdown-item" href="#">Eliminar</a>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
     <!-- Fin Tabla de Trabajadores -->
 </section>
 
@@ -79,7 +83,7 @@
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-success">
                 <h5 class="modal-title" id="modalFormTrabajadorLabel">Trabajador</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
@@ -108,13 +112,15 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="dni">DNI</label>
-                                <input type="text" class="form-control form-control-sm" id="dni" name="dni" minlength="8" maxlength="8" required>
+                                <input type="text" class="form-control form-control-sm" id="dni" name="dni"
+                                    minlength="8" maxlength="8" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="telefono">Teléfono</label>
-                                <input type="text" class="form-control form-control-sm" id="telefono" name="telefono" minlength="9" maxlength="9" required>
+                                <input type="text" class="form-control form-control-sm" id="telefono" name="telefono"
+                                    minlength="9" maxlength="9" required>
                             </div>
                         </div>
                     </div>
@@ -147,7 +153,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary btn-sm" onclick="guardarTrabajador()">Guardar</button>
+                <button type="button" class="btn btn-success btn-sm" onclick="guardarTrabajador()">Guardar</button>
             </div>
         </div>
     </div>
@@ -160,7 +166,7 @@
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-success">
                 <h5 class="modal-title" id="modalViewTrabajadorLabel">Ver Trabajador</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>

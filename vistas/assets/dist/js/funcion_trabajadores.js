@@ -6,8 +6,8 @@ $(document).ready(function () {
             "url": `${BASE_URL}/assets/i18n/Spanish.json` // Asegúrate de que esta URL sea correcta
         },
         "columnDefs": [
-            { "orderable": true, "targets": [0, 1, 2, 3, 4, 5, 6, 7] }, // Columnas ordenables
-            { "orderable": false, "targets": [8] } // Columna de acciones no ordenable
+            { "orderable": true, "targets": [0, 1, 2, 3, 4, 5, 6] }, // Columnas ordenables
+            { "orderable": false, "targets": [7] } // Columna de acciones no ordenable
         ],
         "paging": true, // Habilitar paginación
         "pageLength": 10, // Número de filas por página
@@ -33,14 +33,7 @@ $(document).ready(function () {
 
 // inicio completar trabajadores 
 window.CargarTablaTrabajadores = function () {
-    const filtros = {
-        NombresUsuario: $('#filtroNombre').val(),
-        ApellidosUsuario: $('#filtroApellido').val(),
-        DNIUsuario: $('#filtroDNI').val(),
-        TelefonoUsuario: $('#filtroTelefono').val(),
-        CorreoUsuario: $('#filtroCorreo').val()
-    };
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarTablaTrabajadores&${new URLSearchParams(filtros)}`)
+    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarTablaTrabajadores`)
         .then(response => response.json())
         .then(response => {
             if (!response.success) {
@@ -59,15 +52,20 @@ window.CargarTablaTrabajadores = function () {
                     trabajador.TelefonoUsuario,
                     trabajador.CorreoUsuario,
                     trabajador.UsernameUsuario,
-                    trabajador.RolUsuario,
                     `<div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-cog"></i> Opciones
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#" onclick="verTrabajador(${trabajador.IdUsuario})">Ver</a>
-                            <a class="dropdown-item" href="#" onclick="editarTrabajador(${trabajador.IdUsuario})">Editar</a>
-                            <a class="dropdown-item" href="#" onclick="eliminarTrabajador(${trabajador.IdUsuario})">Eliminar</a>
+                            <a class="dropdown-item text-success" href="#" onclick="verTrabajador(${trabajador.IdUsuario})">
+                                <i class="fas fa-eye"></i> Ver
+                            </a>
+                            <a class="dropdown-item text-warning" href="#" onclick="editarTrabajador(${trabajador.IdUsuario})">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <a class="dropdown-item text-danger" href="#" onclick="eliminarTrabajador(${trabajador.IdUsuario})">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </a>
                         </div>
                     </div>`
                 ]).draw(false);
@@ -85,7 +83,7 @@ window.CargarTablaTrabajadores = function () {
 
 // inicio ver trabajador
 function verTrabajador(id) {
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=obtenerTrabajador&id=${id}`, { method: 'GET' })
+    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=obtenerTrabajadorPorId&id=${id}`, { method: 'GET' })
         .then(response => response.json())
         .then(response => {
             if (!response.success) {
@@ -140,7 +138,7 @@ function eliminarTrabajador(id) {
 
 // inicio editar trabajador
 function editarTrabajador(id) {
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=obtenerTrabajador&id=${id}`, { method: 'GET' })
+    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=obtenerTrabajadorPorId&id=${id}`, { method: 'GET' })
         .then(response => response.json())
         .then(response => {
             if (response.success) {

@@ -33,13 +33,14 @@ class TrabajadoresControlador
 
 
     // inicio Obtener un trabajador por ID
-    public function obtenerTrabajador($id)
+    public function obtenerTrabajadorPorId($id)
     {
         try {
+            // Verificar si el ID está vacío
             if (empty($id)) {
                 throw new Exception('ID no proporcionado');
             }
-            $trabajador = $this->modelo->obtenerPorId($id);
+            $trabajador = $this->modelo->obtenerTrabajadorPorId($id);
             if ($trabajador) {
                 echo json_encode(['success' => true, 'data' => $trabajador]);
             } else {
@@ -91,7 +92,7 @@ class TrabajadoresControlador
 
 
 
-  
+
 
 
     // Editar un trabajador
@@ -134,7 +135,7 @@ class TrabajadoresControlador
 
 
 
-  
+
     // Eliminar un trabajador
     public function eliminarTrabajador($id)
     {
@@ -165,28 +166,6 @@ class TrabajadoresControlador
 
 
 
-
-    // Buscar trabajadores según filtros
-    public function buscarTrabajador()
-    {
-        try {
-            if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-                throw new Exception('Método no permitido');
-            }
-
-            $filtros = [
-                'NombresUsuario' => $_GET['NombresUsuario'] ?? null,
-                'ApellidosUsuario' => $_GET['ApellidosUsuario'] ?? null,
-                'DNIUsuario' => $_GET['DNIUsuario'] ?? null,
-                'CorreoUsuario' => $_GET['CorreoUsuario'] ?? null
-            ];
-
-            $resultado = $this->modelo->buscarTrabajador($filtros);
-            echo json_encode(['success' => true, 'data' => $resultado]);
-        } catch (Exception $e) {
-            echo json_encode(['success' => false, 'msg' => 'Error al buscar trabajadores: ' . $e->getMessage()]);
-        }
-    }
 }
 
 
@@ -212,12 +191,9 @@ if (isset($_GET['action'])) {
             $id = $_POST['idTrabajador'] ?? null;
             $controlador->editarTrabajador($id);
             break;
-        case 'buscarTrabajador':
-            $controlador->buscarTrabajador();
-            break;
-        case 'obtenerTrabajador':
+        case 'obtenerTrabajadorPorId':
             $id = $_GET['id'] ?? null;
-            $controlador->obtenerTrabajador($id);
+            $controlador->obtenerTrabajadorPorId($id);
             break;
         default:
             echo json_encode(['success' => false, 'msg' => 'Acción no válida']);

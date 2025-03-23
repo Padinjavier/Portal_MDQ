@@ -22,21 +22,21 @@ class TrabajadoresModelo
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-  // fin Obtener todos los trabajadores (rol = 3)
+    // fin Obtener todos los trabajadores (rol = 3)
 
 
 
 
 
     // inicio funcion obtenerporid 
-    public function obtenerPorId($id)
+    public function obtenerTrabajadorPorId($id)
     {
         $sql = "SELECT * FROM usuarios WHERE IdUsuario = ? AND RolUsuario = 3";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-   // fin funcion obtenerporid 
+    // fin funcion obtenerporid 
 
 
 
@@ -55,11 +55,14 @@ class TrabajadoresModelo
 
 
 
-    // Crear un nuevo trabajador
+    // inicio Crear un nuevo trabajador
     public function crearTrabajador($datos)
     {
+        if ($this->verificarDatosUnicos($datos)) {
+            throw new Exception("El correo, DNI, teléfono o nombre de usuario ya están registrados.");
+        }
         $sql = "INSERT INTO usuarios (NombresUsuario, ApellidosUsuario, TelefonoUsuario, DNIUsuario, CorreoUsuario, UsernameUsuario, PasswordUsuario, RolUsuario) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, 3)";
+                VALUES (?, ?, ?, ?, ?, ?, ?, 3)";
         $stmt = $this->db->prepare($sql);
         $passwordHash = hash('sha256', $datos['PasswordUsuario']);
         return $stmt->execute([
@@ -72,17 +75,24 @@ class TrabajadoresModelo
             $passwordHash
         ]);
     }
+    // fin Crear un nuevo trabajador
 
+
+
+
+
+    // inicio editar un nuevo trabajador
     public function editarTrabajador($id, $datos)
     {
-        // Verificar si el campo "PasswordUsuario" está presente y no está vacío
+        if ($this->verificarDatosUnicos($datos, $id)) {
+            throw new Exception("El correo, DNI, teléfono o nombre de usuario ya están registrados.");
+        }
         if (!empty($datos['PasswordUsuario'])) {
-            // Si hay contraseña, actualizarla junto con los demás campos
             $sql = "UPDATE usuarios 
-                    SET NombresUsuario = ?, ApellidosUsuario = ?, TelefonoUsuario = ?, DNIUsuario = ?, CorreoUsuario = ?, UsernameUsuario = ?, PasswordUsuario = ? 
-                    WHERE IdUsuario = ? AND RolUsuario = 3";
+                  SET NombresUsuario = ?, ApellidosUsuario = ?, TelefonoUsuario = ?, DNIUsuario = ?, CorreoUsuario = ?, UsernameUsuario = ?, PasswordUsuario = ? 
+                  WHERE IdUsuario = ? AND RolUsuario = 3";
             $stmt = $this->db->prepare($sql);
-            $passwordHash = hash('sha256', $datos['PasswordUsuario']); // Hashear la contraseña
+            $passwordHash = hash('sha256', $datos['PasswordUsuario']);
             $params = [
                 $datos['NombresUsuario'],
                 $datos['ApellidosUsuario'],
@@ -94,10 +104,9 @@ class TrabajadoresModelo
                 $id
             ];
         } else {
-            // Si no hay contraseña, actualizar solo los demás campos
             $sql = "UPDATE usuarios 
-                    SET NombresUsuario = ?, ApellidosUsuario = ?, TelefonoUsuario = ?, DNIUsuario = ?, CorreoUsuario = ?, UsernameUsuario = ? 
-                    WHERE IdUsuario = ? AND RolUsuario = 3";
+                  SET NombresUsuario = ?, ApellidosUsuario = ?, TelefonoUsuario = ?, DNIUsuario = ?, CorreoUsuario = ?, UsernameUsuario = ? 
+                  WHERE IdUsuario = ? AND RolUsuario = 3";
             $stmt = $this->db->prepare($sql);
             $params = [
                 $datos['NombresUsuario'],
@@ -109,37 +118,32 @@ class TrabajadoresModelo
                 $id
             ];
         }
-    
-        // Ejecutar la consulta
         return $stmt->execute($params);
     }
+    // fin editar un nuevo trabajador
 
-    // Buscar trabajadores según filtros
-    public function buscarTrabajador($filtros)
+
+
+
+
+    public function verificarDatosUnicos($datos, $id = null)
     {
-        $sql = "SELECT * FROM usuarios WHERE RolUsuario = 3 AND StatusUsuario = 1";
-        $params = [];
-
-        // Aplicar filtros dinámicos
-        if (!empty($filtros['NombresUsuario'])) {
-            $sql .= " AND NombresUsuario LIKE ?";
-            $params[] = '%' . $filtros['NombresUsuario'] . '%';
+        $sql = "SELECT COUNT(*) as count FROM usuarios WHERE (CorreoUsuario = ? OR DNIUsuario = ? OR TelefonoUsuario = ? OR UsernameUsuario = ?)";
+        if ($id !== null) {
+            $sql .= " AND IdUsuario != ?";
         }
-        if (!empty($filtros['ApellidosUsuario'])) {
-            $sql .= " AND ApellidosUsuario LIKE ?";
-            $params[] = '%' . $filtros['ApellidosUsuario'] . '%';
-        }
-        if (!empty($filtros['DNIUsuario'])) {
-            $sql .= " AND DNIUsuario = ?";
-            $params[] = $filtros['DNIUsuario'];
-        }
-        if (!empty($filtros['CorreoUsuario'])) {
-            $sql .= " AND CorreoUsuario LIKE ?";
-            $params[] = '%' . $filtros['CorreoUsuario'] . '%';
-        }
-
         $stmt = $this->db->prepare($sql);
+        $params = [
+            $datos['CorreoUsuario'],
+            $datos['DNIUsuario'],
+            $datos['TelefonoUsuario'],
+            $datos['UsernameUsuario']
+        ];
+        if ($id !== null) {
+            $params[] = $id;
+        }
         $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $resultado['count'] > 0;
     }
 }
