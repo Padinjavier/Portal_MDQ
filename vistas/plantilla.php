@@ -25,6 +25,10 @@ require_once __DIR__ . '/../Config/Config.php';
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <!-- Notificaciones personalizadas -->
     <script src="<?php echo BASE_URL; ?>/vistas/assets/dist/js/toastNotifications.js"></script>
+    <!-- Incluir SweetAlert2 desde un CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Incluir jQuery desde un CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body class="hold-transition sidebar-mini">

@@ -9,6 +9,7 @@
 </section>
 
 <script>
+    var dataticket = {}; // Variable para almacenar los datos de los tickets
     document.addEventListener("DOMContentLoaded", function () {
         // Hacer la solicitud fetch cada vez que se carga la página
         fetch("<?php echo BASE_URL; ?>/controladores/DashboardControlador.php")
@@ -19,6 +20,7 @@
             .catch(error => console.error("Error cargando datos:", error));
 
         function updateDashboard(data) {
+            dataticket = data;
             // Actualizar los valores en la interfaz
             document.getElementById("total_trabajadores").textContent = data.total_trabajadores;
             document.getElementById("total_soporte").textContent = data.total_soporte;
