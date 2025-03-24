@@ -40,7 +40,7 @@ require_once __DIR__ . '/../Config/Config.php';
         include "modulos/layout/sidebar_lateral.php";
 
         // Contenido de la página
-        echo '<div class="content-wrapper pt-5">';
+        echo '<div class="content-wrapper mt-5 pt-2">';
         // Cargar el contenido según la ruta
         $ruta = isset($_GET['ruta']) ? $_GET['ruta'] : 'dashboard';
         include "modulos/$ruta.php";
@@ -58,5 +58,17 @@ require_once __DIR__ . '/../Config/Config.php';
     <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
     <script src="vistas/assets/dist/js/demo.js"></script>
 </body>
+
+
+<!-- DataTables Buttons CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap4.min.css">
+
+<!-- DataTables Buttons JS -->
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.bootstrap4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
 
 </html>

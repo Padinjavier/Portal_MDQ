@@ -7,14 +7,34 @@
 <section class="content-header ml-3 mr-3">
     <div class="row">
         <div class="col-md-12">
-            <div class="card shadow-sm" style="border-radius: 30px;">
-                <div class="card-body">
-                    <h1 class="mb-0">Trabajadores
-                        <small></small>
-                        <button class="btn btn-success btn-sm" type="button" onclick="openModal();">
-                            <i class="fas fa-plus-circle"></i> Nuevo
-                        </button>
-                    </h1>
+            <div class="card shadow-sm d-flex justify-content-between align-items-center flex-row p-3"
+                style="border-radius: 30px;">
+                <h1 class="mb-0">Trabajadores
+                    <small></small>
+                    <button class="btn btn-success btn-sm" type="button" onclick="openModal();">
+                        <i class="fas fa-plus-circle"></i> Nuevo
+                    </button>
+                </h1>
+                <div class="dropdown">
+                    <button class="btn btn-primary btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-cog"></i> Configuración
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" data-bs-auto-close="outside">
+                        <h6 class="dropdown-header bg-success fw-bold"
+                            title="Estos son los roles que se veran en esta tabla, algunos ya estas en otra tabla quitelos de esas para agregarlos a esta.">
+                            Opciones de tabla</h6>
+                        <div id="roles-list" class="px-3">
+                            <!-- Aquí se cargarán los roles dinámicamente -->
+                        </div>
+                        <div class="dropdown-divider "></div>
+                        <div class="d-flex">
+                            <button class="btn btn-success btn-sm mx-auto" type="button"
+                                onclick="guardarConfiguracion()">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -29,7 +49,7 @@
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered w-100" id="tableTrabajadores"
                             style="background-color: white;">
-                            <thead class="bg-success"> <!-- (bg-primary success warning danger info) -->
+                            <thead class="bg-success">
                                 <tr>
                                     <th class="font-weight-bold">ID</th>
                                     <th class="font-weight-bold">Nombre</th>
@@ -44,7 +64,7 @@
                             <tbody>
                                 <!-- Datos de ejemplo en texto plano -->
                                 <tr>
-                                    <td class="font-weight-bold">1</td> <!-- Texto en negrita -->
+                                    <td class="font-weight-bold">1</td>
                                     <td>example</td>
                                     <td>example</td>
                                     <td>12345678</td>

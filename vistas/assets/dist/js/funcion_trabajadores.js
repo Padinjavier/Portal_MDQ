@@ -11,19 +11,69 @@ $(document).ready(function () {
         ],
         "paging": true, // Habilitar paginación
         "pageLength": 10, // Número de filas por página
-        "lengthChange": false, // Deshabilitar cambio de longitud de página
+        "lengthChange": true, // Habilitar cambio de longitud de página
         "searching": true, // Habilitar búsqueda
         "ordering": true, // Habilitar ordenación
         "info": true, // Mostrar información de paginación
         "autoWidth": false, // Deshabilitar ajuste automático de ancho
         "responsive": true, // Hacer la tabla responsive
-        "dom": 'Bfrtip', // Posición de los elementos de la tabla (B: botones, f: filtro, r: procesamiento, t: tabla, i: información, p: paginación)
-        "buttons": [
-            'copy', 'csv', 'excel', 'pdf', 'print' // Botones de exportación
-        ]
+        "dom": 'lBfrtip', // Posición de los elementos de la tabla
+        "bDestroy": true,
+        "iDisplayLength": 10,
+        "lengthMenu": [5, 10, 25, 50, 100], // Opciones de longitud de página
+        "order": [[0, "desc"]],
+        'buttons': [
+            {
+                "extend": "copyHtml5",
+                "text": "<i class='far fa-copy'></i> Copiar",
+                "titleAttr": "Copiar",
+                "className": "btn btn-secondary",
+                "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3, 4, 5]
+                }
+            }, {
+                "extend": "excelHtml5",
+                "text": "<i class='bi bi-file-earmark-excel'></i> Excel",
+                "titleAttr": "Exportar a Excel",
+                "className": "btn btn-success",
+                "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3, 4, 5]
+                }
+            }, {
+                "extend": "pdfHtml5",
+                "text": "<i class='bi bi-filetype-pdf'></i> Pdf",
+                "titleAttr": "Exportar a PDF",
+                "className": "btn btn-danger",
+                "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3, 4, 5]
+                }
+            }, {
+                "extend": "csvHtml5",
+                "text": "<i class='fas fa-file-csv'></i> CSV",
+                "titleAttr": "Exportar a CSV",
+                "className": "btn btn-info d-none",
+                "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3, 4, 5]
+                }
+            },
+            {
+                "extend": "csv",
+                "text": "<i class='fas fa-file-code'></i> JSON",
+                "titleAttr": "Exportar a JSON",
+                "className": "btn btn-info",
+                // "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3, 4, 5]
+                }
+            }
+        ],
     });
-    // Función para cargar datos en la tabla (debes implementarla)
     CargarTablaTrabajadores();
+    cargarRoles();
 });
 // fin funcionamiento de tabla trabajadores
 
@@ -201,3 +251,91 @@ function openModal() {
     $('#modalFormTrabajador').modal('show');
 }
 // fin editar trabajador
+
+
+
+
+
+// inicio Función para cargar los roles desde el servidor
+function cargarRoles() {
+    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarRoles`)
+        .then(response => response.json())
+        .then(response => {
+            if (!response.success) {
+                throw new Error(response.msg || 'Error al cargar los roles');
+            }
+            const rolesList = document.getElementById('roles-list');
+            rolesList.innerHTML = ''; // Limpiar la lista antes de cargar
+            response.data.forEach(rol => {
+                const div = document.createElement('div');
+                div.className = 'form-check form-switch d-flex align-items-center mb-2'; // Switch + Alineación + Espaciado
+                const estado = rol.IdModulo === 'No asignado' ? 'No asignado' : 
+                              rol.IdModulo == 1 ? 'Asignado a Trabajadores' : 
+                              `Asignado a ${rol.NombreModulo}`;
+                const disabled = rol.IdModulo !== 'No asignado' && rol.IdModulo != 1 && rol.IdModulo != 2;
+                const checked = rol.IdModulo == 1 || rol.IdModulo == 2;
+                div.innerHTML = `
+                    <input class="form-check-input" type="checkbox" role="switch" id="rol-${rol.IdRol}" 
+                        ${disabled ? 'disabled' : ''} ${checked ? 'checked' : ''}>
+                    <label class="form-check-label ms-2 fw-bold" for="rol-${rol.IdRol}" data-bs-toggle="tooltip" title="${estado}">
+                        ${rol.NombreRol}
+                    </label>
+                `;
+                // Evitar que el menú se cierre al hacer clic en el label
+                div.querySelector('label').addEventListener('click', function(event) {
+                    event.stopPropagation();
+                });
+                rolesList.appendChild(div);
+            });
+            
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        })
+        .catch(error => {
+            console.error('Error al cargar roles:', error);
+            Swal.fire("Error", "No se pudieron cargar los roles.", "error");
+        });
+}
+// fin Función para cargar los roles desde el servidor
+
+
+
+
+
+
+
+// Función para guardar la configuración
+function guardarConfiguracion() {
+    const checkboxes = document.querySelectorAll('#roles-list .form-check-input');
+    const rolesSeleccionados = [];
+
+    // Obtener los roles seleccionados
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            rolesSeleccionados.push(checkbox.value);
+        }
+    });
+
+    // Enviar los roles seleccionados al servidor
+    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=guardarConfiguracion`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ roles: rolesSeleccionados }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire("Éxito", "Configuración guardada correctamente.", "success");
+        } else {
+            Swal.fire("Error", data.msg || "No se pudo guardar la configuración.", "error");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire("Error", "Hubo un problema al guardar la configuración.", "error");
+    });
+}

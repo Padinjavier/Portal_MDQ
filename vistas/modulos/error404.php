@@ -2,6 +2,7 @@
 // Incluir el archivo de configuración
 require_once __DIR__ . '/../../Config/Config.php';
 ?>
+<!-- aaaaa  -->
 <!DOCTYPE html>
 <html lang="es">
 <head>

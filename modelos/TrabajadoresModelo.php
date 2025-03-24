@@ -15,14 +15,29 @@ class TrabajadoresModelo
 
 
     // inicio Obtener todos los trabajadores (rol = 3)
-    public function CargarTablaTrabajadores()
-    {
-        $sql = "SELECT * FROM usuarios WHERE RolUsuario = 3 AND StatusUsuario = 1";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    // fin Obtener todos los trabajadores (rol = 3)
+// inicio Obtener todos los trabajadores asignados al módulo de Trabajadores
+public function CargarTablaTrabajadores()
+{
+    $sql = "SELECT u.* 
+            FROM usuarios u
+            INNER JOIN modulo_roles mr ON u.RolUsuario = mr.IdRol
+            INNER JOIN modulos m ON mr.IdModulo = m.IdModulo
+            WHERE m.NombreModulo = 'Trabajadores' 
+            AND u.StatusUsuario = 1";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute();
+    $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    error_log("Usuarios encontrados: " . count($usuarios));
+
+    return $usuarios;
+}
+
+
+// fin Obtener todos los trabajadores asignados al módulo de Trabajadores
+// fin Obtener todos los trabajadores (rol = 3)
+// return $stmtUsuarios->fetchAll(PDO::FETCH_ASSOC);
 
 
 
@@ -146,4 +161,31 @@ class TrabajadoresModelo
         $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
         return $resultado['count'] > 0;
     }
+
+
+
+
+
+// inicio Obtener todos los roles con su estado de asignación
+public function CargarRoles()
+{
+    $sql = "SELECT 
+                r.IdRol,
+                r.NombreRol,
+                COALESCE(m.IdModulo, 'No asignado') AS IdModulo,
+                COALESCE(m.NombreModulo, 'No asignado') AS NombreModulo
+            FROM rol r
+            LEFT JOIN modulo_roles mr ON r.IdRol = mr.IdRol
+            LEFT JOIN modulos m ON mr.IdModulo = m.IdModulo
+            WHERE r.StatusRol = 1";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+// fin Obtener todos los roles con su estado de asignación
+
+
+
+
+
 }
