@@ -17,7 +17,7 @@
                 </h1>
                 <div class="dropdown">
                     <button class="btn btn-primary btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
+                        aria-haspopup="true" aria-expanded="false" onclick="cargarRoles()">
                         <i class="fas fa-cog"></i> Configuración
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" data-bs-auto-close="outside">

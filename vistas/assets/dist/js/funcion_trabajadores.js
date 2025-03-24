@@ -257,30 +257,32 @@ function openModal() {
 
 
 // inicio Función para cargar los roles desde el servidor
+let estadoInicialRoles = {}; // Guarda el estado inicial de los roles
 function cargarRoles() {
     fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarRoles`)
         .then(response => response.json())
         .then(({ success, data, msg }) => {
             if (!success) throw new Error(msg || 'Error al cargar los roles');
             const rolesList = document.getElementById('roles-list');
-            rolesList.innerHTML = ''; // Limpiar la lista antes de cargar
+            rolesList.innerHTML = ''; 
+            estadoInicialRoles = {}; // Resetear el estado inicial
             data.forEach(({ IdRol, NombreRol, NombreModulo }) => {
                 const asignadoATrabajadores = NombreModulo === "Trabajadores";
                 const noAsignado = NombreModulo === "No asignado";
                 const asignadoAOtroModulo = !noAsignado && !asignadoATrabajadores;
                 const checked = asignadoATrabajadores || asignadoAOtroModulo;
                 const disabled = asignadoAOtroModulo;
+                estadoInicialRoles[IdRol] = checked; // Guardar el estado original
                 const div = document.createElement('div');
                 div.className = 'form-check form-switch d-flex align-items-center mb-2';
                 div.innerHTML = `
-                    <input class="form-check-input" type="checkbox" role="switch" id="rol-${IdRol}" 
+                    <input class="form-check-input" type="checkbox" role="switch" id="rol-${IdRol}" value="${IdRol}"
                         ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}>
                     <label class="form-check-label ms-2 fw-bold" for="rol-${IdRol}" data-bs-toggle="tooltip" title="Asignado a ${NombreModulo}">
                         ${NombreRol}
                     </label>
                 `;
                 div.querySelector('label').addEventListener('click', e => e.stopPropagation());
-
                 rolesList.appendChild(div);
             });
             document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
@@ -290,45 +292,71 @@ function cargarRoles() {
             Swal.fire("Error", "No se pudieron cargar los roles.", "error");
         });
 }
-
 // fin Función para cargar los roles desde el servidor
 
 
 
 
 
-
-
-// Función para guardar la configuración
+// Inicio Función para guardar la configuración
 function guardarConfiguracion() {
-    const checkboxes = document.querySelectorAll('#roles-list .form-check-input');
-    const rolesSeleccionados = [];
+    const rolesNuevos = [...document.querySelectorAll('#roles-list .form-check-input')]
+        .filter(checkbox => checkbox.checked && !estadoInicialRoles[checkbox.value])
+        .map(checkbox => checkbox.value);
 
-    // Obtener los roles seleccionados
-    checkboxes.forEach(checkbox => {
-        if (checkbox.checked) {
-            rolesSeleccionados.push(checkbox.value);
-        }
-    });
+    const rolesEliminados = Object.keys(estadoInicialRoles)
+        .filter(idRol => estadoInicialRoles[idRol] && !document.getElementById(`rol-${idRol}`).checked);
 
-    // Enviar los roles seleccionados al servidor
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=guardarConfiguracion`, {
+    if (!rolesNuevos.length && !rolesEliminados.length) {
+        return Swal.fire("Sin cambios", "No has realizado cambios en los roles.", "info");
+    }
+
+    // Guardar nuevos roles
+    if (rolesNuevos.length) {
+        fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=guardarConfiguracion`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ roles: rolesNuevos }),
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire("Éxito", "Configuración guardada correctamente.", "success");
+                cargarRoles(); // Recargar los roles para reflejar los cambios
+                CargarTablaTrabajadores(); // Recargar la tabla
+            } else {
+                Swal.fire("Error", data.msg || "No se pudo guardar la configuración.", "error");
+            }
+        })
+        .catch(() => Swal.fire("Error", "Hubo un problema al guardar la configuración.", "error"));
+            Swal.fire({title: "Error en la respuesta",html: text,icon: "error",width: "70%",customClass:{popup:'text-start'}
+        });
+    }else{
+        // Eliminar roles desactivados
+            eliminarRelacionModuloRol(rolesEliminados);
+    }
+}
+// fin Función para guardar la configuración
+
+
+
+// Inicio Función para eliminar la configuración
+function eliminarRelacionModuloRol(rolesEliminados) {
+    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=eliminarRelacionModuloRol`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ roles: rolesSeleccionados }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ roles: rolesEliminados }),
     })
-    .then(response => response.json())
+    .then(res => res.json())
     .then(data => {
         if (data.success) {
-            Swal.fire("Éxito", "Configuración guardada correctamente.", "success");
+            Swal.fire("Éxito", "Relación eliminada correctamente.", "success");
+            CargarTablaTrabajadores(); // Recargar la tabla
+            cargarRoles(); // Recargar los roles para reflejar los cambios
         } else {
-            Swal.fire("Error", data.msg || "No se pudo guardar la configuración.", "error");
+            Swal.fire("Error", data.msg || "No se pudo eliminar la relación.", "error");
         }
     })
-    .catch(error => {
-        console.error('Error:', error);
-        Swal.fire("Error", "Hubo un problema al guardar la configuración.", "error");
-    });
+    .catch(() => Swal.fire("Error", "Hubo un problema al eliminar la relación.", "error"));
 }
+// fin Función para eliminar la configuración

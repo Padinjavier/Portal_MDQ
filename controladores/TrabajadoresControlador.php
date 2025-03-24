@@ -154,59 +154,59 @@ class TrabajadoresControlador
 
 
 
-// inicio Obtener todos los roles
-public function CargarRoles()
-{
-    try {
-        $roles = $this->modelo->CargarRoles();
-        echo json_encode(['success' => true, 'data' => $roles]);
-    } catch (Exception $e) {
-        echo json_encode(['success' => false, 'msg' => 'Error al obtener roles: ' . $e->getMessage()]);
+    // inicio Obtener todos los roles
+    public function CargarRoles()
+    {
+        try {
+            $roles = $this->modelo->CargarRoles();
+            echo json_encode(['success' => true, 'data' => $roles]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'msg' => 'Error al obtener roles: ' . $e->getMessage()]);
+        }
     }
-}
-// fin Obtener todos los roles
+    // fin Obtener todos los roles
 
 
 
 
 
+    // inicio Guardar configuración de roles
+    public function guardarConfiguracion()
+    {
+        try {
+            $data = json_decode(file_get_contents('php://input'), true);
+            $roles = $data['roles'] ?? [];
+            if (empty($roles)) {
+                throw new Exception("Datos incompletos para guardar la configuración.");
+            }
+            $result = $this->modelo->guardarConfiguracionMODELO($roles);
+            echo json_encode(['success' => true, 'data' => $result]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'msg' => 'Error al guardar la configuración: ' . $e->getMessage()]);
+        }
+    }
+    // fin Guardar configuración de roles
 
 
 
 
 
-
-
-
-
-// inicio Guardar configuración de roles
-// public function guardarConfiguracion($idModulo, $roles)
-// {
-//     try {
-//         // Eliminar roles anteriores para este módulo
-//         $sql = "DELETE FROM modulo_roles WHERE IdModulo = ?";
-//         $stmt = $this->db->prepare($sql);
-//         $stmt->execute([$idModulo]);
-
-//         // Insertar los nuevos roles seleccionados
-//         $sql = "INSERT INTO modulo_roles (IdModulo, IdRol) VALUES (?, ?)";
-//         $stmt = $this->db->prepare($sql);
-
-//         foreach ($roles as $idRol) {
-//             $stmt->execute([$idModulo, $idRol]);
-//         }
-
-//         return true;
-//     } catch (Exception $e) {
-//         throw new Exception("Error al guardar la configuración: " . $e->getMessage());
-//     }
-// }
-// fin Guardar configuración de roles
-
-
-
-
-
+    // inicio eliminar configuración de roles
+    public function eliminarRelacionModuloRol()
+    {
+        try {
+            $data = json_decode(file_get_contents('php://input'), true);
+            $roles = $data['roles'] ?? [];
+            if (!$roles) {
+                throw new Exception("Datos incompletos para eliminar la relación.");
+            }
+            $result = $this->modelo->eliminarRelacionModuloRolMODELO($roles);
+            echo json_encode(['success' => true, 'data' => $result]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'msg' => 'Error al eliminar la relación: ' . $e->getMessage()]);
+        }
+    }
+    // fin eliminar configuración de roles
 
 
 
@@ -242,9 +242,12 @@ if (isset($_GET['action'])) {
         case 'CargarRoles':
             $controlador->CargarRoles();
             break;
-        // case 'guardarConfiguracion':
-        //     $controlador->guardarConfiguracion();
-        //     break;
+        case 'guardarConfiguracion':
+            $controlador->guardarConfiguracion();
+            break;
+        case 'eliminarRelacionModuloRol':
+            $controlador->eliminarRelacionModuloRol();
+            break;
         default:
             echo json_encode(['success' => false, 'msg' => 'Acción no válida']);
             break;

@@ -188,4 +188,52 @@ public function CargarRoles()
 
 
 
+    // inicio guardar configuración de roles
+public function guardarConfiguracionMODELO($roles)
+{
+    try {
+        $this->db->beginTransaction();
+        $sqlInsert = "INSERT INTO modulo_roles (IdModulo, IdRol) VALUES (2, ?) 
+                      ON DUPLICATE KEY UPDATE IdRol = VALUES(IdRol)";
+        $stmtInsert = $this->db->prepare($sqlInsert);
+
+        foreach ($roles as $idRol) {
+            $stmtInsert->execute([$idRol]);
+        }
+        $this->db->commit();
+        return true;
+    } catch (Exception $e) {
+        $this->db->rollBack();
+        throw new Exception("Error al guardar la configuración: " . $e->getMessage());
+    }
+}
+    // fin guardar configuración de roles
+
+
+
+
+
+    // inicio eliminar configuración de roles
+public function eliminarRelacionModuloRolMODELO($roles)
+{
+    try {
+        $this->db->beginTransaction();
+        $sqlDelete = "DELETE FROM modulo_roles WHERE IdModulo = 2 AND IdRol = ?";
+        $stmtDelete = $this->db->prepare($sqlDelete);
+        foreach ($roles as $idRol) {
+            $stmtDelete->execute([$idRol]);
+        }
+        $this->db->commit();
+        return true;
+    } catch (Exception $e) {
+        $this->db->rollBack();
+        throw new Exception("Error al eliminar la relación: " . $e->getMessage());
+    }
+}
+    // fin eliminar configuración de roles
+
+
+
+
+
 }
