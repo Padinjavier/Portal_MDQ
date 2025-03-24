@@ -260,44 +260,37 @@ function openModal() {
 function cargarRoles() {
     fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarRoles`)
         .then(response => response.json())
-        .then(response => {
-            if (!response.success) {
-                throw new Error(response.msg || 'Error al cargar los roles');
-            }
+        .then(({ success, data, msg }) => {
+            if (!success) throw new Error(msg || 'Error al cargar los roles');
             const rolesList = document.getElementById('roles-list');
             rolesList.innerHTML = ''; // Limpiar la lista antes de cargar
-            response.data.forEach(rol => {
+            data.forEach(({ IdRol, NombreRol, NombreModulo }) => {
+                const asignadoATrabajadores = NombreModulo === "Trabajadores";
+                const noAsignado = NombreModulo === "No asignado";
+                const asignadoAOtroModulo = !noAsignado && !asignadoATrabajadores;
+                const checked = asignadoATrabajadores || asignadoAOtroModulo;
+                const disabled = asignadoAOtroModulo;
                 const div = document.createElement('div');
-                div.className = 'form-check form-switch d-flex align-items-center mb-2'; // Switch + Alineación + Espaciado
-                const estado = rol.IdModulo === 'No asignado' ? 'No asignado' : 
-                              rol.IdModulo == 1 ? 'Asignado a Trabajadores' : 
-                              `Asignado a ${rol.NombreModulo}`;
-                const disabled = rol.IdModulo !== 'No asignado' && rol.IdModulo != 1 && rol.IdModulo != 2;
-                const checked = rol.IdModulo == 1 || rol.IdModulo == 2;
+                div.className = 'form-check form-switch d-flex align-items-center mb-2';
                 div.innerHTML = `
-                    <input class="form-check-input" type="checkbox" role="switch" id="rol-${rol.IdRol}" 
-                        ${disabled ? 'disabled' : ''} ${checked ? 'checked' : ''}>
-                    <label class="form-check-label ms-2 fw-bold" for="rol-${rol.IdRol}" data-bs-toggle="tooltip" title="${estado}">
-                        ${rol.NombreRol}
+                    <input class="form-check-input" type="checkbox" role="switch" id="rol-${IdRol}" 
+                        ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}>
+                    <label class="form-check-label ms-2 fw-bold" for="rol-${IdRol}" data-bs-toggle="tooltip" title="Asignado a ${NombreModulo}">
+                        ${NombreRol}
                     </label>
                 `;
-                // Evitar que el menú se cierre al hacer clic en el label
-                div.querySelector('label').addEventListener('click', function(event) {
-                    event.stopPropagation();
-                });
+                div.querySelector('label').addEventListener('click', e => e.stopPropagation());
+
                 rolesList.appendChild(div);
             });
-            
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-                new bootstrap.Tooltip(tooltipTriggerEl);
-            });
+            document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
         })
         .catch(error => {
             console.error('Error al cargar roles:', error);
             Swal.fire("Error", "No se pudieron cargar los roles.", "error");
         });
 }
+
 // fin Función para cargar los roles desde el servidor
 
 
