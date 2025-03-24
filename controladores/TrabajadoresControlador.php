@@ -20,10 +20,15 @@ class TrabajadoresControlador
     public function CargarTablaTrabajadores()
     {
         try {
+            ob_start(); // Captura cualquier salida de error o warning
             $trabajadores = $this->modelo->CargarTablaTrabajadores();
+            $output = ob_get_clean(); // Obtiene los errores capturados
+            if (!empty($output)) {
+                throw new Exception($output); // Lanza una excepción con el error capturado
+            }
             echo json_encode(['success' => true, 'data' => $trabajadores]);
         } catch (Exception $e) {
-            echo json_encode(['success' => false, 'msg' => 'Error al obtener trabajadores: ' . $e->getMessage()]);
+            echo json_encode(['success' => false, 'msg' => $e->getMessage()]);
         }
     }
     // fin Obtener todos los trabajadores
@@ -109,6 +114,7 @@ class TrabajadoresControlador
                 'DNIUsuario' => $_POST['dni'] ?? null,
                 'CorreoUsuario' => $_POST['correo'] ?? null,
                 'UsernameUsuario' => $_POST['usuario'] ?? null,
+                'idTrabajador' => $_POST['idTrabajador'] ?? null,
             ];
             if (!empty($_POST['password'])) {
                 $datos['PasswordUsuario'] = $_POST['password'];
@@ -121,12 +127,12 @@ class TrabajadoresControlador
             $resultado = $this->modelo->editarTrabajador($id, $datos);
             echo json_encode([
                 'success' => $resultado,
-                'msg' => $resultado ? 'Trabajador editado exitosamente.' : 'Error al editar el trabajador.'
+                'msg' => $resultado ? 'Trabajador editado exitosamente. ' : 'Error al editar el trabajador.'
             ]);
         } catch (Exception $e) {
             echo json_encode([
                 'success' => false,
-                'msg' => 'Error al editar el trabajador: ' . $e->getMessage()
+                'msg' => 'Error al editar el trabajador: '. $e->getMessage()
             ]);
         }
     }
@@ -144,7 +150,10 @@ class TrabajadoresControlador
                 throw new Exception('ID no proporcionado');
             }
             $resultado = $this->modelo->eliminarTrabajador($id);
-            echo json_encode(['success' => $resultado, 'msg' => $resultado ? 'Trabajador eliminado correctamente.' : 'Error al eliminar el trabajador.']);
+            if (!$resultado) {
+                throw new Exception('No se pudo eliminar el trabajador en la base de datos.');
+            }
+            echo json_encode(['success' => true, 'msg' => 'Trabajador eliminado correctamente.']);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'msg' => 'Error al eliminar el trabajador: ' . $e->getMessage()]);
         }
@@ -218,22 +227,12 @@ class TrabajadoresControlador
 
 
 // Ejecutar la acción correspondiente
-if (isset($_GET['action'])) {
+// Ejecutar la acción correspondiente
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     $controlador = new TrabajadoresControlador();
     switch ($_GET['action']) {
         case 'CargarTablaTrabajadores':
             $controlador->CargarTablaTrabajadores();
-            break;
-        case 'eliminarTrabajador':
-            $id = $_GET['id'] ?? null;
-            $controlador->eliminarTrabajador($id);
-            break;
-        case 'crearTrabajador':
-            $controlador->crearTrabajador();
-            break;
-        case 'editarTrabajador':
-            $id = $_POST['idTrabajador'] ?? null;
-            $controlador->editarTrabajador($id);
             break;
         case 'obtenerTrabajadorPorId':
             $id = $_GET['id'] ?? null;
@@ -242,6 +241,27 @@ if (isset($_GET['action'])) {
         case 'CargarRoles':
             $controlador->CargarRoles();
             break;
+        default:
+            echo json_encode(['success' => false, 'msg' => 'Acción GET no válida']);
+            break;
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
+    // Leer el cuerpo de la solicitud POST
+    $input = json_decode(file_get_contents('php://input'), true);
+
+    $controlador = new TrabajadoresControlador();
+    switch ($_GET['action']) {
+        case 'crearTrabajador':
+            $controlador->crearTrabajador();
+            break;
+        case 'editarTrabajador':
+            $id = $_POST['idTrabajador'] ?? null; // Leer desde el cuerpo
+            $controlador->editarTrabajador($id);
+            break;
+        case 'eliminarTrabajador':
+            $id = $input['id'] ?? null; // Leer desde el cuerpo
+            $controlador->eliminarTrabajador($id);
+            break;
         case 'guardarConfiguracion':
             $controlador->guardarConfiguracion();
             break;
@@ -249,9 +269,9 @@ if (isset($_GET['action'])) {
             $controlador->eliminarRelacionModuloRol();
             break;
         default:
-            echo json_encode(['success' => false, 'msg' => 'Acción no válida']);
+            echo json_encode(['success' => false, 'msg' => 'Acción POST no válida']);
             break;
     }
 } else {
-    echo json_encode(['success' => false, 'msg' => 'Acción no especificada']);
+    echo json_encode(['success' => false, 'msg' => 'Acción no especificada o método incorrecto']);
 }

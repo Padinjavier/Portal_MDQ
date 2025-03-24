@@ -83,7 +83,7 @@ $(document).ready(function () {
 
 // inicio completar trabajadores 
 window.CargarTablaTrabajadores = function () {
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarTablaTrabajadores`)
+    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarTablaTrabajadores`, { method: 'GET' })
         .then(response => response.json())
         .then(response => {
             if (!response.success) {
@@ -122,9 +122,16 @@ window.CargarTablaTrabajadores = function () {
             });
         })
         .catch(error => {
-            Swal.fire("Error", error.message, "error");
+            Swal.fire({
+                title: "Error en la respuesta",
+                html: error.message, // Muestra el error como HTML
+                icon: "error",
+                width: "70%",
+                customClass: { popup: 'text-start' }
+            });
         });
 };
+
 // fin completar trabajadores 
 
 
@@ -169,14 +176,36 @@ function eliminarTrabajador(id) {
         cancelButtonText: "No, cancelar!",
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=eliminarTrabajador&id=${id}`)
+            fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=eliminarTrabajador`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id }),
+            })
                 .then(response => response.json())
                 .then(data => {
-                    const message = data.success ? '¡Eliminado! El trabajador ha sido eliminado correctamente.' : 'Error: No se pudo eliminar el trabajador.';
-                    const icon = data.success ? 'success' : 'error';
-                    Swal.fire(message, '', icon).then(() => CargarTablaTrabajadores());
+                    if (data.success) {
+                        Swal.fire('¡Eliminado!', 'El trabajador ha sido eliminado correctamente.', 'success')
+                            .then(() => CargarTablaTrabajadores());
+                    } else {
+                        // Mostrar el error completo
+                        Swal.fire({
+                            title: "Error en la respuesta",
+                            html: data.msg, // Muestra el error como HTML
+                            icon: "error",
+                            width: "70%",
+                            customClass: { popup: 'text-start' }
+                        });
+                    }
                 })
-                .catch(() => Swal.fire('Error', 'Hubo un problema al intentar eliminar el trabajador.', 'error'));
+                .catch(error => {
+                    Swal.fire({
+                        title: "Error en la solicitud",
+                        html: error.message, // Muestra el error como HTML
+                        icon: "error",
+                        width: "70%",
+                        customClass: { popup: 'text-start' }
+                    });
+                });
         }
     });
 }
@@ -222,19 +251,31 @@ function editarTrabajador(id) {
 function guardarTrabajador() {
     const formData = new FormData(document.getElementById('formTrabajador'));
     const accion = document.getElementById('idTrabajador').value ? 'editarTrabajador' : 'crearTrabajador';
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=${accion}`, { method: 'POST', body: formData })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire("Éxito", data.msg, "success").then(() => {
-                    $('#modalFormTrabajador').modal('hide');
-                    CargarTablaTrabajadores(); // Recargar la tabla
-                });
-            } else {
-                Swal.fire("Error", data.msg, "error");
-            }
-        })
-        .catch(error => Swal.fire("Error", "Hubo un problema al procesar la solicitud: " + error.message, "error"));
+
+    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=${accion}`, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        return response.text(); // Primero obtenemos el texto para ver qué contiene
+    })
+    .then(text => {
+        return JSON.parse(text); // Luego intentamos parsearlo como JSON
+    })
+    .then(data => {
+        if (data.success) {
+            Swal.fire("Éxito", data.msg, "success").then(() => {
+                $('#modalFormTrabajador').modal('hide');
+                CargarTablaTrabajadores(); // Recargar la tabla
+            });
+        } else {
+            Swal.fire("Error", data.msg, "error");
+        }
+    })
+    .catch(error => {
+        console.error(error); // Imprime el error en la consola
+        Swal.fire("Error", "Hubo un problema al procesar la solicitud: " + error.message, "error");
+    });
 }
 // fin guardar trabajador
 
@@ -259,12 +300,12 @@ function openModal() {
 // inicio Función para cargar los roles desde el servidor
 let estadoInicialRoles = {}; // Guarda el estado inicial de los roles
 function cargarRoles() {
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarRoles`)
+    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarRoles`, { method: 'GET' })
         .then(response => response.json())
         .then(({ success, data, msg }) => {
             if (!success) throw new Error(msg || 'Error al cargar los roles');
             const rolesList = document.getElementById('roles-list');
-            rolesList.innerHTML = ''; 
+            rolesList.innerHTML = '';
             estadoInicialRoles = {}; // Resetear el estado inicial
             data.forEach(({ IdRol, NombreRol, NombreModulo }) => {
                 const asignadoATrabajadores = NombreModulo === "Trabajadores";
@@ -316,24 +357,23 @@ function guardarConfiguracion() {
         fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=guardarConfiguracion`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ roles: rolesNuevos }),
+            body: JSON.stringify({ roles: rolesNuevos })
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire("Éxito", "Configuración guardada correctamente.", "success");
-                cargarRoles(); // Recargar los roles para reflejar los cambios
-                CargarTablaTrabajadores(); // Recargar la tabla
-            } else {
-                Swal.fire("Error", data.msg || "No se pudo guardar la configuración.", "error");
-            }
-        })
-        .catch(() => Swal.fire("Error", "Hubo un problema al guardar la configuración.", "error"));
-            Swal.fire({title: "Error en la respuesta",html: text,icon: "error",width: "70%",customClass:{popup:'text-start'}
-        });
-    }else{
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire("Éxito", "Configuración guardada correctamente.", "success");
+                    cargarRoles(); // Recargar los roles para reflejar los cambios
+                    CargarTablaTrabajadores(); // Recargar la tabla
+                } else {
+                    Swal.fire("Error", data.msg || "No se pudo guardar la configuración.", "error");
+                }
+            })
+            .catch(() => Swal.fire("Error", "Hubo un problema al guardar la configuración.", "error"));
+
+    } else {
         // Eliminar roles desactivados
-            eliminarRelacionModuloRol(rolesEliminados);
+        eliminarRelacionModuloRol(rolesEliminados);
     }
 }
 // fin Función para guardar la configuración
@@ -345,18 +385,18 @@ function eliminarRelacionModuloRol(rolesEliminados) {
     fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=eliminarRelacionModuloRol`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ roles: rolesEliminados }),
+        body: JSON.stringify({ roles: rolesEliminados })
     })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire("Éxito", "Relación eliminada correctamente.", "success");
-            CargarTablaTrabajadores(); // Recargar la tabla
-            cargarRoles(); // Recargar los roles para reflejar los cambios
-        } else {
-            Swal.fire("Error", data.msg || "No se pudo eliminar la relación.", "error");
-        }
-    })
-    .catch(() => Swal.fire("Error", "Hubo un problema al eliminar la relación.", "error"));
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire("Éxito", "Relación eliminada correctamente.", "success");
+                CargarTablaTrabajadores(); // Recargar la tabla
+                cargarRoles(); // Recargar los roles para reflejar los cambios
+            } else {
+                Swal.fire("Error", data.msg || "No se pudo eliminar la relación.", "error");
+            }
+        })
+        .catch(() => Swal.fire("Error", "Hubo un problema al eliminar la relación.", "error"));
 }
 // fin Función para eliminar la configuración
