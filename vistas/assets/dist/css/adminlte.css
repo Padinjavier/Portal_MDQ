@@ -2853,7 +2853,14 @@ fieldset:disabled a.btn {
   border-color: #28a745;
   box-shadow: none;
 }
-
+.btn:not([disabled]):not(.disabled):not(.btn-link):hover,
+.btn:not([disabled]):not(.disabled):not(.btn-link):focus {
+      text-decoration: none;
+      -webkit-transform: translate3d(0, -1px, 0);
+      transform: translate3d(0, -1px, 0);
+      -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+    }
 .btn-success:hover {
   color: #fff;
   background-color: #218838;

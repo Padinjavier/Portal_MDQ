@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `modulos` (
   PRIMARY KEY (`IdModulo`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla helpdesk.modulos: ~15 rows (aproximadamente)
+-- Volcando datos para la tabla helpdesk.modulos: ~13 rows (aproximadamente)
 DELETE FROM `modulos`;
 INSERT INTO `modulos` (`IdModulo`, `NombreModulo`, `DescripcionModulo`, `DatecreateModulo`, `StatusModulo`) VALUES
 	(1, 'Dashboard', 'Panel principal con métricas y accesos rápidos', '2025-03-22 12:06:20', 1),
@@ -74,14 +74,36 @@ INSERT INTO `modulos` (`IdModulo`, `NombreModulo`, `DescripcionModulo`, `Datecre
 	(5, 'Permisos', 'Administración de permisos', '2025-03-22 12:06:20', 1),
 	(6, 'Gestión de Inventario', 'Manejo de productos y stock', '2025-03-22 12:06:20', 1),
 	(7, 'Reportes de Inventario', 'Generación de reportes del inventario', '2025-03-22 12:06:20', 1),
-	(8, 'Tickets', 'Gestión de tickets de soporte', '2025-03-22 12:06:20', 1),
-	(9, 'Problemas', 'Clasificación y control de problemas reportados', '2025-03-22 12:06:20', 1),
-	(10, 'Gestión de Tickets', 'Administración de tickets', '2025-03-22 12:06:20', 1),
-	(11, 'Reportes de Tickets', 'Generación de reportes de tickets', '2025-03-22 12:06:20', 1),
-	(12, 'Tips', 'Consejos y recomendaciones', '2025-03-22 12:06:20', 1),
-	(13, 'Preguntas Frecuentes', 'Sección de preguntas frecuentes', '2025-03-22 12:06:20', 1),
-	(14, 'Manuales', 'Documentación y guías de uso', '2025-03-22 12:06:20', 1),
-	(15, 'Papelera', 'Módulo de elementos eliminados', '2025-03-22 12:06:20', 1);
+	(8, 'Gestión de Tickets', 'Administración de tickets', '2025-03-22 12:06:20', 1),
+	(9, 'Reportes de Tickets', 'Generación de reportes de tickets', '2025-03-22 12:06:20', 1),
+	(10, 'Problemas', 'Clasificación y control de problemas reportados', '2025-03-22 12:06:20', 1),
+	(11, 'Tips', 'Consejos y recomendaciones', '2025-03-22 12:06:20', 1),
+	(12, 'Preguntas Frecuentes', 'Sección de preguntas frecuentes', '2025-03-22 12:06:20', 1),
+	(13, 'Manuales', 'Documentación y guías de uso', '2025-03-22 12:06:20', 1),
+	(14, 'Papelera', 'Módulo de elementos eliminados', '2025-03-22 12:06:20', 1);
+
+-- Volcando estructura para tabla helpdesk.modulo_roles
+CREATE TABLE IF NOT EXISTS `modulo_roles` (
+  `IdModuloRol` int NOT NULL AUTO_INCREMENT COMMENT 'Identificador único de la relación módulo-rol',
+  `IdModulo` int NOT NULL COMMENT 'ID del módulo (trabajadores o técnicos), relacionado con la tabla modulos',
+  `IdRol` int NOT NULL COMMENT 'ID del rol asignado al módulo, relacionado con la tabla rol',
+  `DatecreateModuloRol` datetime DEFAULT (now()) COMMENT 'Fecha y hora de creación de la relación',
+  `StatusModuloRol` int DEFAULT '1' COMMENT 'Estado de la relación: 0 = Inactivo, 1 = Activo',
+  PRIMARY KEY (`IdModuloRol`) USING BTREE,
+  UNIQUE KEY `IdModuloIdRol` (`IdModulo`,`IdRol`) USING BTREE,
+  KEY `FK_modulo_roles_rol` (`IdRol`),
+  CONSTRAINT `FK_modulo_roles_modulos` FOREIGN KEY (`IdModulo`) REFERENCES `modulos` (`IdModulo`),
+  CONSTRAINT `FK_modulo_roles_rol` FOREIGN KEY (`IdRol`) REFERENCES `rol` (`IdRol`)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Volcando datos para la tabla helpdesk.modulo_roles: ~3 rows (aproximadamente)
+DELETE FROM `modulo_roles`;
+INSERT INTO `modulo_roles` (`IdModuloRol`, `IdModulo`, `IdRol`, `DatecreateModuloRol`, `StatusModuloRol`) VALUES
+	(4, 3, 2, '2025-03-23 19:39:47', 1),
+	(49, 2, 3, '2025-03-24 02:35:20', 1),
+	(50, 2, 5, '2025-03-25 01:09:05', 1),
+	(51, 2, 6, '2025-03-25 01:09:05', 1),
+	(52, 2, 7, '2025-03-25 01:09:05', 1);
 
 -- Volcando estructura para tabla helpdesk.permisos
 CREATE TABLE IF NOT EXISTS `permisos` (
@@ -98,26 +120,25 @@ CREATE TABLE IF NOT EXISTS `permisos` (
   KEY `IdModulo` (`IdModulo`),
   CONSTRAINT `FK_permisos_modulos` FOREIGN KEY (`IdModulo`) REFERENCES `modulos` (`IdModulo`),
   CONSTRAINT `FK_permisos_rol` FOREIGN KEY (`IdRol`) REFERENCES `rol` (`IdRol`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla helpdesk.permisos: ~15 rows (aproximadamente)
+-- Volcando datos para la tabla helpdesk.permisos: ~14 rows (aproximadamente)
 DELETE FROM `permisos`;
 INSERT INTO `permisos` (`IdPermiso`, `IdRol`, `IdModulo`, `R`, `W`, `U`, `D`, `DatecreatePermiso`) VALUES
-	(1, 1, 1, 1, 1, 1, 1, '2025-03-22 12:10:21'),
-	(2, 1, 2, 1, 1, 1, 1, '2025-03-22 12:12:28'),
-	(3, 1, 3, 1, 1, 1, 1, '2025-03-22 12:12:28'),
-	(4, 1, 4, 1, 1, 1, 1, '2025-03-22 12:12:28'),
-	(5, 1, 5, 1, 1, 1, 1, '2025-03-22 12:12:28'),
-	(6, 1, 6, 1, 1, 1, 1, '2025-03-22 12:12:28'),
-	(7, 1, 7, 1, 1, 1, 1, '2025-03-22 12:12:28'),
-	(8, 1, 8, 1, 1, 1, 1, '2025-03-22 12:12:28'),
-	(9, 1, 9, 1, 1, 1, 1, '2025-03-22 12:12:28'),
-	(10, 1, 10, 1, 1, 1, 1, '2025-03-22 12:12:28'),
-	(11, 1, 11, 1, 1, 1, 1, '2025-03-22 12:12:28'),
-	(12, 1, 12, 1, 1, 1, 1, '2025-03-22 12:12:28'),
-	(13, 1, 13, 1, 1, 1, 1, '2025-03-22 12:12:28'),
-	(14, 1, 14, 1, 1, 1, 1, '2025-03-22 12:12:28'),
-	(15, 1, 15, 1, 1, 1, 1, '2025-03-22 12:12:28');
+	(32, 1, 1, 1, 1, 1, 1, '2025-03-22 15:36:56'),
+	(33, 1, 2, 1, 1, 1, 1, '2025-03-22 15:36:56'),
+	(34, 1, 3, 1, 1, 1, 1, '2025-03-22 15:36:56'),
+	(35, 1, 4, 1, 1, 1, 1, '2025-03-22 15:36:56'),
+	(36, 1, 5, 1, 1, 1, 1, '2025-03-22 15:36:56'),
+	(37, 1, 6, 1, 1, 1, 1, '2025-03-22 15:36:56'),
+	(38, 1, 7, 1, 1, 1, 1, '2025-03-22 15:36:56'),
+	(39, 1, 8, 1, 1, 1, 1, '2025-03-22 15:36:56'),
+	(40, 1, 9, 1, 1, 1, 1, '2025-03-22 15:36:56'),
+	(41, 1, 10, 1, 1, 1, 1, '2025-03-22 15:36:56'),
+	(42, 1, 11, 1, 1, 1, 1, '2025-03-22 15:36:56'),
+	(43, 1, 12, 1, 1, 1, 1, '2025-03-22 15:36:56'),
+	(44, 1, 13, 1, 1, 1, 1, '2025-03-22 15:36:56'),
+	(45, 1, 14, 1, 1, 1, 1, '2025-03-22 15:36:56');
 
 -- Volcando estructura para tabla helpdesk.problema
 CREATE TABLE IF NOT EXISTS `problema` (
@@ -195,11 +216,11 @@ INSERT INTO `rol` (`IdRol`, `NombreRol`, `DescripcionRol`, `DatecreateRol`, `Sta
 	(1, 'Administrador', 'Gestiona el sistema, configura permisos y administ', '2025-03-22 11:51:38', 1),
 	(2, 'Soporte', 'Atiende incidencias, gestiona tickets y brinda asi', '2025-03-22 11:51:38', 1),
 	(3, 'Trabajador', 'Accede a módulos operativos según sus permisos', '2025-03-22 11:51:38', 1),
-	(4, 'Super Admin', 'Acceso total al sistema, incluso sobre administrad', '2025-03-22 12:08:39', 1),
+	(4, 'SuperAdmin', 'Acceso total al sistema, incluso sobre administrad', '2025-03-22 12:08:39', 1),
 	(5, 'Alcalde', 'Autoridad principal con acceso a reportes y audito', '2025-03-22 12:08:39', 1),
 	(6, 'Gerente', 'Gestión de áreas específicas con permisos administ', '2025-03-22 12:08:39', 1),
 	(7, 'Supervisor', 'Encargado de la supervisión de trabajadores y técn', '2025-03-22 12:08:39', 1),
-	(8, 'Usuario Registrado', 'Rol con acceso básico al sistema', '2025-03-22 12:08:39', 1);
+	(8, 'UsuarioRegistrado', 'Rol con acceso básico al sistema', '2025-03-22 12:08:39', 1);
 
 -- Volcando estructura para tabla helpdesk.tickets
 CREATE TABLE IF NOT EXISTS `tickets` (
@@ -241,18 +262,14 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   UNIQUE KEY `DNIUsuario` (`DNIUsuario`),
   KEY `RolUsuario` (`RolUsuario`),
   CONSTRAINT `FK_usuarios_rol` FOREIGN KEY (`RolUsuario`) REFERENCES `rol` (`IdRol`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla helpdesk.usuarios: ~7 rows (aproximadamente)
+-- Volcando datos para la tabla helpdesk.usuarios: ~3 rows (aproximadamente)
 DELETE FROM `usuarios`;
 INSERT INTO `usuarios` (`IdUsuario`, `NombresUsuario`, `ApellidosUsuario`, `TelefonoUsuario`, `DNIUsuario`, `CorreoUsuario`, `UsernameUsuario`, `PasswordUsuario`, `DatecreateUsuario`, `RolUsuario`, `StatusUsuario`) VALUES
-	(1, 'Javier Antonio ', 'Padin Flores ', '917189300', '74199531', 'javierpadin661@gmail.com', 'javier20', 'afad7b36d11a0e2c7b30ec3a16c9077d8e2c4117f282f257790bd9f70641d840', '2025-03-21 23:54:52', 1, 1),
-	(2, 'Mathias Gabriel', 'Padin Flores ', '924804802', '74199532', 'javierpadin662@gmail.com', 'mathias20', 'fc2e2294cd25e4383ac6995ffabe05cbf5ef46763f94aad805d069c17db9a28a', '2025-03-22 01:58:25', 2, 1),
-	(3, 'Juan', 'Pérez López', '987654321', '12345678', 'juan.perez@email.com', 'juanperez', '630e8b9d4b526f224f721c299f586309b6da475a4c536fa66a48d8d0b2db7ff4', '2025-03-22 01:59:49', 2, 1),
-	(4, 'María', 'González Torres', '912345678', '87654321', 'maria.gonzalez@email.com', 'mariagonzalez', '41262418c85bff0e53567a387f7a7a8cc62fcd17a3d0c8d341d069edbd8fdab2', '2025-03-22 01:59:49', 2, 1),
-	(5, 'Carlos', 'Ramírez Soto', '956789123', '56781234', 'carlos.ramirez@email.com', 'carlosramirez', '5eb9252dbe42943e955e8bcea05943cec5a71297c6ac55669185db29bd9f94f7', '2025-03-22 01:59:49', 3, 1),
-	(6, 'Ana', 'Fernández Díaz', '934567890', '34567890', 'ana.fernandez@email.com', 'anafernandez', '4b2b75f4cafde054cdabcdd3065b995f0379a39fa03da5853e5457c4fe091653', '2025-03-22 01:59:49', 3, 1),
-	(7, 'Luis', 'Martínez Rojas', '976543210', '23456789', 'luis.martinez@email.com', 'luismartinez', 'c94a21dc9372bbc8d0172deb5ad400826995af10f965fdc8f59d1353d6194e11', '2025-03-22 01:59:49', 3, 1);
+	(1, 'Javier Antonio ', 'Padin Flores ', '917189300', '74199531', 'javierpadin661@gmail.com', 'javier20', '297cf7d9afeb918e1d6b9c7b6385c08939921e1e69f0e825a2b2981a39ac2b9c', '2025-03-21 23:54:52', 1, 1),
+	(20, 'Jeanettis Marielee', 'Luyo Correaee', '999876545', '76543215', 'jeanettis@gmail.come', 'Jeanetteeeise', '35ae84e6875226920c3163da978246ff11a2d37367e5536fc73be28c14938814', '2025-03-24 01:08:51', 3, 1),
+	(21, 'Jose Angel', 'Huaman Samudio', '987654321', '76543213', 'josehuaman@gmail.com', 'amanda', 'afad7b36d11a0e2c7b30ec3a16c9077d8e2c4117f282f257790bd9f70641d840', '2025-03-24 19:28:52', 5, 1);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

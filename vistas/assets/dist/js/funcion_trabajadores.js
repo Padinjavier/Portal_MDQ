@@ -108,15 +108,15 @@ window.CargarTablaTrabajadores = function () {
                             <i class="fas fa-cog"></i> Opciones
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item text-success" href="#" onclick="verTrabajador(${trabajador.IdUsuario})">
+                            <button class="btn dropdown-item text-success bg-transparent" href="#" onclick="verTrabajador(${trabajador.IdUsuario})">
                                 <i class="fas fa-eye"></i> Ver
-                            </a>
-                            <a class="dropdown-item text-warning" href="#" onclick="editarTrabajador(${trabajador.IdUsuario})">
+                            </button>
+                            <button class="btn dropdown-item text-warning  bg-transparent" href="#" onclick="editarTrabajador(${trabajador.IdUsuario})">
                                 <i class="fas fa-edit"></i> Editar
-                            </a>
-                            <a class="dropdown-item text-danger" href="#" onclick="eliminarTrabajador(${trabajador.IdUsuario})">
+                            </button>
+                            <button class="btn dropdown-item text-danger bg-transparent" href="#" onclick="eliminarTrabajador(${trabajador.IdUsuario})">
                                 <i class="fas fa-trash"></i> Eliminar
-                            </a>
+                            </button>
                         </div>
                     </div>`
                 ]).draw(false);

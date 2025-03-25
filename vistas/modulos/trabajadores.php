@@ -76,15 +76,22 @@
                                     <td>Rolexample</td>
                                     <td>
                                         <div class="dropdown">
-                                            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button"
-                                                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
+                                            <button
+                                                class="btn btn-secondary dropdown-toggle btn-sm shadow-none over-grow-sm"
+                                                type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false">
                                                 <i class="fas fa-cog"></i> Opciones
                                             </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item" href="#">Ver</a>
-                                                <a class="dropdown-item" href="#">Editar</a>
-                                                <a class="dropdown-item" href="#">Eliminar</a>
+                                            <div class="dropdown-menu">
+                                                <button class="btn dropdown-item text-success border-0 bg-transparent">
+                                                    <i class="fas fa-eye"></i> Ver
+                                                </button>
+                                                <button class="btn dropdown-item text-warning border-0 bg-transparent">
+                                                    <i class="fas fa-edit"></i> Editar
+                                                </button>
+                                                <button class="btn dropdown-item text-danger border-0 bg-transparent">
+                                                    <i class="fas fa-trash"></i> Eliminar
+                                                </button>
                                             </div>
                                         </div>
                                     </td>
@@ -108,7 +115,7 @@
         <div class="modal-content">
             <div class="modal-header bg-success">
                 <h5 class="modal-title" id="modalFormTrabajadorLabel">Trabajador</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                <button class="close"  type="button" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -182,8 +189,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-success btn-sm" onclick="guardarTrabajador()">Guardar</button>
+                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cerrar</button>
+                <button class="btn btn-success btn-sm" type="button" onclick="guardarTrabajador()">Guardar</button>
             </div>
         </div>
     </div>
@@ -217,7 +224,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
