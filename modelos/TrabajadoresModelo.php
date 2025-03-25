@@ -73,8 +73,9 @@ class TrabajadoresModelo
     // inicio Crear un nuevo trabajador
     public function crearTrabajador($datos)
     {
-        if ($this->verificarDatosUnicos($datos)) {
-            throw new Exception("El correo, DNI, teléfono o nombre de usuario ya están registrados.");
+        $error = $this->verificarDatosUnicos($datos);
+        if ($error) {
+            throw new Exception($error);
         }
         $sql = "INSERT INTO usuarios (NombresUsuario, ApellidosUsuario, TelefonoUsuario, DNIUsuario, CorreoUsuario, UsernameUsuario, PasswordUsuario, RolUsuario) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, 3)";
@@ -99,8 +100,9 @@ class TrabajadoresModelo
     // inicio editar un nuevo trabajador
     public function editarTrabajador($id, $datos)
     {
-        if ($this->verificarDatosUnicos($datos, $id)) {
-            throw new Exception("El correo, DNI, teléfono o nombre de usuario ya están registrados.");
+        $error = $this->verificarDatosUnicos($datos, $id);
+        if ($error) {
+            throw new Exception($error);
         }
         if (!empty($datos['PasswordUsuario'])) {
             $sql = "UPDATE usuarios 
@@ -143,23 +145,27 @@ class TrabajadoresModelo
 
     public function verificarDatosUnicos($datos, $id = null)
     {
-        $sql = "SELECT COUNT(*) as count FROM usuarios WHERE (CorreoUsuario = ? OR DNIUsuario = ? OR TelefonoUsuario = ? OR UsernameUsuario = ?)";
-        if ($id !== null) {
-            $sql .= " AND IdUsuario != ?";
-        }
-        $stmt = $this->db->prepare($sql);
-        $params = [
-            $datos['CorreoUsuario'],
-            $datos['DNIUsuario'],
-            $datos['TelefonoUsuario'],
-            $datos['UsernameUsuario']
+        $campos = [
+            'CorreoUsuario' => "El correo ya está registrado.",
+            'DNIUsuario' => "El DNI ya está registrado.",
+            'TelefonoUsuario' => "El teléfono ya está registrado.",
+            'UsernameUsuario' => "El nombre de usuario ya está registrado."
         ];
-        if ($id !== null) {
-            $params[] = $id;
+        foreach ($campos as $campo => $mensaje) {
+            $sql = "SELECT COUNT(*) as count FROM usuarios WHERE $campo = ?";
+            if ($id !== null) {
+                $sql .= " AND IdUsuario != ?";
+            }
+            $stmt = $this->db->prepare($sql);
+            $params = ($id !== null) ? [$datos[$campo], $id] : [$datos[$campo]];
+            $stmt->execute($params);
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($resultado['count'] > 0) {
+                return $mensaje; // Retorna el mensaje del error encontrado
+            }
         }
-        $stmt->execute($params);
-        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $resultado['count'] > 0;
+         return false; // No hay duplicados
     }
 
 

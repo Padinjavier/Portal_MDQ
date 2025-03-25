@@ -229,7 +229,7 @@ function editarTrabajador(id) {
                 document.getElementById('telefono').value = response.data.TelefonoUsuario;
                 document.getElementById('correo').value = response.data.CorreoUsuario;
                 document.getElementById('usuario').value = response.data.UsernameUsuario;
-                document.getElementById('alerpassword').innerText = '(*) Ingrese una nueva contraseña solo si desea cambiarla. De lo contrario, déjelo vacío.';
+                cargarRolesSelect();
                 document.getElementById('modalFormTrabajadorLabel').innerText = 'Editar Trabajador';
                 $('#modalFormTrabajador').modal('show');
             } else {
@@ -287,8 +287,8 @@ function guardarTrabajador() {
 function openModal() {
     document.getElementById('formTrabajador').reset();
     document.getElementById('idTrabajador').value = "";
-    document.getElementById('alerpassword').innerText = '(*) Ingrese una nueva contraseña segura.';
     document.getElementById('modalFormTrabajadorLabel').innerText = 'Nuevo Trabajador';
+    cargarRolesSelect();
     $('#modalFormTrabajador').modal('show');
 }
 // fin editar trabajador
@@ -400,3 +400,31 @@ function eliminarRelacionModuloRol(rolesEliminados) {
         .catch(() => Swal.fire("Error", "Hubo un problema al eliminar la relación.", "error"));
 }
 // fin Función para eliminar la configuración
+
+
+
+
+function cargarRolesSelect() {
+    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarRoles`, { method: 'GET' })
+        .then(response => response.json())
+        .then(({ success, data, msg }) => {
+            if (!success) throw new Error(msg || 'Error al cargar los roles');
+
+            const selectRol = document.getElementById('rol');
+            selectRol.innerHTML = '<option value="">Seleccione un rol</option>'; // Resetear select
+            // Filtrar solo roles que sean de "Trabajadores" o "No asignado"
+            data.filter(({ NombreModulo }) => 
+                NombreModulo === "Trabajadores" || NombreModulo === "No asignado"
+            ).forEach(({ IdRol, NombreRol }) => {
+                const option = document.createElement('option');
+                option.value = IdRol;
+                option.textContent = NombreRol;
+                selectRol.appendChild(option);
+            });
+            
+        })
+        .catch(error => {
+            console.error('Error al cargar roles:', error);
+            Swal.fire("Error", "No se pudieron cargar los roles.", "error");
+        });
+}

@@ -20,7 +20,8 @@
                         aria-haspopup="true" aria-expanded="false" onclick="cargarRoles()">
                         <i class="fas fa-cog"></i> Configuración
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" data-bs-auto-close="outside">
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
+                        data-bs-auto-close="outside">
                         <h6 class="dropdown-header bg-success fw-bold"
                             title="Estos son los roles que se veran en esta tabla, algunos ya estas en otra tabla quitelos de esas para agregarlos a esta.">
                             Opciones de tabla</h6>
@@ -160,12 +161,18 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="password">Contraseña</label>
-                                <br>
-                                <small class="text-danger" id="alerpassword">(*)</small>
                                 <input type="text" class="form-control form-control-sm" id="password" name="password">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="rol">Rol</label>
+                                <select class="form-control form-control-sm" id="rol" name="rol">
+                                    <option value="">Seleccione un rol</option>
+                                </select>
                             </div>
                         </div>
                     </div>
