@@ -18,12 +18,13 @@ class TrabajadoresModelo
 // inicio Obtener todos los trabajadores asignados al módulo de Trabajadores
     public function CargarTablaTrabajadores()
     {
-        $sql = "SELECT u.* 
-            FROM usuarios u
-            INNER JOIN modulo_roles mr ON u.RolUsuario = mr.IdRol
-            INNER JOIN modulos m ON mr.IdModulo = m.IdModulo
-            WHERE m.NombreModulo = 'Trabajadores' 
-            AND u.StatusUsuario = 1";
+        $sql = "SELECT u.*, r.NombreRol
+                FROM usuarios u, rol r,modulo_roles mr ,modulos m
+                WHERE m.NombreModulo = 'Trabajadores' 
+                AND u.StatusUsuario = 1 
+                AND u.RolUsuario = r.IdRol
+                AND mr.IdRol = u.RolUsuario
+                AND mr.IdModulo = m.IdModulo";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
@@ -78,7 +79,7 @@ class TrabajadoresModelo
             throw new Exception($error);
         }
         $sql = "INSERT INTO usuarios (NombresUsuario, ApellidosUsuario, TelefonoUsuario, DNIUsuario, CorreoUsuario, UsernameUsuario, PasswordUsuario, RolUsuario) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, 3)";
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
         $passwordHash = hash('sha256', $datos['PasswordUsuario']);
         return $stmt->execute([
@@ -88,7 +89,8 @@ class TrabajadoresModelo
             $datos['DNIUsuario'],
             $datos['CorreoUsuario'],
             $datos['UsernameUsuario'],
-            $passwordHash
+            $passwordHash,
+            $datos['RolUsuario'],
         ]);
     }
     // fin Crear un nuevo trabajador
@@ -106,7 +108,7 @@ class TrabajadoresModelo
         }
         if (!empty($datos['PasswordUsuario'])) {
             $sql = "UPDATE usuarios 
-                  SET NombresUsuario = ?, ApellidosUsuario = ?, TelefonoUsuario = ?, DNIUsuario = ?, CorreoUsuario = ?, UsernameUsuario = ?, PasswordUsuario = ? 
+                  SET NombresUsuario = ?, ApellidosUsuario = ?, TelefonoUsuario = ?, DNIUsuario = ?, CorreoUsuario = ?, UsernameUsuario = ?, PasswordUsuario = ?, RolUsuario = ? 
                   WHERE IdUsuario = ?";
             $stmt = $this->db->prepare($sql);
             $passwordHash = hash('sha256', $datos['PasswordUsuario']);
@@ -118,11 +120,12 @@ class TrabajadoresModelo
                 $datos['CorreoUsuario'],
                 $datos['UsernameUsuario'],
                 $passwordHash,
+                $datos['RolUsuario'],
                 $id
             ];
         } else {
             $sql = "UPDATE usuarios 
-                  SET NombresUsuario = ?, ApellidosUsuario = ?, TelefonoUsuario = ?, DNIUsuario = ?, CorreoUsuario = ?, UsernameUsuario = ? 
+                  SET NombresUsuario = ?, ApellidosUsuario = ?, TelefonoUsuario = ?, DNIUsuario = ?, CorreoUsuario = ?, UsernameUsuario = ?, RolUsuario = ? 
                   WHERE IdUsuario = ?";
             $stmt = $this->db->prepare($sql);
             $params = [
@@ -132,6 +135,7 @@ class TrabajadoresModelo
                 $datos['DNIUsuario'],
                 $datos['CorreoUsuario'],
                 $datos['UsernameUsuario'],
+                $datos['RolUsuario'],
                 $id
             ];
         }

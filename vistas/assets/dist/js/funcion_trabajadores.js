@@ -6,8 +6,8 @@ $(document).ready(function () {
             "url": `${BASE_URL}/assets/i18n/Spanish.json` // Asegúrate de que esta URL sea correcta
         },
         "columnDefs": [
-            { "orderable": true, "targets": [0, 1, 2, 3, 4, 5, 6] }, // Columnas ordenables
-            { "orderable": false, "targets": [7] } // Columna de acciones no ordenable
+            { "orderable": true, "targets": [0, 1, 2, 3, 4, 5, 6,7 ]}, // Columnas ordenables
+            { "orderable": false, "targets": [8] } // Columna de acciones no ordenable
         ],
         "paging": true, // Habilitar paginación
         "pageLength": 10, // Número de filas por página
@@ -30,7 +30,7 @@ $(document).ready(function () {
                 "className": "btn btn-secondary",
                 "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5]
+                    "columns": [0, 1, 2, 3, 4, 5,6]
                 }
             }, {
                 "extend": "excelHtml5",
@@ -39,7 +39,7 @@ $(document).ready(function () {
                 "className": "btn btn-success",
                 "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5]
+                    "columns": [0, 1, 2, 3, 4, 5,6]
                 }
             }, {
                 "extend": "pdfHtml5",
@@ -48,7 +48,7 @@ $(document).ready(function () {
                 "className": "btn btn-danger",
                 "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5]
+                    "columns": [0, 1, 2, 3, 4, 5,6]
                 }
             }, {
                 "extend": "csvHtml5",
@@ -57,7 +57,7 @@ $(document).ready(function () {
                 "className": "btn btn-info d-none",
                 "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5]
+                    "columns": [0, 1, 2, 3, 4, 5,6]
                 }
             },
             {
@@ -67,7 +67,7 @@ $(document).ready(function () {
                 "className": "btn btn-info",
                 // "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5]
+                    "columns": [0, 1, 2, 3, 4, 5,6]
                 }
             }
         ],
@@ -102,6 +102,7 @@ window.CargarTablaTrabajadores = function () {
                     trabajador.TelefonoUsuario,
                     trabajador.CorreoUsuario,
                     trabajador.UsernameUsuario,
+                    trabajador.NombreRol,
                     `<div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-cog"></i> Opciones
@@ -216,30 +217,33 @@ function eliminarTrabajador(id) {
 
 
 // inicio editar trabajador
-function editarTrabajador(id) {
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=obtenerTrabajadorPorId&id=${id}`, { method: 'GET' })
-        .then(response => response.json())
-        .then(response => {
-            if (response.success) {
-                document.getElementById('formTrabajador').reset();
-                document.getElementById('idTrabajador').value = response.data.IdUsuario;
-                document.getElementById('nombre').value = response.data.NombresUsuario;
-                document.getElementById('apellido').value = response.data.ApellidosUsuario;
-                document.getElementById('dni').value = response.data.DNIUsuario;
-                document.getElementById('telefono').value = response.data.TelefonoUsuario;
-                document.getElementById('correo').value = response.data.CorreoUsuario;
-                document.getElementById('usuario').value = response.data.UsernameUsuario;
-                cargarRolesSelect();
-                document.getElementById('modalFormTrabajadorLabel').innerText = 'Editar Trabajador';
-                $('#modalFormTrabajador').modal('show');
-            } else {
-                Swal.fire("Error", trabajador.msg, "error");
-            }
-        })
-        .catch(error => {
-            console.error('Error al obtener el trabajador:', error);
-            Swal.fire("Error", "No se pudo obtener la información del trabajador.", "error");
-        });
+async function editarTrabajador(id) {
+    try {
+        const response = await fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=obtenerTrabajadorPorId&id=${id}`);
+        const result = await response.json();
+        if (result.success) {
+            // Carga los roles y espera a que termine
+            await cargarRolesSelect();
+            // Llena el formulario
+            document.getElementById('idTrabajador').value = result.data.IdUsuario;
+            document.getElementById('nombre').value = result.data.NombresUsuario;
+            document.getElementById('apellido').value = result.data.ApellidosUsuario;
+            document.getElementById('dni').value = result.data.DNIUsuario;
+            document.getElementById('telefono').value = result.data.TelefonoUsuario;
+            document.getElementById('correo').value = result.data.CorreoUsuario;
+            document.getElementById('usuario').value = result.data.UsernameUsuario;
+            // Asigna el valor del rol (¡sin selectpicker!)
+            document.getElementById('rol').value = result.data.RolUsuario;
+            // Muestra el modal
+            document.getElementById('modalFormTrabajadorLabel').innerText = 'Editar Trabajador';
+            $('#modalFormTrabajador').modal('show');
+        } else {
+            Swal.fire("Error", result.msg, "error");
+        }
+    } catch (error) {
+        console.error('Error al obtener el trabajador:', error);
+        Swal.fire("Error", "No se pudo obtener la información del trabajador.", "error");
+    }
 }
 // fin editar trabajador
 
@@ -273,8 +277,8 @@ function guardarTrabajador() {
         }
     })
     .catch(error => {
-        console.error(error); // Imprime el error en la consola
-        Swal.fire("Error", "Hubo un problema al procesar la solicitud: " + error.message, "error");
+        console.error("Error:", error);
+        Swal.fire("Error", "Hubo un problema al procesar la solicitud", "error");
     });
 }
 // fin guardar trabajador
@@ -405,26 +409,27 @@ function eliminarRelacionModuloRol(rolesEliminados) {
 
 
 function cargarRolesSelect() {
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarRoles`, { method: 'GET' })
-        .then(response => response.json())
-        .then(({ success, data, msg }) => {
-            if (!success) throw new Error(msg || 'Error al cargar los roles');
+    return new Promise((resolve, reject) => {
+        fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarRoles`)
+            .then(response => response.json())
+            .then(({ success, data, msg }) => {
+                if (!success) {
+                    reject(msg || 'Error al cargar los roles');
+                    return;
+                }
 
-            const selectRol = document.getElementById('rol');
-            selectRol.innerHTML = '<option value="">Seleccione un rol</option>'; // Resetear select
-            // Filtrar solo roles que sean de "Trabajadores" o "No asignado"
-            data.filter(({ NombreModulo }) => 
-                NombreModulo === "Trabajadores" || NombreModulo === "No asignado"
-            ).forEach(({ IdRol, NombreRol }) => {
-                const option = document.createElement('option');
-                option.value = IdRol;
-                option.textContent = NombreRol;
-                selectRol.appendChild(option);
-            });
-            
-        })
-        .catch(error => {
-            console.error('Error al cargar roles:', error);
-            Swal.fire("Error", "No se pudieron cargar los roles.", "error");
-        });
+                const select = document.getElementById('rol');
+                select.innerHTML = '<option value="">Seleccione un rol</option>';
+
+                data.forEach(({ IdRol, NombreRol }) => {
+                    const option = document.createElement('option');
+                    option.value = IdRol;
+                    option.textContent = NombreRol;
+                    select.appendChild(option);
+                });
+
+                resolve();
+            })
+            .catch(error => reject(error));
+    });
 }

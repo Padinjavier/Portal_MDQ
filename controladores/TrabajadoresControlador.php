@@ -76,7 +76,8 @@ class TrabajadoresControlador
                 'DNIUsuario' => $_POST['dni'] ?? null,
                 'CorreoUsuario' => $_POST['correo'] ?? null,
                 'UsernameUsuario' => $_POST['usuario'] ?? null,
-                'PasswordUsuario' => $_POST['password'] ?? null // Si es necesario
+                'PasswordUsuario' => $_POST['password'] ?? null, // Si es necesario
+                'RolUsuario' => $_POST['rol'] ?? null // Si es necesario
             ];
 
             // Validar datos
@@ -114,7 +115,8 @@ class TrabajadoresControlador
                 'DNIUsuario' => $_POST['dni'] ?? null,
                 'CorreoUsuario' => $_POST['correo'] ?? null,
                 'UsernameUsuario' => $_POST['usuario'] ?? null,
-                'idTrabajador' => $_POST['idTrabajador'] ?? null,
+                'RolUsuario' => $_POST['rol'] ?? null,
+                'IdTrabajador' => $_POST['idTrabajador'] ?? null,
             ];
             if (!empty($_POST['password'])) {
                 $datos['PasswordUsuario'] = $_POST['password'];

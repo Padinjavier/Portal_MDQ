@@ -59,6 +59,7 @@
                                     <th class="font-weight-bold">Teléfono</th>
                                     <th class="font-weight-bold">Correo</th>
                                     <th class="font-weight-bold">Usuario</th>
+                                    <th class="font-weight-bold">Rol</th>
                                     <th class="font-weight-bold">Acciones</th>
                                 </tr>
                             </thead>
@@ -72,6 +73,7 @@
                                     <td>12345678</td>
                                     <td>example@example.com</td>
                                     <td>example</td>
+                                    <td>Rolexample</td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-secondary dropdown-toggle btn-sm" type="button"
@@ -172,6 +174,7 @@
                                 <label for="rol">Rol</label>
                                 <select class="form-control form-control-sm" id="rol" name="rol">
                                     <option value="">Seleccione un rol</option>
+                                    <!-- Las opciones se cargarán dinámicamente -->
                                 </select>
                             </div>
                         </div>
