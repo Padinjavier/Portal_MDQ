@@ -13,7 +13,7 @@ require_once __DIR__ . '/../Config/Config.php';
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Iconos Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"> -->
     <!-- CSS STYLES -->
     <link rel="stylesheet" href="vistas/assets/plugins/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="vistas/assets/dist/css/adminlte.css">
@@ -51,7 +51,7 @@ require_once __DIR__ . '/../Config/Config.php';
         ?>
     </div>
     <!-- Scripts -->
-    <script src="vistas/assets/plugins/jquery/jquery.min.js"></script>
+    <!-- <script src="vistas/assets/plugins/jquery/jquery.min.js"></script> -->
     <script src="vistas/assets/plugins/bootstrap/js/bootstrap.bundle.js"></script>
     <script src="vistas/assets/dist/js/adminlte.js"></script>
     <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
