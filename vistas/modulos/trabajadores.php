@@ -45,6 +45,33 @@
         <div class="col-md-12">
             <div class="card shadow-sm" style="border-radius: 30px;">
                 <div class="card-body p-4">
+                    <div title="Botones para exportar">
+                        <!-- Botón de Excel -->
+                        <button class="btn btn-secondary buttons-excel buttons-html5 btn-success" tabindex="0"
+                            aria-controls="tableTrabajadores" type="button" title="Exportar a Excel">
+                            <span><i class="bi bi-file-earmark-excel"></i> Excel</span>
+                        </button>
+
+                        <!-- Botón de PDF -->
+                        <button class="btn btn-secondary buttons-pdf buttons-html5 btn-danger" tabindex="0"
+                            aria-controls="tableTrabajadores" type="button" title="Exportar a PDF">
+                            <span><i class="bi bi-filetype-pdf"></i> Pdf</span>
+                        </button>
+
+                        <!-- Botón de CSV (deshabilitado, visible, bloqueado en gris) -->
+                        <button class="btn bg-secondary buttons-csv buttons-html5  disabled" tabindex="0"
+                            aria-controls="tableTrabajadores" type="button" title="Exportar a CSV" disabled>
+                            <span><i class="fas fa-file-csv"></i> CSV</span>
+                        </button>
+
+                        <!-- Botón de JSON (deshabilitado, visible, bloqueado en gris) -->
+                        <button class="btn bg-secondary buttons-csv buttons-html5  disabled" tabindex="0"
+                            aria-controls="tableTrabajadores" type="button" title="Exportar a JSON" disabled>
+                            <span><i class="fas fa-file-code"></i> JSON</span>
+                        </button>
+                    </div>
+                    <div class="dt-buttons btn-group flex-wrap">
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered w-100" id="tableTrabajadores"
                             style="background-color: white;">
@@ -62,38 +89,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Datos de ejemplo en texto plano -->
-                                <tr>
-                                    <td class="font-weight-bold">1</td>
-                                    <td>example</td>
-                                    <td>example</td>
-                                    <td>12345678</td>
-                                    <td>12345678</td>
-                                    <td>example@example.com</td>
-                                    <td>example</td>
-                                    <td>Rolexample</td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button
-                                                class="btn btn-secondary dropdown-toggle btn-sm shadow-none over-grow-sm"
-                                                type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-cog"></i> Opciones
-                                            </button>
-                                            <div class="dropdown-menu">
-                                                <button class="btn dropdown-item text-success border-0 bg-transparent">
-                                                    <i class="fas fa-eye"></i> Ver
-                                                </button>
-                                                <button class="btn dropdown-item text-warning border-0 bg-transparent">
-                                                    <i class="fas fa-edit"></i> Editar
-                                                </button>
-                                                <button class="btn dropdown-item text-danger border-0 bg-transparent">
-                                                    <i class="fas fa-trash"></i> Eliminar
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                <!-- se agregan los datos automaticamente con js   -->
                             </tbody>
                         </table>
                     </div>

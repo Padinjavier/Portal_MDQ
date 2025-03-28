@@ -1,5 +1,5 @@
 <?php
-// C:\wamp64\www\helpmdq\modelos\TrabajadoresModelo.php
+// C:\wamp64\www\helpmdq\modelos\trabajadores\TrabajadoresModelo.php
 class TrabajadoresModelo
 {
     private $db;

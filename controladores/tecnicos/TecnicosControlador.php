@@ -1,6 +1,6 @@
 <?php
-require_once "../modelos/TecnicosModelo.php";
-require_once "../Config/Config.php"; // Asegúrate de que tienes la clase de conexión
+require_once "../../modelos/tecnicos/TecnicosModelo.php";
+require_once "../../Config/Config.php"; // Asegúrate de que tienes la clase de conexión
 
 $conexion = new Conexion();
 $TecnicosModelo = new TecnicosModelo($conexion);

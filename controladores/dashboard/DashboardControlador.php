@@ -1,7 +1,7 @@
 <?php
 // C:\wamp64\www\helpmdq\controladores\DashboardControlador.php
-require_once '../modelos/DashboardModelo.php';
-require_once '../Config/Config.php'; // Incluir la configuración
+require_once '../../modelos/dashboard/DashboardModelo.php';
+require_once '../../Config/Config.php'; // Incluir la configuración
 
 class DashboardControlador {
     private $DashboardModelo;

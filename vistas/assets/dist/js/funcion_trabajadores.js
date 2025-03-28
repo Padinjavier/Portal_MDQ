@@ -17,7 +17,7 @@ $(document).ready(function () {
         "info": true, // Mostrar información de paginación
         "autoWidth": false, // Deshabilitar ajuste automático de ancho
         "responsive": true, // Hacer la tabla responsive
-        "dom": 'lBfrtip', // Posición de los elementos de la tabla
+        "dom": 'lfrtip', // Posición de los elementos de la tabla
         "bDestroy": true,
         "iDisplayLength": 10,
         "lengthMenu": [5, 10, 25, 50, 100], // Opciones de longitud de página
@@ -83,7 +83,7 @@ $(document).ready(function () {
 
 // inicio completar trabajadores 
 window.CargarTablaTrabajadores = function () {
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarTablaTrabajadores`, { method: 'GET' })
+    fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=CargarTablaTrabajadores`, { method: 'GET' })
         .then(response => response.json())
         .then(response => {
             if (!response.success) {
@@ -142,7 +142,7 @@ window.CargarTablaTrabajadores = function () {
 
 // inicio ver trabajador
 function verTrabajador(id) {
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=obtenerTrabajadorPorId&id=${id}`, { method: 'GET' })
+    fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=obtenerTrabajadorPorId&id=${id}`, { method: 'GET' })
         .then(response => response.json())
         .then(response => {
             if (!response.success) {
@@ -178,7 +178,7 @@ function eliminarTrabajador(id) {
         cancelButtonText: "No, cancelar!",
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=eliminarTrabajador`, {
+            fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=eliminarTrabajador`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: id }),
@@ -220,7 +220,7 @@ function eliminarTrabajador(id) {
 // inicio editar trabajador
 async function editarTrabajador(id) {
     try {
-        const response = await fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=obtenerTrabajadorPorId&id=${id}`);
+        const response = await fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=obtenerTrabajadorPorId&id=${id}`);
         const result = await response.json();
         if (result.success) {
             document.getElementById('formTrabajador').reset();
@@ -258,7 +258,7 @@ function guardarTrabajador() {
     const formData = new FormData(document.getElementById('formTrabajador'));
     const accion = document.getElementById('idTrabajador').value ? 'editarTrabajador' : 'crearTrabajador';
 
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=${accion}`, {
+    fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=${accion}`, {
         method: 'POST',
         body: formData
     })
@@ -334,7 +334,7 @@ function closeConfigMenuOnClickOutside(event) {
 // inicio Función para cargar los roles desde el servidor
 let estadoInicialRoles = {}; // Guarda el estado inicial de los roles
 function cargarRoles() {
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarRoles`, { method: 'GET' })
+    fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=CargarRoles`, { method: 'GET' })
         .then(response => response.json())
         .then(({ success, data, msg }) => {
             if (!success) throw new Error(msg || 'Error al cargar los roles');
@@ -399,7 +399,7 @@ function guardarConfiguracion() {
     }
     // Enviar solo los roles activados
     if (rolesNuevos.length > 0) {
-        fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=guardarConfiguracion`, {
+        fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=guardarConfiguracion`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ roles: rolesNuevos })
@@ -429,7 +429,7 @@ function guardarConfiguracion() {
 
 // Inicio Función para eliminar la configuración
 function eliminarRelacionModuloRol(rolesEliminados) {
-    fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=eliminarRelacionModuloRol`, {
+    fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=eliminarRelacionModuloRol`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ roles: rolesEliminados })
@@ -455,7 +455,7 @@ function eliminarRelacionModuloRol(rolesEliminados) {
 // inicio funcion cargar roles en select para formuladio de nuevo o editar
 function cargarRolesSelect() {
     return new Promise((resolve, reject) => {
-        fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarRoles`)
+        fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=CargarRoles`)
             .then(response => response.json())
             .then(({ success, data, msg }) => {
                 if (!success) {

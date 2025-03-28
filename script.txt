@@ -75,3 +75,25 @@ DELIMITER ;
 Se crea una variable @new_id que empieza en 0.
 Se reordena la tabla permisos agrupando primero por IdRol y asignando IDs secuenciales.
 Así, los permisos del Rol 1 estarán siempre juntos, luego los del Rol 2, etc.
+
+
+
+medicion de tiempos de carga de las secicones
+let tiempos = [];
+let iteraciones = 10; // Número de veces que recargará
+
+async function medirCarga() {
+    for (let i = 0; i < iteraciones; i++) {
+        let inicio = performance.now();
+        await fetch(window.location.href, { cache: "reload" }); // Recarga sin caché
+        let fin = performance.now();
+        let tiempoCarga = fin - inicio;
+        tiempos.push(tiempoCarga);
+        console.log(`Carga ${i + 1}: ${tiempoCarga.toFixed(2)} ms`);
+    }
+    
+    let promedio = tiempos.reduce((a, b) => a + b, 0) / tiempos.length;
+    console.log(`Tiempo promedio de carga: ${promedio.toFixed(2)} ms`);
+}
+
+medirCarga();

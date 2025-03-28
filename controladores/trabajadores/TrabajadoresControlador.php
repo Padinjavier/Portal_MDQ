@@ -1,6 +1,6 @@
 <?php
-require_once '../modelos/TrabajadoresModelo.php';
-require_once '../Config/Config.php'; // Incluir Config.php
+require_once '../../modelos/trabajadores/TrabajadoresModelo.php';
+require_once '../../Config/Config.php'; // Incluir Config.php
 
 class TrabajadoresControlador
 {

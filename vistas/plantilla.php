@@ -18,7 +18,8 @@ require_once __DIR__ . '/../Config/Config.php';
     <!-- Iconos Bootstrap -->
     <!-- Biblioteca de iconos de Bootstrap que se usa en la interfaz para representar acciones -->
     <link rel="stylesheet" href="vistas/assets/plugins/fontawesome-free/css/all.min.css">
-    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <!-- CSS STYLES -->
     <!-- Estilos básicos para la interfaz, incluyendo diseño y colores -->
     <link rel="stylesheet" href="vistas/assets/dist/css/adminlte.css">
@@ -105,6 +106,10 @@ require_once __DIR__ . '/../Config/Config.php';
     <!-- Exportación a HTML5 -->
     <!-- Funcionalidad para exportar la tabla a formato HTML -->
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 
 </html>
