@@ -1,39 +1,41 @@
 <!-- C:\wamp64\www\helpmdq\vistas\modulos\layout\sidebar_lateral.php -->
+<!-- Sidebar -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4 menu_lateral h-100 d-flex flex-column position-fixed">
-    <!-- Sidebar -->
-    <div class="sidebar d-flex flex-column h-100 p-0">
+    <!-- Brand Logo -->
+    <a href="index.php" class="brand-link">
+        <img src="vistas/assets/dist/img/escudo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+            style="opacity: .8">
+        <span class="brand-text font-weight-light">PORTALMDQ</span>
+    </a>
+    <div class="sidebar">
         <!-- Sidebar user-->
-        <div class="user-panel d-flex align-items-center h-58px flex-shrink-0">
-            <style>
-                .h-58px {
-                    height: 58px !important;
-                    /* Fuerza el alto a 58px */
-                }
-            </style>
-            <!-- Iniciales en un círculo -->
+        <div class="user-panel mt-2 pb-2 mb-2 d-flex">
             <div class="image">
-                <div class="rounded-circle bg-success d-flex align-items-center justify-content-center"
-                    style="width: 35px; height: 35px;">
-                    <?php
-                    // Obtener las iniciales del nombre y apellido
-                    $nombre = $_SESSION['Login_NombresUsuario'] ?? 'Usuario';
-                    $apellido = $_SESSION['Login_ApellidosUsuario'] ?? 'Anónimo';
-                    $inicialNombre = substr($nombre, 0, 1); // Primera letra del nombre
-                    $inicialApellido = substr($apellido, 0, 1); // Primera letra del apellido
-                    echo '<span class="text-white font-weight-bold text-uppercase">' . strtoupper($inicialNombre . $inicialApellido) . '</span>';
-                    ?>
-                </div>
+                <!-- <img src="vistas/assets/dist/img/user1-128x128.jpg" class="img-circle elevation-2" alt="User Image"> -->
+                <svg id="userIcon" width="35" height="35" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Círculo de fondo -->
+                    <circle cx="25" cy="25" r="24" fill="#28a745" />
+                    <!-- Texto de iniciales (dinámico) -->
+                    <text id="initials" x="50%" y="60%" font-size="18" font-weight="bold" text-anchor="middle"
+                        fill="white" font-family="Arial">
+                        <?php
+                        // Obtener las iniciales del nombre y apellido
+                        $nombre = $_SESSION['Login_NombresUsuario'] ?? 'Usuario';
+                        $apellido = $_SESSION['Login_ApellidosUsuario'] ?? 'Anónimo';
+                        $inicialNombre = substr($nombre, 0, 1); // Primera letra del nombre
+                        $inicialApellido = substr($apellido, 0, 1); // Primera letra del apellido
+                        echo strtoupper($inicialNombre . $inicialApellido);
+                        ?>
+                    </text>
+                </svg>
             </div>
-            <!-- Nombre y apellido -->
-            <div class="info ml-3">
-                <a href="#" class="d-block text-white"><?php echo $_SESSION['Login_NombresUsuario'] ?? 'Usuario'; ?></a>
-                <a href="#"
-                    class="d-block text-white"><?php echo $_SESSION['Login_ApellidosUsuario'] ?? 'Anónimo'; ?></a>
+            <div class="info">
+                <a href="#" class="d-block"><?php echo $_SESSION['Login_NombresUsuario'] ?? 'Usuario'; ?></a>
             </div>
         </div>
 
         <!-- Resto del código del sidebar -->
-        <nav class="mt-2 flex-grow-1 overflow-auto">
+        <nav class="mt-2 flex-grow-1">
             <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu"
                 data-accordion="false">
                 <!-- Contenido del menú lateral -->
@@ -58,7 +60,7 @@
                 <!-- Gestión de Trabajadores -->
                 <?php if ($_SESSION['Login_Permisos']['Trabajadores']['Leer'] == 1): ?>
                     <li class="nav-item">
-                    <a href="index.php?ruta=trabajadores" class="nav-link">
+                        <a href="index.php?ruta=trabajadores" class="nav-link">
                             <i class="nav-icon fas fa-users"></i>
                             <p>Trabajadores</p>
                         </a>
@@ -72,7 +74,7 @@
                 <!-- Gestión de Técnicos -->
                 <?php if ($_SESSION['Login_Permisos']['Técnicos']['Leer'] == 1): ?>
                     <li class="nav-item">
-                    <a href="index.php?ruta=tecnicos" class="nav-link">
+                        <a href="index.php?ruta=tecnicos" class="nav-link">
                             <i class="nav-icon fas fa-tools"></i>
                             <p>Técnicos</p>
                         </a>
@@ -93,7 +95,7 @@
 
                             <?php if ($_SESSION['Login_Permisos']['Roles']['Leer'] == 1): ?>
                                 <li class="nav-item">
-                                <a href="index.php?ruta=roles" class="nav-link">
+                                    <a href="index.php?ruta=roles" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Roles</p>
                                     </a>
@@ -103,7 +105,7 @@
 
                             <?php if ($_SESSION['Login_Permisos']['Permisos']['Leer'] == 1): ?>
                                 <li class="nav-item">
-                                <a href="index.php?ruta=permisos" class="nav-link">
+                                    <a href="index.php?ruta=permisos" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Permisos</p>
                                     </a>
@@ -139,7 +141,7 @@
 
                             <?php if ($_SESSION['Login_Permisos']['Reportes de Inventario']['Leer'] == 1): ?>
                                 <li class="nav-item">
-                                <a href="index.php?ruta=reporteinventario" class="nav-link">
+                                    <a href="index.php?ruta=reporteinventario" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Reportes</p>
                                     </a>
@@ -165,7 +167,7 @@
 
                             <?php if ($_SESSION['Login_Permisos']['Gestión de Tickets']['Leer'] == 1): ?>
                                 <li class="nav-item">
-                                <a href="index.php?ruta=gestiontickets" class="nav-link">
+                                    <a href="index.php?ruta=gestiontickets" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Gestión de Tickets</p>
                                     </a>
@@ -175,7 +177,7 @@
 
                             <?php if ($_SESSION['Login_Permisos']['Reportes de Tickets']['Leer'] == 1): ?>
                                 <li class="nav-item">
-                                <a href="index.php?ruta=reportetickets" class="nav-link">
+                                    <a href="index.php?ruta=reportetickets" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Reportes</p>
                                     </a>
@@ -193,7 +195,7 @@
                 <!-- Problemas -->
                 <?php if ($_SESSION['Login_Permisos']['Problemas']['Leer'] == 1): ?>
                     <li class="nav-item">
-                    <a href="index.php?ruta=problemas" class="nav-link">
+                        <a href="index.php?ruta=problemas" class="nav-link">
                             <i class="nav-icon fas fa-exclamation-triangle"></i>
                             <p>Problemas</p>
                         </a>
@@ -207,7 +209,7 @@
                 <!-- Tips -->
                 <?php if ($_SESSION['Login_Permisos']['Tips']['Leer'] == 1): ?>
                     <li class="nav-item">
-                    <a href="index.php?ruta=tips" class="nav-link">
+                        <a href="index.php?ruta=tips" class="nav-link">
                             <i class="nav-icon fas fa-lightbulb"></i>
                             <p>Tips</p>
                         </a>
@@ -221,7 +223,7 @@
                 <!-- Preguntas Frecuentes -->
                 <?php if ($_SESSION['Login_Permisos']['Preguntas Frecuentes']['Leer'] == 1): ?>
                     <li class="nav-item">
-                    <a href="index.php?ruta=preguntasfrecuentes" class="nav-link">
+                        <a href="index.php?ruta=preguntasfrecuentes" class="nav-link">
                             <i class="nav-icon fas fa-question-circle"></i>
                             <p>Preguntas Frecuentes</p>
                         </a>
@@ -235,7 +237,7 @@
                 <!-- Manuales -->
                 <?php if ($_SESSION['Login_Permisos']['Manuales']['Leer'] == 1): ?>
                     <li class="nav-item">
-                    <a href="index.php?ruta=manuales" class="nav-link">
+                        <a href="index.php?ruta=manuales" class="nav-link">
                             <i class="nav-icon fas fa-book"></i>
                             <p>Manuales</p>
                         </a>
