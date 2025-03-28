@@ -15,20 +15,20 @@
                         <i class="fas fa-plus-circle"></i> Nuevo
                     </button>
                 </h1>
-                <div class="dropdown">
-                    <button class="btn btn-primary btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false" onclick="cargarRoles()">
+                <div class="position-relative">
+                    <button class="btn btn-primary btn-sm" type="button" id="configButton"
+                        onclick="toggleConfigMenu(); cargarRoles()">
                         <i class="fas fa-cog"></i> Configuración
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
-                        data-bs-auto-close="outside">
+                    <div class="config-menu shadow-sm bg-white pb-2 mt-2 border position-absolute " id="configMenu"
+                        style="display: none; right: 0; top: 100%; z-index: 1000;">
                         <h6 class="dropdown-header bg-success fw-bold"
-                            title="Estos son los roles que se veran en esta tabla, algunos ya estas en otra tabla quitelos de esas para agregarlos a esta.">
+                            title="Estos son los roles que se verán en esta tabla, algunos ya están en otra tabla quitelos de esas para agregarlos a esta.">
                             Opciones de tabla</h6>
                         <div id="roles-list" class="px-3">
                             <!-- Aquí se cargarán los roles dinámicamente -->
                         </div>
-                        <div class="dropdown-divider "></div>
+                        <div class="dropdown-divider"></div>
                         <div class="d-flex">
                             <button class="btn btn-success btn-sm mx-auto" type="button"
                                 onclick="guardarConfiguracion()">
@@ -40,8 +40,6 @@
             </div>
         </div>
     </div>
-
-
     <!-- Tabla de Trabajadores -->
     <div class="row">
         <div class="col-md-12">
@@ -115,7 +113,7 @@
         <div class="modal-content">
             <div class="modal-header bg-success">
                 <h5 class="modal-title" id="modalFormTrabajadorLabel">Trabajador</h5>
-                <button class="close"  type="button" data-dismiss="modal" aria-label="Cerrar">
+                <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>

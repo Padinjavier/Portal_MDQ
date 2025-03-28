@@ -6,7 +6,7 @@ $(document).ready(function () {
             "url": `${BASE_URL}/assets/i18n/Spanish.json` // Asegúrate de que esta URL sea correcta
         },
         "columnDefs": [
-            { "orderable": true, "targets": [0, 1, 2, 3, 4, 5, 6,7 ]}, // Columnas ordenables
+            { "orderable": true, "targets": [0, 1, 2, 3, 4, 5, 6, 7] }, // Columnas ordenables
             { "orderable": false, "targets": [8] } // Columna de acciones no ordenable
         ],
         "paging": true, // Habilitar paginación
@@ -30,7 +30,7 @@ $(document).ready(function () {
                 "className": "btn btn-secondary",
                 "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5,6]
+                    "columns": [0, 1, 2, 3, 4, 5, 6]
                 }
             }, {
                 "extend": "excelHtml5",
@@ -39,7 +39,7 @@ $(document).ready(function () {
                 "className": "btn btn-success",
                 "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5,6]
+                    "columns": [0, 1, 2, 3, 4, 5, 6]
                 }
             }, {
                 "extend": "pdfHtml5",
@@ -48,7 +48,7 @@ $(document).ready(function () {
                 "className": "btn btn-danger",
                 "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5,6]
+                    "columns": [0, 1, 2, 3, 4, 5, 6]
                 }
             }, {
                 "extend": "csvHtml5",
@@ -57,7 +57,7 @@ $(document).ready(function () {
                 "className": "btn btn-info d-none",
                 "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5,6]
+                    "columns": [0, 1, 2, 3, 4, 5, 6]
                 }
             },
             {
@@ -67,7 +67,7 @@ $(document).ready(function () {
                 "className": "btn btn-info",
                 // "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5,6]
+                    "columns": [0, 1, 2, 3, 4, 5, 6]
                 }
             }
         ],
@@ -89,10 +89,11 @@ window.CargarTablaTrabajadores = function () {
             if (!response.success) {
                 throw new Error(response.msg || 'Error al cargar los datos');
             }
-
             const table = $('#tableTrabajadores').DataTable();
-            table.clear();
-
+            table.clear(); // Limpiar los datos existentes
+            if (response.data.length === 0) {
+                table.draw(); // Redibujar la tabla para que se vea vacía
+            }
             response.data.forEach(trabajador => {
                 table.row.add([
                     trabajador.IdUsuario,
@@ -222,6 +223,7 @@ async function editarTrabajador(id) {
         const response = await fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=obtenerTrabajadorPorId&id=${id}`);
         const result = await response.json();
         if (result.success) {
+            document.getElementById('formTrabajador').reset();
             // Carga los roles y espera a que termine
             await cargarRolesSelect();
             // Llena el formulario
@@ -260,26 +262,26 @@ function guardarTrabajador() {
         method: 'POST',
         body: formData
     })
-    .then(response => {
-        return response.text(); // Primero obtenemos el texto para ver qué contiene
-    })
-    .then(text => {
-        return JSON.parse(text); // Luego intentamos parsearlo como JSON
-    })
-    .then(data => {
-        if (data.success) {
-            Swal.fire("Éxito", data.msg, "success").then(() => {
-                $('#modalFormTrabajador').modal('hide');
-                CargarTablaTrabajadores(); // Recargar la tabla
-            });
-        } else {
-            Swal.fire("Error", data.msg, "error");
-        }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        Swal.fire("Error", "Hubo un problema al procesar la solicitud", "error");
-    });
+        .then(response => {
+            return response.text(); // Primero obtenemos el texto para ver qué contiene
+        })
+        .then(text => {
+            return JSON.parse(text); // Luego intentamos parsearlo como JSON
+        })
+        .then(data => {
+            if (data.success) {
+                Swal.fire("Éxito", data.msg, "success").then(() => {
+                    $('#modalFormTrabajador').modal('hide');
+                    CargarTablaTrabajadores(); // Recargar la tabla
+                });
+            } else {
+                Swal.fire("Error", data.msg, "error");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            Swal.fire("Error", "Hubo un problema al procesar la solicitud", "error");
+        });
 }
 // fin guardar trabajador
 
@@ -301,6 +303,34 @@ function openModal() {
 
 
 
+// inicio funcionesde open and close menu opciones
+function toggleConfigMenu() {
+    const menu = document.getElementById('configMenu');
+    if (menu.style.display === 'none' || menu.style.display === '') {
+        menu.style.display = 'block';
+        // Agregar event listener para cerrar al hacer clic fuera
+        document.addEventListener('click', closeConfigMenuOnClickOutside);
+    } else {
+        menu.style.display = 'none';
+        document.removeEventListener('click', closeConfigMenuOnClickOutside);
+    }
+}
+function closeConfigMenuOnClickOutside(event) {
+    const menu = document.getElementById('configMenu');
+    const button = document.getElementById('configButton');
+
+    // Si el clic no fue dentro del menú ni en el botón
+    if (!menu.contains(event.target) && !button.contains(event.target)) {
+        menu.style.display = 'none';
+        document.removeEventListener('click', closeConfigMenuOnClickOutside);
+    }
+}
+// fin funcionesde open and close menu opciones
+
+
+
+
+
 // inicio Función para cargar los roles desde el servidor
 let estadoInicialRoles = {}; // Guarda el estado inicial de los roles
 function cargarRoles() {
@@ -309,7 +339,7 @@ function cargarRoles() {
         .then(({ success, data, msg }) => {
             if (!success) throw new Error(msg || 'Error al cargar los roles');
             const rolesList = document.getElementById('roles-list');
-            rolesList.innerHTML = '';
+            rolesList.innerHTML = ''; // Limpiar lista previa
             estadoInicialRoles = {}; // Resetear el estado inicial
             data.forEach(({ IdRol, NombreRol, NombreModulo }) => {
                 const asignadoATrabajadores = NombreModulo === "Trabajadores";
@@ -318,16 +348,21 @@ function cargarRoles() {
                 const checked = asignadoATrabajadores || asignadoAOtroModulo;
                 const disabled = asignadoAOtroModulo;
                 estadoInicialRoles[IdRol] = checked; // Guardar el estado original
+
                 const div = document.createElement('div');
-                div.className = 'form-check form-switch d-flex align-items-center mb-2';
+                div.className = 'form-check';
                 div.innerHTML = `
-                    <input class="form-check-input" type="checkbox" role="switch" id="rol-${IdRol}" value="${IdRol}"
+                    <input class="form-check-input" type="checkbox" value="${IdRol}" id="rol-${IdRol}" 
                         ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}>
-                    <label class="form-check-label ms-2 fw-bold" for="rol-${IdRol}" data-bs-toggle="tooltip" title="Asignado a ${NombreModulo}">
+                    <label class="form-check-label" for="rol-${IdRol}" data-bs-toggle="tooltip" title="Asignado a ${NombreModulo}">
                         ${NombreRol}
                     </label>
                 `;
+
+                // Prevenir que el clic en el checkbox o label cierre el menú
+                div.querySelector('input').addEventListener('click', e => e.stopPropagation());
                 div.querySelector('label').addEventListener('click', e => e.stopPropagation());
+
                 rolesList.appendChild(div);
             });
             document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
