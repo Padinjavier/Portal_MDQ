@@ -358,7 +358,6 @@ function cargarRoles() {
                         ${NombreRol}
                     </label>
                 `;
-
                 // Prevenir que el clic en el checkbox o label cierre el menú
                 div.querySelector('input').addEventListener('click', e => e.stopPropagation());
                 div.querySelector('label').addEventListener('click', e => e.stopPropagation());
@@ -380,19 +379,26 @@ function cargarRoles() {
 
 // Inicio Función para guardar la configuración
 function guardarConfiguracion() {
-    const rolesNuevos = [...document.querySelectorAll('#roles-list .form-check-input')]
-        .filter(checkbox => checkbox.checked && !estadoInicialRoles[checkbox.value])
-        .map(checkbox => checkbox.value);
-
-    const rolesEliminados = Object.keys(estadoInicialRoles)
-        .filter(idRol => estadoInicialRoles[idRol] && !document.getElementById(`rol-${idRol}`).checked);
-
-    if (!rolesNuevos.length && !rolesEliminados.length) {
+    const checkboxes = document.querySelectorAll('#roles-list .form-check-input');
+    let rolesNuevos = [];
+    let rolesEliminados = [];
+    checkboxes.forEach(checkbox => {
+        const idRol = checkbox.value;
+        const activo = checkbox.checked;
+        // Si el estado cambió, lo agregamos a la lista de cambios
+        if (estadoInicialRoles[idRol] !== activo) {
+            if (activo) {
+                rolesNuevos.push(idRol); // Se activó
+            } else {
+                rolesEliminados.push(idRol); // Se desactivó
+            }
+        }
+    });
+    if (rolesNuevos.length === 0 && rolesEliminados.length === 0) {
         return Swal.fire("Sin cambios", "No has realizado cambios en los roles.", "info");
     }
-
-    // Guardar nuevos roles
-    if (rolesNuevos.length) {
+    // Enviar solo los roles activados
+    if (rolesNuevos.length > 0) {
         fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=guardarConfiguracion`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -401,21 +407,23 @@ function guardarConfiguracion() {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    Swal.fire("Éxito", "Configuración guardada correctamente.", "success");
-                    cargarRoles(); // Recargar los roles para reflejar los cambios
-                    CargarTablaTrabajadores(); // Recargar la tabla
+                    Swal.fire("Éxito", "Roles activados correctamente.", "success");
+                    cargarRoles();
+                    CargarTablaTrabajadores();
                 } else {
-                    Swal.fire("Error", data.msg || "No se pudo guardar la configuración.", "error");
+                    Swal.fire("Error", data.msg || "No se pudieron activar los roles.", "error");
                 }
             })
-            .catch(() => Swal.fire("Error", "Hubo un problema al guardar la configuración.", "error"));
-
-    } else {
-        // Eliminar roles desactivados
+            .catch(() => Swal.fire("Error", "Hubo un problema al activar los roles.", "error"));
+    }
+    // Enviar solo los roles desactivados
+    if (rolesEliminados.length > 0) {
         eliminarRelacionModuloRol(rolesEliminados);
     }
 }
 // fin Función para guardar la configuración
+
+
 
 
 
@@ -443,6 +451,8 @@ function eliminarRelacionModuloRol(rolesEliminados) {
 
 
 
+
+// inicio funcion cargar roles en select para formuladio de nuevo o editar
 function cargarRolesSelect() {
     return new Promise((resolve, reject) => {
         fetch(`${BASE_URL}/controladores/TrabajadoresControlador.php?action=CargarRoles`)
@@ -452,7 +462,6 @@ function cargarRolesSelect() {
                     reject(msg || 'Error al cargar los roles');
                     return;
                 }
-
                 const select = document.getElementById('rol');
                 select.innerHTML = '<option value="">Seleccione un rol</option>';
 
@@ -468,3 +477,4 @@ function cargarRolesSelect() {
             .catch(error => reject(error));
     });
 }
+// inicio funcion cargar roles en select para formuladio de nuevo o editar
