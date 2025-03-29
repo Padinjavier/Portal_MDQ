@@ -73,7 +73,7 @@
 
 
                 <!-- Gestión de Técnicos -->
-                <?php if ($_SESSION['Login_Permisos']['Técnicos']['Leer'] == 1): ?>
+                <?php if ($_SESSION['Login_Permisos']['Soportes']['Leer'] == 1): ?>
                     <li class="nav-item">
                         <a href="index.php?ruta=soportes" class="nav-link">
                             <i class="nav-icon fas fa-tools"></i>

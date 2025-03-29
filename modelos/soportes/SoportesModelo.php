@@ -14,7 +14,7 @@ class SoportesModelo
 
 
 
-    // inicio Obtener todos los Soportes (rol = 2)
+    // inicio Obtener todos los Soportes (rol = Soportes)
 // inicio Obtener todos los Soportes asignados al módulo de Soportes
     public function CargarTablaSoportes()
     {
@@ -37,8 +37,6 @@ class SoportesModelo
 
 
     // fin Obtener todos los Soportes asignados al módulo de Soportes
-// fin Obtener todos los Soportes (rol = 2)
-// return $stmtUsuarios->fetchAll(PDO::FETCH_ASSOC);
 
 
 

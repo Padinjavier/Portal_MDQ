@@ -201,7 +201,7 @@ class TrabajadoresModelo
 
 
 
-    // inicio guardar configuración de roles
+      // inicio guardar configuración de roles que se muestran en las tablas tener en cuenta el ID del modulo cambia dependiendo del modulo donde se aplique
     public function guardarConfiguracionMODELO($roles)
     {
         try {
@@ -226,7 +226,7 @@ class TrabajadoresModelo
 
 
 
-    // inicio eliminar configuración de roles
+    // inicio eliminar configuración de roles que se muestran en las tablas tener en cuenta el ID del modulo cambia dependiendo del modulo donde se aplique 
     public function eliminarRelacionModuloRolMODELO($roles)
     {
         try {
