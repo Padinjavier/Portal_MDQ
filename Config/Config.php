@@ -3,6 +3,7 @@
 
 $ip = $_SERVER['SERVER_ADDR'];
 $link = 'http://' . $ip . '/helpmdq';
+// $link = 'https://f34e-187-102-210-140.ngrok-free.app/helpmdq';
 define('BASE_URL', $link);
 
 //Zona horaria

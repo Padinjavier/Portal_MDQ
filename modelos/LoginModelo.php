@@ -10,9 +10,9 @@ class LoginModelo {
     // Inicia sesión y verifica las credenciales del usuario con SHA-256
     public function loginUsuario($usernameusuario, $passwordusuario) {
         // Obtiene los datos del usuario
-        $sql = "SELECT IdUsuario, NombresUsuario, ApellidosUsuario, CorreoUsuario, UsernameUsuario, PasswordUsuario, RolUsuario, StatusUsuario 
-                FROM usuarios 
-                WHERE UsernameUsuario = ?";
+        $sql = "SELECT u.IdUsuario, u.NombresUsuario, u.ApellidosUsuario, u.CorreoUsuario, u.UsernameUsuario, u.PasswordUsuario, u.RolUsuario, r.NombreRol , u.StatusUsuario
+                FROM (usuarios u,rol r)
+                WHERE  u.RolUsuario = r.IdRol AND UsernameUsuario = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$usernameusuario]);
         $usuarioData = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -31,6 +31,7 @@ class LoginModelo {
             $_SESSION['Login_CorreoUsuario'] = $usuarioData['CorreoUsuario'];
             $_SESSION['Login_UsernameUsuario'] = $usuarioData['UsernameUsuario'];
             $_SESSION['Login_RolUsuario'] = $usuarioData['RolUsuario'];
+            $_SESSION['Login_NombreRol'] = $usuarioData['NombreRol'];
             $_SESSION['Login_StatusUsuario'] = $usuarioData['StatusUsuario'];
     
             // Obtener permisos del usuario

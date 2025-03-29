@@ -3,7 +3,7 @@
 $(document).ready(function () {
     const table = $('#tableTrabajadores').DataTable({
         "language": {
-            "url": `${BASE_URL}/assets/i18n/Spanish.json` // Asegúrate de que esta URL sea correcta
+            "url": `${BASE_URL}/vistas/assets/dist/js/Spanish.json` // Asegúrate de que esta URL sea correcta
         },
         "columnDefs": [
             { "orderable": true, "targets": [0, 1, 2, 3, 4, 5, 6, 7] }, // Columnas ordenables
@@ -73,7 +73,7 @@ $(document).ready(function () {
         ],
     });
     CargarTablaTrabajadores();
-    cargarRoles();
+    // cargarRoles();
 });
 // fin funcionamiento de tabla trabajadores
 

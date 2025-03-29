@@ -8,7 +8,7 @@ require_once __DIR__ . '/../Config/Config.php';
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Administrar Sistema | Inicio</title>
+    <title>Portal MDQ</title>
     <link rel="icon" type="image/x-icon" href="<?php echo BASE_URL; ?>/vistas/assets/dist/img/escudo.png">
     
     <!-- Google Font: Source Sans Pro -->

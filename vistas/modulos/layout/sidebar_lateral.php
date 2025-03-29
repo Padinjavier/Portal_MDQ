@@ -5,12 +5,12 @@
     <a href="index.php" class="brand-link">
         <img src="vistas/assets/dist/img/escudo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
             style="opacity: .8">
-        <span class="brand-text font-weight-light">PORTALMDQ</span>
+        <span class="brand-text font-weight-light">Portal MDQ</span>
     </a>
     <div class="sidebar">
         <!-- Sidebar user-->
         <div class="user-panel mt-2 pb-2 mb-2 d-flex">
-            <div class="image">
+            <div class="image d-flex align-items-center">
                 <!-- <img src="vistas/assets/dist/img/user1-128x128.jpg" class="img-circle elevation-2" alt="User Image"> -->
                 <svg id="userIcon" width="35" height="35" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
                     <!-- Círculo de fondo -->
@@ -30,7 +30,8 @@
                 </svg>
             </div>
             <div class="info">
-                <a href="#" class="d-block"><?php echo $_SESSION['Login_NombresUsuario'] ?? 'Usuario'; ?></a>
+                <a href="#" class="d-block" style="font-size: 12px;"><?php echo $_SESSION['Login_NombresUsuario'] ?? 'Usuario'; echo $_SESSION['Login_ApellidosUsuario'] ?? 'Usuario';?></a>
+                <a href="#" class="d-block" style="font-size: 14px;"><?php echo $_SESSION['Login_NombreRol'] ?? 'Anónimo'; ?></a>
             </div>
         </div>
 
@@ -74,9 +75,9 @@
                 <!-- Gestión de Técnicos -->
                 <?php if ($_SESSION['Login_Permisos']['Técnicos']['Leer'] == 1): ?>
                     <li class="nav-item">
-                        <a href="index.php?ruta=tecnicos" class="nav-link">
+                        <a href="index.php?ruta=soportes" class="nav-link">
                             <i class="nav-icon fas fa-tools"></i>
-                            <p>Técnicos</p>
+                            <p>Soportes</p>
                         </a>
                     </li>
                 <?php endif; ?>
