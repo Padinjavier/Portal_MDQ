@@ -1,8 +1,8 @@
 <?php
 // C:\wamp64\www\internet\controladores\RegistroControlador.php
 
-require_once '../modelos/RegistroModelo.php';
-require_once '../Config/Config.php';
+require_once '../../modelos/registro/RegistroModelo.php';
+require_once '../../Config/Config.php';
 
 class RegistroControlador {
     private $RegistroModelo;

@@ -1,6 +1,7 @@
 <?php
 // C:\wamp64\www\helpmdq\vistas\modulos\registro.php
 
+header('Location: ' . BASE_URL); // Usar BASE_URL para mandar al usuario al login bloquea el acceso a registro
 // Incluir el archivo de configuración
 require_once __DIR__ . '/../../Config/Config.php';
 ?>
@@ -96,7 +97,7 @@ require_once __DIR__ . '/../../Config/Config.php';
             <div class="card-body register-card-body">
                 <h3 class="login-box-msg">Regístrate para comenzar</h3>
 
-                <form action="<?php echo BASE_URL; ?>/controladores/RegistroControlador.php" method="POST">
+                <form action="<?php echo BASE_URL; ?>/controladores/registro/RegistroControlador.php" method="POST">
                     <div class="row">
                         <!-- Columna 1 -->
                         <div class="col-md-6">

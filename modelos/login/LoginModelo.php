@@ -1,5 +1,5 @@
 <?php
-// C:\wamp64\www\internet\modelos\LoginModelo.php
+// C:\wamp64\www\helpmdq\modelos\login\LoginModelo.php
 
 class LoginModelo {
     private $db;

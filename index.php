@@ -1,4 +1,5 @@
 <?php
+// C:\wamp64\www\helpmdq\index.php
 session_start();
 
 // Obtener la ruta solicitada

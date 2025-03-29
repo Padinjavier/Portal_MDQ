@@ -96,7 +96,7 @@ require_once __DIR__ . '/../../Config/Config.php';
             <div class="card-body login-card-body">
                 <h3 class="login-box-msg">Iniciar Sesión</h3>
 
-                <form action="<?php echo BASE_URL; ?>/controladores/LoginControlador.php" method="POST">
+                <form action="<?php echo BASE_URL; ?>/controladores/login/LoginControlador.php" method="POST">
                     <!-- Campo de Usuario -->
                     <div class="form-group mb-3">
                         <label for="usernameusuario">Nombre de Usuario</label>

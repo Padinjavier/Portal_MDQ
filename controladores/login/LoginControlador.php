@@ -1,7 +1,7 @@
 <?php
-// C:\wamp64\www\helpmdq\controladores\LoginControlador.php
-require_once '../modelos/LoginModelo.php';
-require_once '../Config/Config.php'; // Incluir Config.php
+// C:\wamp64\www\helpmdq\controladores\login\LoginControlador.php
+require_once '../../modelos/login/LoginModelo.php';
+require_once '../../Config/Config.php'; // Incluir Config.php
 
 class LoginControlador {
     private $LoginModelo;
