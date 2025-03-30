@@ -105,7 +105,7 @@
 <!-- Inicio Modal para Crear/Editar Trabajador -->
 <div class="modal fade" id="modalFormTrabajador" tabindex="-1" role="dialog" aria-labelledby="modalFormTrabajadorLabel"
     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success">
                 <h5 class="modal-title" id="modalFormTrabajadorLabel">Trabajador</h5>
@@ -195,7 +195,7 @@
 <!-- Inicio Modal para Ver Trabajador -->
 <div class="modal fade" id="modalViewTrabajador" tabindex="-1" role="dialog" aria-labelledby="modalViewTrabajadorLabel"
     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success">
                 <h5 class="modal-title" id="modalViewTrabajadorLabel">Ver Trabajador</h5>

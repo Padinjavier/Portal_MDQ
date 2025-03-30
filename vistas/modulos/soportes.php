@@ -105,7 +105,7 @@
 <!-- Inicio Modal para Crear/Editar Soporte -->
 <div class="modal fade" id="modalFormSoporte" tabindex="-1" role="dialog" aria-labelledby="modalFormSoporteLabel"
     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success">
                 <h5 class="modal-title" id="modalFormSoporteLabel">Soporte</h5>
@@ -195,7 +195,7 @@
 <!-- Inicio Modal para Ver Soporte -->
 <div class="modal fade" id="modalViewSoporte" tabindex="-1" role="dialog" aria-labelledby="modalViewSoporteLabel"
     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success">
                 <h5 class="modal-title" id="modalViewSoporteLabel">Ver Soporte</h5>
