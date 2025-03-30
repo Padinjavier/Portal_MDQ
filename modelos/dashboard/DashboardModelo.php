@@ -13,7 +13,7 @@ class DashboardModelo {
                 (SELECT COUNT(*) FROM usuarios u, rol r WHERE r.IdRol = u.RolUsuario AND r.NombreRol = 'Soporte') AS total_soporte,
                 (SELECT COUNT(*) FROM rol) AS total_roles,
                 (SELECT COUNT(*) FROM computadoras) AS total_inventario,
-                (SELECT COUNT(*) FROM problema) AS total_problemas,
+                (SELECT COUNT(*) FROM problemas) AS total_problemas,
                 (SELECT COUNT(*) FROM tickets) AS total_tickets,
                 (SELECT COUNT(*) FROM tickets WHERE status = 1) AS abiertos,
                 (SELECT COUNT(*) FROM tickets WHERE status = 2) AS en_atencion,

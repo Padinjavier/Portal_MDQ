@@ -62,9 +62,9 @@ CREATE TABLE IF NOT EXISTS `modulos` (
   `DatecreateModulo` datetime DEFAULT (now()),
   `StatusModulo` int DEFAULT '1' COMMENT 'Estado del módulo: 0 = Inactivo, 1 = Activo',
   PRIMARY KEY (`IdModulo`)
-) ENGINE=InnoDB AUTO_INCREMENT=3334 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla helpdesk.modulos: ~15 rows (aproximadamente)
+-- Volcando datos para la tabla helpdesk.modulos: ~13 rows (aproximadamente)
 DELETE FROM `modulos`;
 INSERT INTO `modulos` (`IdModulo`, `NombreModulo`, `DescripcionModulo`, `DatecreateModulo`, `StatusModulo`) VALUES
 	(1, 'Dashboard', 'Panel principal con métricas y accesos rápidos', '2025-03-22 12:06:20', 1),
@@ -81,7 +81,7 @@ INSERT INTO `modulos` (`IdModulo`, `NombreModulo`, `DescripcionModulo`, `Datecre
 	(12, 'Preguntas Frecuentes', 'Sección de preguntas frecuentes', '2025-03-22 12:06:20', 1),
 	(13, 'Manuales', 'Documentación y guías de uso', '2025-03-22 12:06:20', 1),
 	(14, 'Papelera', 'Módulo de elementos eliminados', '2025-03-22 12:06:20', 1),
-	(17, 'Configuracion', 'Configuracion de la tabla trabajadores y tecnicos', '2025-03-26 07:42:03', 1);
+	(15, 'Configuracion', 'Configuracion de la tabla trabajadores y tecnicos', '2025-03-26 07:42:03', 1);
 
 -- Volcando estructura para tabla helpdesk.modulo_roles
 CREATE TABLE IF NOT EXISTS `modulo_roles` (
@@ -95,15 +95,15 @@ CREATE TABLE IF NOT EXISTS `modulo_roles` (
   KEY `FK_modulo_roles_rol` (`IdRol`),
   CONSTRAINT `FK_modulo_roles_modulos` FOREIGN KEY (`IdModulo`) REFERENCES `modulos` (`IdModulo`),
   CONSTRAINT `FK_modulo_roles_rol` FOREIGN KEY (`IdRol`) REFERENCES `rol` (`IdRol`)
-) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Volcando datos para la tabla helpdesk.modulo_roles: ~4 rows (aproximadamente)
 DELETE FROM `modulo_roles`;
 INSERT INTO `modulo_roles` (`IdModuloRol`, `IdModulo`, `IdRol`, `DatecreateModuloRol`, `StatusModuloRol`) VALUES
-	(95, 2, 2, '2025-03-29 17:59:44', 1),
-	(96, 2, 5, '2025-03-29 17:59:44', 1),
-	(98, 3, 1, '2025-03-29 18:00:07', 1),
-	(99, 3, 3, '2025-03-29 18:00:12', 1);
+	(1, 2, 2, '2025-03-29 17:59:44', 1),
+	(2, 2, 5, '2025-03-29 17:59:44', 1),
+	(3, 3, 1, '2025-03-29 18:00:07', 1),
+	(4, 3, 3, '2025-03-29 18:00:12', 1);
 
 -- Volcando estructura para tabla helpdesk.permisos
 CREATE TABLE IF NOT EXISTS `permisos` (
@@ -115,136 +115,76 @@ CREATE TABLE IF NOT EXISTS `permisos` (
   `U` int DEFAULT '0',
   `D` int DEFAULT '0',
   `DatecreatePermiso` datetime DEFAULT (now()),
-  PRIMARY KEY (`IdPermiso`),
-  KEY `IdRol` (`IdRol`),
-  KEY `IdModulo` (`IdModulo`),
+  PRIMARY KEY (`IdPermiso`) USING BTREE,
+  KEY `IdRol` (`IdRol`) USING BTREE,
+  KEY `IdModulo` (`IdModulo`) USING BTREE,
   CONSTRAINT `FK_permisos_modulos` FOREIGN KEY (`IdModulo`) REFERENCES `modulos` (`IdModulo`),
   CONSTRAINT `FK_permisos_rol` FOREIGN KEY (`IdRol`) REFERENCES `rol` (`IdRol`)
-) ENGINE=InnoDB AUTO_INCREMENT=436 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla helpdesk.permisos: ~135 rows (aproximadamente)
+-- Volcando datos para la tabla helpdesk.permisos: ~60 rows (aproximadamente)
 DELETE FROM `permisos`;
 INSERT INTO `permisos` (`IdPermiso`, `IdRol`, `IdModulo`, `R`, `W`, `U`, `D`, `DatecreatePermiso`) VALUES
-	(315, 1, 1, 1, 1, 1, 1, '2025-03-29 17:52:13'),
-	(316, 1, 2, 1, 1, 1, 1, '2025-03-29 17:52:13'),
-	(317, 1, 3, 1, 1, 1, 1, '2025-03-29 17:52:13'),
-	(318, 1, 4, 1, 1, 1, 1, '2025-03-29 17:52:13'),
-	(319, 1, 5, 1, 1, 1, 1, '2025-03-29 17:52:13'),
-	(320, 1, 6, 1, 1, 1, 1, '2025-03-29 17:52:13'),
-	(321, 1, 7, 1, 1, 1, 1, '2025-03-29 17:52:13'),
-	(322, 1, 8, 1, 1, 1, 1, '2025-03-29 17:52:13'),
-	(323, 1, 9, 1, 1, 1, 1, '2025-03-29 17:52:13'),
-	(324, 1, 10, 1, 1, 1, 1, '2025-03-29 17:52:13'),
-	(325, 1, 11, 1, 1, 1, 1, '2025-03-29 17:52:13'),
-	(326, 1, 12, 1, 1, 1, 1, '2025-03-29 17:52:13'),
-	(327, 1, 13, 1, 1, 1, 1, '2025-03-29 17:52:13'),
-	(328, 1, 14, 1, 1, 1, 1, '2025-03-29 17:52:13'),
-	(329, 1, 17, 1, 1, 1, 1, '2025-03-29 17:52:13'),
-	(330, 2, 1, 0, 0, 0, 0, '2025-03-29 17:52:28'),
-	(331, 2, 2, 0, 0, 0, 0, '2025-03-29 17:52:28'),
-	(332, 2, 3, 0, 0, 0, 0, '2025-03-29 17:52:28'),
-	(333, 2, 4, 0, 0, 0, 0, '2025-03-29 17:52:28'),
-	(334, 2, 5, 0, 0, 0, 0, '2025-03-29 17:52:28'),
-	(335, 2, 6, 0, 0, 0, 0, '2025-03-29 17:52:28'),
-	(336, 2, 7, 0, 0, 0, 0, '2025-03-29 17:52:28'),
-	(337, 2, 8, 0, 0, 0, 0, '2025-03-29 17:52:28'),
-	(338, 2, 9, 0, 0, 0, 0, '2025-03-29 17:52:28'),
-	(339, 2, 10, 0, 0, 0, 0, '2025-03-29 17:52:28'),
-	(340, 2, 11, 0, 0, 0, 0, '2025-03-29 17:52:28'),
-	(341, 2, 12, 0, 0, 0, 0, '2025-03-29 17:52:28'),
-	(342, 2, 13, 0, 0, 0, 0, '2025-03-29 17:52:28'),
-	(343, 2, 14, 0, 0, 0, 0, '2025-03-29 17:52:28'),
-	(344, 2, 17, 0, 0, 0, 0, '2025-03-29 17:52:28'),
-	(345, 3, 1, 0, 0, 0, 0, '2025-03-29 17:52:31'),
-	(346, 3, 2, 0, 0, 0, 0, '2025-03-29 17:52:31'),
-	(347, 3, 3, 0, 0, 0, 0, '2025-03-29 17:52:31'),
-	(348, 3, 4, 0, 0, 0, 0, '2025-03-29 17:52:31'),
-	(349, 3, 5, 0, 0, 0, 0, '2025-03-29 17:52:31'),
-	(350, 3, 6, 0, 0, 0, 0, '2025-03-29 17:52:31'),
-	(351, 3, 7, 0, 0, 0, 0, '2025-03-29 17:52:31'),
-	(352, 3, 8, 0, 0, 0, 0, '2025-03-29 17:52:31'),
-	(353, 3, 9, 0, 0, 0, 0, '2025-03-29 17:52:31'),
-	(354, 3, 10, 0, 0, 0, 0, '2025-03-29 17:52:31'),
-	(355, 3, 11, 0, 0, 0, 0, '2025-03-29 17:52:31'),
-	(356, 3, 12, 0, 0, 0, 0, '2025-03-29 17:52:31'),
-	(357, 3, 13, 0, 0, 0, 0, '2025-03-29 17:52:31'),
-	(358, 3, 14, 0, 0, 0, 0, '2025-03-29 17:52:31'),
-	(359, 3, 17, 0, 0, 0, 0, '2025-03-29 17:52:31'),
-	(360, 4, 1, 0, 0, 0, 0, '2025-03-29 17:52:33'),
-	(361, 4, 2, 0, 0, 0, 0, '2025-03-29 17:52:33'),
-	(362, 4, 3, 0, 0, 0, 0, '2025-03-29 17:52:33'),
-	(363, 4, 4, 0, 0, 0, 0, '2025-03-29 17:52:33'),
-	(364, 4, 5, 0, 0, 0, 0, '2025-03-29 17:52:33'),
-	(365, 4, 6, 0, 0, 0, 0, '2025-03-29 17:52:33'),
-	(366, 4, 7, 0, 0, 0, 0, '2025-03-29 17:52:33'),
-	(367, 4, 8, 0, 0, 0, 0, '2025-03-29 17:52:33'),
-	(368, 4, 9, 0, 0, 0, 0, '2025-03-29 17:52:33'),
-	(369, 4, 10, 0, 0, 0, 0, '2025-03-29 17:52:33'),
-	(370, 4, 11, 0, 0, 0, 0, '2025-03-29 17:52:33'),
-	(371, 4, 12, 0, 0, 0, 0, '2025-03-29 17:52:33'),
-	(372, 4, 13, 0, 0, 0, 0, '2025-03-29 17:52:33'),
-	(373, 4, 14, 0, 0, 0, 0, '2025-03-29 17:52:33'),
-	(374, 4, 17, 0, 0, 0, 0, '2025-03-29 17:52:33'),
-	(375, 5, 1, 0, 0, 0, 0, '2025-03-29 17:52:34'),
-	(376, 5, 2, 0, 0, 0, 0, '2025-03-29 17:52:34'),
-	(377, 5, 3, 0, 0, 0, 0, '2025-03-29 17:52:34'),
-	(378, 5, 4, 0, 0, 0, 0, '2025-03-29 17:52:34'),
-	(379, 5, 5, 0, 0, 0, 0, '2025-03-29 17:52:34'),
-	(380, 5, 6, 0, 0, 0, 0, '2025-03-29 17:52:34'),
-	(381, 5, 7, 0, 0, 0, 0, '2025-03-29 17:52:34'),
-	(382, 5, 8, 0, 0, 0, 0, '2025-03-29 17:52:34'),
-	(383, 5, 9, 0, 0, 0, 0, '2025-03-29 17:52:34'),
-	(384, 5, 10, 0, 0, 0, 0, '2025-03-29 17:52:34'),
-	(385, 5, 11, 0, 0, 0, 0, '2025-03-29 17:52:34'),
-	(386, 5, 12, 0, 0, 0, 0, '2025-03-29 17:52:34'),
-	(387, 5, 13, 0, 0, 0, 0, '2025-03-29 17:52:34'),
-	(388, 5, 14, 0, 0, 0, 0, '2025-03-29 17:52:34'),
-	(389, 5, 17, 0, 0, 0, 0, '2025-03-29 17:52:34'),
-	(390, 6, 1, 0, 0, 0, 0, '2025-03-29 17:52:37'),
-	(391, 6, 2, 0, 0, 0, 0, '2025-03-29 17:52:37'),
-	(392, 6, 3, 0, 0, 0, 0, '2025-03-29 17:52:37'),
-	(393, 6, 4, 0, 0, 0, 0, '2025-03-29 17:52:37'),
-	(394, 6, 5, 0, 0, 0, 0, '2025-03-29 17:52:37'),
-	(395, 6, 6, 0, 0, 0, 0, '2025-03-29 17:52:37'),
-	(396, 6, 7, 0, 0, 0, 0, '2025-03-29 17:52:37'),
-	(397, 6, 8, 0, 0, 0, 0, '2025-03-29 17:52:37'),
-	(398, 6, 9, 0, 0, 0, 0, '2025-03-29 17:52:37'),
-	(399, 6, 10, 0, 0, 0, 0, '2025-03-29 17:52:37'),
-	(400, 6, 11, 0, 0, 0, 0, '2025-03-29 17:52:37'),
-	(401, 6, 12, 0, 0, 0, 0, '2025-03-29 17:52:37'),
-	(402, 6, 13, 0, 0, 0, 0, '2025-03-29 17:52:37'),
-	(403, 6, 14, 0, 0, 0, 0, '2025-03-29 17:52:37'),
-	(404, 6, 17, 0, 0, 0, 0, '2025-03-29 17:52:37'),
-	(405, 7, 1, 0, 0, 0, 0, '2025-03-29 17:52:38'),
-	(406, 7, 2, 0, 0, 0, 0, '2025-03-29 17:52:38'),
-	(407, 7, 3, 0, 0, 0, 0, '2025-03-29 17:52:38'),
-	(408, 7, 4, 0, 0, 0, 0, '2025-03-29 17:52:38'),
-	(409, 7, 5, 0, 0, 0, 0, '2025-03-29 17:52:38'),
-	(410, 7, 6, 0, 0, 0, 0, '2025-03-29 17:52:38'),
-	(411, 7, 7, 0, 0, 0, 0, '2025-03-29 17:52:38'),
-	(412, 7, 8, 0, 0, 0, 0, '2025-03-29 17:52:38'),
-	(413, 7, 9, 0, 0, 0, 0, '2025-03-29 17:52:38'),
-	(414, 7, 10, 0, 0, 0, 0, '2025-03-29 17:52:38'),
-	(415, 7, 11, 0, 0, 0, 0, '2025-03-29 17:52:38'),
-	(416, 7, 12, 0, 0, 0, 0, '2025-03-29 17:52:38'),
-	(417, 7, 13, 0, 0, 0, 0, '2025-03-29 17:52:38'),
-	(418, 7, 14, 0, 0, 0, 0, '2025-03-29 17:52:38'),
-	(419, 7, 17, 0, 0, 0, 0, '2025-03-29 17:52:38'),
-	(420, 8, 1, 0, 0, 0, 0, '2025-03-29 17:52:40'),
-	(421, 8, 2, 0, 0, 0, 0, '2025-03-29 17:52:40'),
-	(422, 8, 3, 0, 0, 0, 0, '2025-03-29 17:52:40'),
-	(423, 8, 4, 0, 0, 0, 0, '2025-03-29 17:52:40'),
-	(424, 8, 5, 0, 0, 0, 0, '2025-03-29 17:52:40'),
-	(425, 8, 6, 0, 0, 0, 0, '2025-03-29 17:52:40'),
-	(426, 8, 7, 0, 0, 0, 0, '2025-03-29 17:52:40'),
-	(427, 8, 8, 0, 0, 0, 0, '2025-03-29 17:52:40'),
-	(428, 8, 9, 0, 0, 0, 0, '2025-03-29 17:52:40'),
-	(429, 8, 10, 0, 0, 0, 0, '2025-03-29 17:52:40'),
-	(430, 8, 11, 0, 0, 0, 0, '2025-03-29 17:52:40'),
-	(431, 8, 12, 0, 0, 0, 0, '2025-03-29 17:52:40'),
-	(432, 8, 13, 0, 0, 0, 0, '2025-03-29 17:52:40'),
-	(433, 8, 14, 0, 0, 0, 0, '2025-03-29 17:52:40'),
-	(434, 8, 17, 0, 0, 0, 0, '2025-03-29 17:52:40');
+	(1, 1, 1, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(2, 1, 2, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(3, 1, 3, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(4, 1, 4, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(5, 1, 5, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(6, 1, 6, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(7, 1, 7, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(8, 1, 8, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(9, 1, 9, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(10, 1, 10, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(11, 1, 11, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(12, 1, 12, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(13, 1, 13, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(14, 1, 14, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(15, 1, 15, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(16, 7, 1, 1, 1, 1, 0, '2025-03-30 15:26:40'),
+	(17, 7, 2, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(18, 7, 3, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(19, 7, 4, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(20, 7, 5, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(21, 7, 6, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(22, 7, 7, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(23, 7, 8, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(24, 7, 9, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(25, 7, 10, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(26, 7, 11, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(27, 7, 12, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(28, 7, 13, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(29, 7, 14, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(30, 7, 15, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(31, 8, 1, 1, 0, 1, 1, '2025-03-30 15:26:40'),
+	(32, 8, 2, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(33, 8, 3, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(34, 8, 4, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(35, 8, 5, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(36, 8, 6, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(37, 8, 7, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(38, 8, 8, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(39, 8, 9, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(40, 8, 10, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(41, 8, 11, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(42, 8, 12, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(43, 8, 13, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(44, 8, 14, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(45, 8, 15, 0, 0, 0, 0, '2025-03-30 15:26:40'),
+	(46, 9, 1, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(47, 9, 2, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(48, 9, 3, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(49, 9, 4, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(50, 9, 5, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(51, 9, 6, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(52, 9, 7, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(53, 9, 8, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(54, 9, 9, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(55, 9, 10, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(56, 9, 11, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(57, 9, 12, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(58, 9, 13, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(59, 9, 14, 1, 1, 1, 1, '2025-03-30 15:26:40'),
+	(60, 9, 15, 1, 1, 1, 1, '2025-03-30 15:26:40');
 
 -- Volcando estructura para tabla helpdesk.problema
 CREATE TABLE IF NOT EXISTS `problema` (
@@ -310,7 +250,7 @@ INSERT INTO `problema` (`problema_id`, `nombre_prob`) VALUES
 CREATE TABLE IF NOT EXISTS `rol` (
   `IdRol` int NOT NULL AUTO_INCREMENT COMMENT 'Identificador único del rol',
   `NombreRol` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'Nombre del rol',
-  `DescripcionRol` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'Descripción del rol',
+  `DescripcionRol` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'Descripción del rol',
   `DatecreateRol` datetime DEFAULT (now()),
   `StatusRol` int DEFAULT '1' COMMENT 'Estado del rol: 0 = Eliminado, 1 = Habilitado',
   PRIMARY KEY (`IdRol`) USING BTREE
@@ -319,15 +259,15 @@ CREATE TABLE IF NOT EXISTS `rol` (
 -- Volcando datos para la tabla helpdesk.rol: ~9 rows (aproximadamente)
 DELETE FROM `rol`;
 INSERT INTO `rol` (`IdRol`, `NombreRol`, `DescripcionRol`, `DatecreateRol`, `StatusRol`) VALUES
-	(1, 'Administrador', 'Gestiona el sistema, configura permisos y administ', '2025-03-22 11:51:38', 1),
-	(2, 'Trabajador', 'Accede a módulos operativos según sus permisos', '2025-03-22 11:51:38', 1),
-	(3, 'Soporte', 'Atiende incidencias, gestiona tickets y brinda asi', '2025-03-22 11:51:38', 1),
-	(4, 'SuperAdmin', 'Acceso total al sistema, incluso sobre administrad', '2025-03-22 12:08:39', 1),
-	(5, 'Alcalde', 'Autoridad principal con acceso a reportes y audito', '2025-03-22 12:08:39', 1),
-	(6, 'Gerente', 'Gestión de áreas específicas con permisos administ', '2025-03-22 12:08:39', 1),
-	(7, 'Supervisor', 'Encargado de la supervisión de trabajadores y técn', '2025-03-22 12:08:39', 1),
-	(8, 'UsuarioRegistrado', 'Rol con acceso básico al sistema', '2025-03-22 12:08:39', 1),
-	(9, 'tercero', 'trabajadores contratados como terceros ', '2025-03-25 15:23:05', 1);
+	(1, 'Administrador', 'Gestiona el sistema, configura permisos y administra usuarios.', '2025-03-22 11:51:38', 1),
+	(2, 'Trabajador', 'Accede a módulos específicos para realizar tareas asignadas.', '2025-03-22 11:51:38', 1),
+	(3, 'Soporte', 'Gestiona incidencias, atiende tickets y brinda asistencia técnica.', '2025-03-22 11:51:38', 1),
+	(4, 'Super Admin', 'Acceso total al sistema, incluyendo la gestión de administradores.', '2025-03-22 12:08:39', 1),
+	(5, 'Alcalde', 'Máxima autoridad con acceso a reportes, auditorías y gestión general.', '2025-03-22 12:08:39', 1),
+	(6, 'Gerente', 'Supervisa áreas específicas y toma decisiones administrativas.', '2025-03-22 12:08:39', 1),
+	(7, 'Supervisor', 'Supervisa personal y operaciones asegurando cumplimiento de tareas.', '2025-03-22 12:08:39', 1),
+	(8, 'Usuario Registrado', 'Accede a funciones básicas del sistema con permisos limitados.', '2025-03-22 12:08:39', 1),
+	(9, 'Tercero', 'Personal contratado externamente con acceso restringido.', '2025-03-25 15:23:05', 1);
 
 -- Volcando estructura para tabla helpdesk.tickets
 CREATE TABLE IF NOT EXISTS `tickets` (
@@ -369,13 +309,13 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   UNIQUE KEY `DNIUsuario` (`DNIUsuario`),
   KEY `RolUsuario` (`RolUsuario`),
   CONSTRAINT `FK_usuarios_rol` FOREIGN KEY (`RolUsuario`) REFERENCES `rol` (`IdRol`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla helpdesk.usuarios: ~2 rows (aproximadamente)
+-- Volcando datos para la tabla helpdesk.usuarios: ~3 rows (aproximadamente)
 DELETE FROM `usuarios`;
 INSERT INTO `usuarios` (`IdUsuario`, `NombresUsuario`, `ApellidosUsuario`, `TelefonoUsuario`, `DNIUsuario`, `CorreoUsuario`, `UsernameUsuario`, `PasswordUsuario`, `DatecreateUsuario`, `RolUsuario`, `StatusUsuario`) VALUES
 	(1, 'Javier Antonio ', 'Padin Flores ', '917189300', '74199531', 'javierpadin661@gmail.com', 'javier20', 'afad7b36d11a0e2c7b30ec3a16c9077d8e2c4117f282f257790bd9f70641d840', '2025-03-21 23:54:52', 1, 1),
-	(21, 'Jose Angel', 'Huaman Samudio', '987654321', '76543213', 'josehuaman@gmail.com', 'jose20', '92e7dd7306dbdd412c8d6b626b7c808f0c3fc692c9297aedf047ae918b11be58', '2025-03-24 19:28:52', 5, 1);
+	(2, 'Jose Angel', 'Huaman Samudio', '987654321', '76543213', 'josehuaman@gmail.com', 'jose20', '92e7dd7306dbdd412c8d6b626b7c808f0c3fc692c9297aedf047ae918b11be58', '2025-03-24 19:28:52', 5, 1);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

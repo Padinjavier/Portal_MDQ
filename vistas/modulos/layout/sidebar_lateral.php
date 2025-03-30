@@ -30,8 +30,10 @@
                 </svg>
             </div>
             <div class="info">
-                <a href="#" class="d-block" style="font-size: 12px;"><?php echo $_SESSION['Login_NombresUsuario'] ?? 'Usuario'; echo $_SESSION['Login_ApellidosUsuario'] ?? 'Usuario';?></a>
-                <a href="#" class="d-block" style="font-size: 14px;"><?php echo $_SESSION['Login_NombreRol'] ?? 'Anónimo'; ?></a>
+                <a href="#" class="d-block" style="font-size: 12px;"><?php echo $_SESSION['Login_NombresUsuario'] ?? 'Usuario';
+                echo $_SESSION['Login_ApellidosUsuario'] ?? 'Usuario'; ?></a>
+                <a href="#" class="d-block"
+                    style="font-size: 14px;"><?php echo $_SESSION['Login_NombreRol'] ?? 'Anónimo'; ?></a>
             </div>
         </div>
 
@@ -106,7 +108,8 @@
 
                             <?php if ($_SESSION['Login_Permisos']['Permisos']['Leer'] == 1): ?>
                                 <li class="nav-item">
-                                    <a href="index.php?ruta=permisos" class="nav-link">
+                                    <!-- <a href="index.php?ruta=permisos" class="nav-link"> -->
+                                    <a  class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Permisos</p>
                                     </a>
@@ -193,15 +196,39 @@
 
 
 
-                <!-- Problemas -->
-                <?php if ($_SESSION['Login_Permisos']['Problemas']['Leer'] == 1): ?>
+                <!-- Gestión de Problemas y subproblemas (Menú desplegable) -->
+                <?php if ($_SESSION['Login_Permisos']['Problemas']['Leer'] == 1 && $_SESSION['Login_Permisos']['Subproblemas']['Leer'] == 1): ?>
                     <li class="nav-item">
-                        <a href="index.php?ruta=problemas" class="nav-link">
-                            <i class="nav-icon fas fa-exclamation-triangle"></i>
-                            <p>Problemas</p>
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-user-shield"></i>
+                            <p>Problemas<i class="right fas fa-angle-left"></i></p>
                         </a>
+                        <ul class="nav nav-treeview">
+                            <?php if ($_SESSION['Login_Permisos']['Problemas']['Leer'] == 1): ?>
+                                <li class="nav-item">
+                                    <a href="index.php?ruta=problemas" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Gestión de Problemas</p>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+
+
+                            <?php if ($_SESSION['Login_Permisos']['Subproblemas']['Leer'] == 1): ?>
+                                <li class="nav-item">
+                                    <a href="index.php?ruta=subproblemas" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Sub Problemas</p>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+
+                        </ul>
                     </li>
                 <?php endif; ?>
+
+
+
 
 
 

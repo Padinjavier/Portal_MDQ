@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             updateDashboard(data); // Actualizar el dashboard con los datos obtenidos
         })
-        .catch(error => console.error("Error cargando datos:", error));
+        .catch(error => console.error("Error cargando datos:", error.json()));
 
     function updateDashboard(data) {
         dataticket = data;
