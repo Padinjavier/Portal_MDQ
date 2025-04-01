@@ -22,7 +22,7 @@ class DashboardModelo {
                 (SELECT COUNT(*) FROM tickets WHERE status = 5) AS cerrados;
             ";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([$sql]);
+        $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

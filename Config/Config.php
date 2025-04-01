@@ -2,7 +2,7 @@
 // C:\wamp64\www\internet\Config\Config.php
 
 $ip = $_SERVER['SERVER_ADDR'];
-$link = 'http://' . $ip . '/helpmdq';
+$link = 'http://' . $ip . '/Portal_MDQ';
 // $link = 'https://f34e-187-102-210-140.ngrok-free.app/helpmdq';
 define('BASE_URL', $link);
 

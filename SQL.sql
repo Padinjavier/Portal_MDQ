@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Versión del servidor:         8.3.0 - MySQL Community Server - GPL
+-- Versión del servidor:         9.1.0 - MySQL Community Server - GPL
 -- SO del servidor:              Win64
 -- HeidiSQL Versión:             12.10.0.7000
 -- --------------------------------------------------------
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `computadoras` (
   UNIQUE KEY `codigo` (`codigo`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla helpdesk.computadoras: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla helpdesk.computadoras: ~1 rows (aproximadamente)
 DELETE FROM `computadoras`;
 INSERT INTO `computadoras` (`id`, `marca`, `modelo`, `codigo`, `ram`, `disco`, `procesador`, `tarjeta_grafica`, `sistema_operativo`, `fecha_registro`) VALUES
 	(1, 'LENOVO', 'TICKPAD ', 'L5DRST', 20, 'MVNE 250GB', 'INTEL COREi 5 10G', 'INTEGRADA IRIS', 'WINDOWS 10', '2024-12-11 16:05:29');
@@ -62,9 +62,9 @@ CREATE TABLE IF NOT EXISTS `modulos` (
   `DatecreateModulo` datetime DEFAULT (now()),
   `StatusModulo` int DEFAULT '1' COMMENT 'Estado del módulo: 0 = Inactivo, 1 = Activo',
   PRIMARY KEY (`IdModulo`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla helpdesk.modulos: ~13 rows (aproximadamente)
+-- Volcando datos para la tabla helpdesk.modulos: ~16 rows (aproximadamente)
 DELETE FROM `modulos`;
 INSERT INTO `modulos` (`IdModulo`, `NombreModulo`, `DescripcionModulo`, `DatecreateModulo`, `StatusModulo`) VALUES
 	(1, 'Dashboard', 'Panel principal con métricas y accesos rápidos', '2025-03-22 12:06:20', 1),
@@ -81,7 +81,8 @@ INSERT INTO `modulos` (`IdModulo`, `NombreModulo`, `DescripcionModulo`, `Datecre
 	(12, 'Preguntas Frecuentes', 'Sección de preguntas frecuentes', '2025-03-22 12:06:20', 1),
 	(13, 'Manuales', 'Documentación y guías de uso', '2025-03-22 12:06:20', 1),
 	(14, 'Papelera', 'Módulo de elementos eliminados', '2025-03-22 12:06:20', 1),
-	(15, 'Configuracion', 'Configuracion de la tabla trabajadores y tecnicos', '2025-03-26 07:42:03', 1);
+	(15, 'Configuracion', 'Configuracion de la tabla trabajadores y tecnicos', '2025-03-26 07:42:03', 1),
+	(16, 'Subproblemas', 'Subproblemas', '2025-04-01 06:54:32', 1);
 
 -- Volcando estructura para tabla helpdesk.modulo_roles
 CREATE TABLE IF NOT EXISTS `modulo_roles` (
@@ -122,129 +123,93 @@ CREATE TABLE IF NOT EXISTS `permisos` (
   CONSTRAINT `FK_permisos_rol` FOREIGN KEY (`IdRol`) REFERENCES `rol` (`IdRol`)
 ) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla helpdesk.permisos: ~60 rows (aproximadamente)
+-- Volcando datos para la tabla helpdesk.permisos: ~61 rows (aproximadamente)
 DELETE FROM `permisos`;
 INSERT INTO `permisos` (`IdPermiso`, `IdRol`, `IdModulo`, `R`, `W`, `U`, `D`, `DatecreatePermiso`) VALUES
-	(1, 1, 1, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(2, 1, 2, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(3, 1, 3, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(4, 1, 4, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(5, 1, 5, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(6, 1, 6, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(7, 1, 7, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(8, 1, 8, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(9, 1, 9, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(10, 1, 10, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(11, 1, 11, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(12, 1, 12, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(13, 1, 13, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(14, 1, 14, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(15, 1, 15, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(16, 7, 1, 1, 1, 1, 0, '2025-03-30 15:26:40'),
-	(17, 7, 2, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(18, 7, 3, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(19, 7, 4, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(20, 7, 5, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(21, 7, 6, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(22, 7, 7, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(23, 7, 8, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(24, 7, 9, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(25, 7, 10, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(26, 7, 11, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(27, 7, 12, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(28, 7, 13, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(29, 7, 14, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(30, 7, 15, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(31, 8, 1, 1, 0, 1, 1, '2025-03-30 15:26:40'),
-	(32, 8, 2, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(33, 8, 3, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(34, 8, 4, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(35, 8, 5, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(36, 8, 6, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(37, 8, 7, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(38, 8, 8, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(39, 8, 9, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(40, 8, 10, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(41, 8, 11, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(42, 8, 12, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(43, 8, 13, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(44, 8, 14, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(45, 8, 15, 0, 0, 0, 0, '2025-03-30 15:26:40'),
-	(46, 9, 1, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(47, 9, 2, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(48, 9, 3, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(49, 9, 4, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(50, 9, 5, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(51, 9, 6, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(52, 9, 7, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(53, 9, 8, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(54, 9, 9, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(55, 9, 10, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(56, 9, 11, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(57, 9, 12, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(58, 9, 13, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(59, 9, 14, 1, 1, 1, 1, '2025-03-30 15:26:40'),
-	(60, 9, 15, 1, 1, 1, 1, '2025-03-30 15:26:40');
+	(1, 1, 1, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(2, 1, 2, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(3, 1, 3, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(4, 1, 4, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(5, 1, 5, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(6, 1, 6, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(7, 1, 7, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(8, 1, 8, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(9, 1, 9, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(10, 1, 10, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(11, 1, 11, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(12, 1, 12, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(13, 1, 13, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(14, 1, 14, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(15, 1, 15, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(16, 1, 16, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(17, 7, 1, 1, 1, 1, 0, '2025-04-01 06:56:51'),
+	(18, 7, 2, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(19, 7, 3, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(20, 7, 4, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(21, 7, 5, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(22, 7, 6, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(23, 7, 7, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(24, 7, 8, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(25, 7, 9, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(26, 7, 10, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(27, 7, 11, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(28, 7, 12, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(29, 7, 13, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(30, 7, 14, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(31, 7, 15, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(32, 8, 1, 1, 0, 1, 1, '2025-04-01 06:56:51'),
+	(33, 8, 2, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(34, 8, 3, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(35, 8, 4, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(36, 8, 5, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(37, 8, 6, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(38, 8, 7, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(39, 8, 8, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(40, 8, 9, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(41, 8, 10, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(42, 8, 11, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(43, 8, 12, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(44, 8, 13, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(45, 8, 14, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(46, 8, 15, 0, 0, 0, 0, '2025-04-01 06:56:51'),
+	(47, 9, 1, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(48, 9, 2, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(49, 9, 3, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(50, 9, 4, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(51, 9, 5, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(52, 9, 6, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(53, 9, 7, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(54, 9, 8, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(55, 9, 9, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(56, 9, 10, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(57, 9, 11, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(58, 9, 12, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(59, 9, 13, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(60, 9, 14, 1, 1, 1, 1, '2025-04-01 06:56:51'),
+	(61, 9, 15, 1, 1, 1, 1, '2025-04-01 06:56:51');
 
--- Volcando estructura para tabla helpdesk.problema
-CREATE TABLE IF NOT EXISTS `problema` (
-  `problema_id` int NOT NULL AUTO_INCREMENT,
-  `nombre_prob` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`problema_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+-- Volcando estructura para tabla helpdesk.problemas
+CREATE TABLE IF NOT EXISTS `problemas` (
+  `IdProblema` int NOT NULL AUTO_INCREMENT,
+  `NombreProblema` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `DataCreateProblema` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `StatusProblema` enum('Activo','Inactivo') COLLATE utf8mb3_unicode_ci DEFAULT 'Activo',
+  PRIMARY KEY (`IdProblema`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
--- Volcando datos para la tabla helpdesk.problema: ~49 rows (aproximadamente)
-DELETE FROM `problema`;
-INSERT INTO `problema` (`problema_id`, `nombre_prob`) VALUES
-	(1, 'Computadora / Laptop'),
-	(2, 'Monitor'),
-	(3, 'Teclado / Mouse / Parlantes'),
-	(4, 'Impresora / Plotter / Escáner'),
-	(5, 'Disco Duro / Memoria USB / CD'),
-	(6, 'Teléfono / Anexo'),
-	(7, 'Proyector Multimedia'),
-	(8, 'Reloj Biométrico'),
-	(9, 'Windows / Office / Autocad'),
-	(10, 'Problemas con programas o sistemas de la oficina'),
-	(11, 'No puedo acceder a carpetas o archivos compartidos'),
-	(12, 'Correo Electrónico Institucional'),
-	(13, 'No puedo entrar a la página web de la institución'),
-	(14, 'Problemas con el Internet'),
-	(15, 'Reuniones virtuales (Zoom, Teams, Meet)'),
-	(16, 'Compra o evaluación de computadora o periférico'),
-	(17, 'Problemas con firma digital'),
-	(18, 'Computadora lenta'),
-	(19, 'Pantalla azul en la computadora'),
-	(20, 'No se puede abrir un archivo'),
-	(21, 'No funciona el correo electrónico'),
-	(22, 'Internet se desconecta seguido'),
-	(23, 'Impresora no imprime'),
-	(24, 'La computadora no enciende'),
-	(25, 'Problemas para entrar a una reunión virtual'),
-	(26, 'Error al abrir un programa'),
-	(27, 'No funciona la cámara en la videollamada'),
-	(28, 'Teclado o mouse no responde'),
-	(29, 'No puedo acceder a una página web'),
-	(30, 'Olvidé mi contraseña de correo'),
-	(31, 'Faltan archivos en mi computadora'),
-	(32, 'Recibo muchos correos de spam'),
-	(33, 'Problema al conectar memoria USB'),
-	(34, 'No puedo imprimir a doble cara'),
-	(35, 'Error al enviar archivos grandes por correo'),
-	(36, 'Problema para entrar a un sistema con mi usuario'),
-	(37, 'No me llega la notificación de un trámite'),
-	(38, 'Impresora imprime a rayas'),
-	(39, 'Impresora imprime en otros colores'),
-	(40, 'Impresora no imprime en negro'),
-	(41, 'Impresora no enciende'),
-	(42, 'Impresora sin tinta o tóner'),
-	(43, 'No puedo escribir en Word o Excel'),
-	(44, 'Aparece mensaje de licencia desactivada en Office'),
-	(45, 'Office pide activar la licencia de nuevo'),
-	(46, 'Error al abrir un archivo de Word o Excel'),
-	(47, 'No puedo guardar mi archivo en Office'),
-	(48, 'Office está en modo de solo lectura'),
-	(49, 'OTROS');
+-- Volcando datos para la tabla helpdesk.problemas: ~10 rows (aproximadamente)
+DELETE FROM `problemas`;
+INSERT INTO `problemas` (`IdProblema`, `NombreProblema`, `DataCreateProblema`, `StatusProblema`) VALUES
+	(1, 'Computadoras', '2025-04-01 04:52:05', 'Activo'),
+	(2, 'Internet', '2025-04-01 04:52:05', 'Activo'),
+	(3, 'Microsoft Word', '2025-04-01 04:52:05', 'Activo'),
+	(4, 'Microsoft Excel', '2025-04-01 04:52:05', 'Activo'),
+	(5, 'Microsoft PowerPoint', '2025-04-01 04:52:05', 'Activo'),
+	(6, 'Nitro PDF', '2025-04-01 04:52:05', 'Activo'),
+	(7, 'SIAF', '2025-04-01 04:52:05', 'Activo'),
+	(8, 'Impresoras', '2025-04-01 04:52:05', 'Activo'),
+	(9, 'Energía Eléctrica', '2025-04-01 04:52:05', 'Activo'),
+	(10, 'Teléfono IP', '2025-04-01 04:52:05', 'Activo');
 
 -- Volcando estructura para tabla helpdesk.rol
 CREATE TABLE IF NOT EXISTS `rol` (
@@ -268,6 +233,62 @@ INSERT INTO `rol` (`IdRol`, `NombreRol`, `DescripcionRol`, `DatecreateRol`, `Sta
 	(7, 'Supervisor', 'Supervisa personal y operaciones asegurando cumplimiento de tareas.', '2025-03-22 12:08:39', 1),
 	(8, 'Usuario Registrado', 'Accede a funciones básicas del sistema con permisos limitados.', '2025-03-22 12:08:39', 1),
 	(9, 'Tercero', 'Personal contratado externamente con acceso restringido.', '2025-03-25 15:23:05', 1);
+
+-- Volcando estructura para tabla helpdesk.subproblemas
+CREATE TABLE IF NOT EXISTS `subproblemas` (
+  `IdSubproblema` int NOT NULL AUTO_INCREMENT,
+  `IdProblema` int NOT NULL,
+  `NombreSubproblema` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `DescripcionSubproblema` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `DataCreateSubproblema` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `StatusSubproblema` enum('Activo','Inactivo') COLLATE utf8mb3_unicode_ci DEFAULT 'Activo',
+  PRIMARY KEY (`IdSubproblema`),
+  KEY `IdProblema` (`IdProblema`)
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+-- Volcando datos para la tabla helpdesk.subproblemas: ~40 rows (aproximadamente)
+DELETE FROM `subproblemas`;
+INSERT INTO `subproblemas` (`IdSubproblema`, `IdProblema`, `NombreSubproblema`, `DescripcionSubproblema`, `DataCreateSubproblema`, `StatusSubproblema`) VALUES
+	(1, 1, 'Se apaga sola', '', '2025-04-01 04:52:20', 'Activo'),
+	(2, 1, 'Pantalla azul al iniciar', '', '2025-04-01 04:52:20', 'Activo'),
+	(3, 1, 'No enciende', '', '2025-04-01 04:52:20', 'Activo'),
+	(4, 1, 'Se congela constantemente', '', '2025-04-01 04:52:20', 'Activo'),
+	(5, 2, 'Internet muy lento', '', '2025-04-01 04:52:20', 'Activo'),
+	(6, 2, 'Sin conexión', '', '2025-04-01 04:52:20', 'Activo'),
+	(7, 2, 'WiFi se desconecta', '', '2025-04-01 04:52:20', 'Activo'),
+	(8, 2, 'VPN no funciona', '', '2025-04-01 04:52:20', 'Activo'),
+	(9, 3, 'No abre el programa', '', '2025-04-01 04:52:20', 'Activo'),
+	(10, 3, 'Error al guardar documentos', '', '2025-04-01 04:52:20', 'Activo'),
+	(11, 3, 'No reconoce formato de archivo', '', '2025-04-01 04:52:20', 'Activo'),
+	(12, 3, 'Problemas con la licencia', '', '2025-04-01 04:52:20', 'Activo'),
+	(13, 4, 'Celdas no calculan bien', '', '2025-04-01 04:52:20', 'Activo'),
+	(14, 4, 'Error al abrir archivos', '', '2025-04-01 04:52:20', 'Activo'),
+	(15, 4, 'Problemas con macros', '', '2025-04-01 04:52:20', 'Activo'),
+	(16, 4, 'Se cierra inesperadamente', '', '2025-04-01 04:52:20', 'Activo'),
+	(17, 5, 'No carga presentaciones', '', '2025-04-01 04:52:20', 'Activo'),
+	(18, 5, 'Problemas con transiciones', '', '2025-04-01 04:52:20', 'Activo'),
+	(19, 5, 'Error al exportar PDF', '', '2025-04-01 04:52:20', 'Activo'),
+	(20, 5, 'No permite insertar videos', '', '2025-04-01 04:52:20', 'Activo'),
+	(21, 6, 'No abre archivos PDF', '', '2025-04-01 04:52:20', 'Activo'),
+	(22, 6, 'Error al firmar documentos', '', '2025-04-01 04:52:20', 'Activo'),
+	(23, 6, 'Problemas al convertir PDF a Word', '', '2025-04-01 04:52:20', 'Activo'),
+	(24, 6, 'No reconoce impresora virtual', '', '2025-04-01 04:52:20', 'Activo'),
+	(25, 7, 'No conecta con el servidor', '', '2025-04-01 04:52:20', 'Activo'),
+	(26, 7, 'Error en módulos de ejecución', '', '2025-04-01 04:52:20', 'Activo'),
+	(27, 7, 'Problema con actualización', '', '2025-04-01 04:52:20', 'Activo'),
+	(28, 7, 'Usuarios sin acceso', '', '2025-04-01 04:52:20', 'Activo'),
+	(29, 8, 'No imprime', '', '2025-04-01 04:52:20', 'Activo'),
+	(30, 8, 'Impresión en blanco', '', '2025-04-01 04:52:20', 'Activo'),
+	(31, 8, 'Atasco de papel', '', '2025-04-01 04:52:20', 'Activo'),
+	(32, 8, 'Error de conexión', '', '2025-04-01 04:52:20', 'Activo'),
+	(33, 9, 'Apagón repentino', '', '2025-04-01 04:52:20', 'Activo'),
+	(34, 9, 'Variaciones de voltaje (sube y baja repentinamente)', '', '2025-04-01 04:52:20', 'Activo'),
+	(35, 9, 'UPS no responde', '', '2025-04-01 04:52:20', 'Activo'),
+	(36, 9, 'Corte de energía en la oficina', '', '2025-04-01 04:52:20', 'Activo'),
+	(37, 10, 'No tiene tono', '', '2025-04-01 04:52:20', 'Activo'),
+	(38, 10, 'Se corta la llamada', '', '2025-04-01 04:52:20', 'Activo'),
+	(39, 10, 'No registra en el sistema', '', '2025-04-01 04:52:20', 'Activo'),
+	(40, 10, 'Eco o ruido en la llamada', '', '2025-04-01 04:52:20', 'Activo');
 
 -- Volcando estructura para tabla helpdesk.tickets
 CREATE TABLE IF NOT EXISTS `tickets` (
@@ -311,7 +332,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   CONSTRAINT `FK_usuarios_rol` FOREIGN KEY (`RolUsuario`) REFERENCES `rol` (`IdRol`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla helpdesk.usuarios: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla helpdesk.usuarios: ~2 rows (aproximadamente)
 DELETE FROM `usuarios`;
 INSERT INTO `usuarios` (`IdUsuario`, `NombresUsuario`, `ApellidosUsuario`, `TelefonoUsuario`, `DNIUsuario`, `CorreoUsuario`, `UsernameUsuario`, `PasswordUsuario`, `DatecreateUsuario`, `RolUsuario`, `StatusUsuario`) VALUES
 	(1, 'Javier Antonio ', 'Padin Flores ', '917189300', '74199531', 'javierpadin661@gmail.com', 'javier20', 'afad7b36d11a0e2c7b30ec3a16c9077d8e2c4117f282f257790bd9f70641d840', '2025-03-21 23:54:52', 1, 1),
