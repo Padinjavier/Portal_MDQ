@@ -77,7 +77,7 @@ class TrabajadoresControlador
                 'CorreoUsuario' => $_POST['correo'] ?? null,
                 'UsernameUsuario' => $_POST['usuario'] ?? null,
                 'PasswordUsuario' => $_POST['password'] ?? null, // Si es necesario
-                'RolUsuario' => $_POST['rol'] ?? null // Si es necesario
+                'RolUsuario' => $_POST['rol'] ?? null
             ];
 
             // Validar datos
