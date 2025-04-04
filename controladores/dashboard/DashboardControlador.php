@@ -3,23 +3,52 @@
 require_once '../../modelos/dashboard/DashboardModelo.php';
 require_once '../../Config/Config.php'; // Incluir la configuración
 
-class DashboardControlador {
+class DashboardControlador
+{
     private $DashboardModelo;
-
-    public function __construct() {
+    public function __construct()
+    {
         $db = new Conexion();
         $this->DashboardModelo = new DashboardModelo($db);
     }
 
-    public function obtenerDashboardData() {
-        $datos = $this->DashboardModelo->getDashboardData();
-        echo json_encode($datos); // Devuelve los datos en formato JSON
+
+
+
+
+    public function ResumenGeneral()
+    {
+        $datos = $this->DashboardModelo->ResumenGeneral();
+        echo json_encode($datos);
+    }
+
+
+
+
+
+    public function EstadoTickets()
+    {
+        $datos = $this->DashboardModelo->EstadoTickets();
+        echo json_encode($datos);
     }
 }
 
-// Verifica si la petición es AJAX para devolver los datos
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $dashboardControlador = new DashboardControlador();
-    $dashboardControlador->obtenerDashboardData();
+
+
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
+    $controlador = new DashboardControlador();
+    switch ($_GET['action']) {
+        case 'ResumenGeneral':
+            $controlador->ResumenGeneral();
+            break;
+        case 'EstadoTickets':
+            $controlador->EstadoTickets();
+            break;
+        default:
+            echo json_encode(['success' => false, 'msg' => 'Acción GET no válida']);
+            break;
+    }
 }
 ?>

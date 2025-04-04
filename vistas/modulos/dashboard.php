@@ -16,46 +16,46 @@
 <section class="content">
     <div class="container-fluid">
         <!-- Contadores Generales -->
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-6">
+        <div class="row justify-content-center row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6">
             <div class="col">
                 <div class="card text-center p-2 shadow-sm">
                     <i class="fas fa-users fa-2x"></i>
-                    <p>Total Trabajadores</p>
+                    <p>Trabajadores</p>
                     <p id="total_trabajadores">0</p>
                 </div>
             </div>
             <div class="col">
                 <div class="card text-center p-2 shadow-sm">
                     <i class="fas fa-user-cog fa-2x"></i>
-                    <p>Total Técnicos</p>
+                    <p>Técnicos</p>
                     <p id="total_soporte">0</p>
                 </div>
             </div>
             <div class="col">
                 <div class="card text-center p-2 shadow-sm">
                     <i class="fas fa-briefcase fa-2x"></i>
-                    <p>Total Roles</p>
+                    <p>Roles</p>
                     <p id="total_roles">0</p>
                 </div>
             </div>
             <div class="col">
                 <div class="card text-center p-2 shadow-sm">
                     <i class="fas fa-box-open fa-2x"></i>
-                    <p>Total Inventario</p>
+                    <p>Inventario</p>
                     <p id="total_inventario">0</p>
                 </div>
             </div>
             <div class="col">
                 <div class="card text-center p-2 shadow-sm">
                     <i class="fas fa-exclamation-triangle fa-2x"></i>
-                    <p>Total Problemas</p>
+                    <p>Problemas</p>
                     <p id="total_problemas">0</p>
                 </div>
             </div>
             <div class="col">
                 <div class="card text-center p-2 shadow-sm">
                     <i class="fas fa-ticket-alt fa-2x"></i>
-                    <p>Total Tickets</p>
+                    <p>Tickets</p>
                     <p id="total_tickets">0</p>
                 </div>
             </div>
@@ -68,31 +68,31 @@
                 <div class="col-md-2 col-sm-4 col-6">
                     <div class="card text-center p-2 bg-danger text-white shadow-sm">
                         <p>Abiertos</p>
-                        <p id="abiertos">0</p>
+                        <p id="TicketAbiertos">0</p>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
                     <div class="card text-center p-2 bg-warning text-dark shadow-sm">
                         <p>En Atención</p>
-                        <p id="en_atencion">0</p>
+                        <p id="TicketEnAtencion">0</p>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
                     <div class="card text-center p-2 bg-success text-white shadow-sm">
                         <p>Resueltos</p>
-                        <p id="resueltos">0</p>
+                        <p id="TicketResueltos">0</p>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
                     <div class="card text-center p-2 bg-info text-white shadow-sm">
                         <p>Reabiertos</p>
-                        <p id="reabiertos">0</p>
+                        <p id="TicketReabiertos">0</p>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
                     <div class="card text-center p-2 bg-secondary text-white shadow-sm">
                         <p>Cerrados</p>
-                        <p id="cerrados">0</p>
+                        <p id="TicketCerrados">0</p>
                     </div>
                 </div>
             </div>

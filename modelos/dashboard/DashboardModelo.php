@@ -1,25 +1,44 @@
 <?php
 // C:\wamp64\www\helpmdq\modelos\dashboard\DashboardModelo.php
-class DashboardModelo {
+class DashboardModelo
+{
     private $db;
-
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->db = $db->getConexion();
     }
 
-    public function getDashboardData() {
+
+
+
+
+    public function ResumenGeneral()
+    {
         $sql = "SELECT 
                 (SELECT COUNT(*) FROM usuarios u, rol r WHERE r.IdRol = u.RolUsuario AND r.NombreRol = 'Trabajador') AS total_trabajadores,
                 (SELECT COUNT(*) FROM usuarios u, rol r WHERE r.IdRol = u.RolUsuario AND r.NombreRol = 'Soporte') AS total_soporte,
                 (SELECT COUNT(*) FROM rol) AS total_roles,
                 (SELECT COUNT(*) FROM computadoras) AS total_inventario,
                 (SELECT COUNT(*) FROM problemas) AS total_problemas,
-                (SELECT COUNT(*) FROM tickets) AS total_tickets,
-                (SELECT COUNT(*) FROM tickets WHERE status = 1) AS abiertos,
-                (SELECT COUNT(*) FROM tickets WHERE status = 2) AS en_atencion,
-                (SELECT COUNT(*) FROM tickets WHERE status = 3) AS resueltos,
-                (SELECT COUNT(*) FROM tickets WHERE status = 4) AS reabiertos,
-                (SELECT COUNT(*) FROM tickets WHERE status = 5) AS cerrados;
+                (SELECT COUNT(*) FROM tickets) AS total_tickets
+            ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
+
+
+
+    public function EstadoTickets()
+    {
+        $sql = "SELECT 
+                (SELECT COUNT(*) FROM tickets WHERE status = 1) AS TicketsAbiertos,
+                (SELECT COUNT(*) FROM tickets WHERE status = 2) AS TicketsEnAtencion,
+                (SELECT COUNT(*) FROM tickets WHERE status = 3) AS TicketsResueltos,
+                (SELECT COUNT(*) FROM tickets WHERE status = 4) AS TicketsReabiertos,
+                (SELECT COUNT(*) FROM tickets WHERE status = 5) AS TicketsCerrados;
             ";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();

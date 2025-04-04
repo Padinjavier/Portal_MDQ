@@ -1,1 +1,0 @@
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis nostrum voluptate incidunt rerum. Quas, harum eum! Mollitia, ipsam incidunt. Atque explicabo, aut iusto incidunt cumque corporis commodi fuga quia repellat?
