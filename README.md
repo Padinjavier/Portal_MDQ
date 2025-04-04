@@ -14,3 +14,10 @@
 
 ```markdown
 ![Diagrama MVC](docs/diagrama.png)
+```mermaid
+flowchart TD
+  Controlador -->|Llama| Modelo
+  Modelo -->|Consulta| BaseDeDatos
+  Controlador --> Vista
+  Vista -->|Muestra| Usuario
+```
