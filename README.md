@@ -1,47 +1,19 @@
-<!-- Escudo principal de la MDQ -->
-<p align="center">
-  <img src="vistas/assets/dist/img/escudomdq.png" alt="Escudo MDQ" width="150"/>
-</p>
+
+✅ Este código lo pegas en tu `README.md` y se renderiza automáticamente en GitHub.
+
+📎 Puedes usar otros tipos de diagramas también: `sequenceDiagram`, `classDiagram`, `stateDiagram`, etc.
 
 ---
 
-# <img src="vistas/assets/dist/img/escudo.png" width="30"/> **Portal MDQ - Help Desk Interno**
+### ✅ OPCIÓN 2: Usar una herramienta externa como **https://app.diagrams.net/** (Draw.io)
 
----
+1. Crea tu diagrama (estructura MVC, peticiones, etc.).
+2. **Exporta como imagen (.png o .svg)** o como código `XML`.
+3. Guarda la imagen en tu repositorio (por ejemplo en `/docs/diagrama.png`).
+4. En el `README.md` o donde quieras, incluyes la imagen:
 
-## 📝 Descripción del Proyecto
-
-El **Portal MDQ** es un sistema de soporte interno (Help Desk) diseñado para gestionar la documentación y el registro de incidencias dentro de la **Unidad de Informática de la Municipalidad Distrital de Quilmaná**. Este sistema permite a los trabajadores registrar problemas técnicos, generar reportes y hacer seguimiento de las soluciones implementadas por el personal técnico.
-
----
-
-## 🧱 Tecnologías Utilizadas
-
-- **PHP** (Backend)
-- **Bootstrap** (Estilos y diseño responsivo)
-- **JavaScript** (Funciones de interacción dinámica)
-- **AJAX** (Peticiones asincrónicas)
-- **MySQL** (Base de datos)
-- **Modelo MVC** (Separación de lógica, presentación y datos)
-
----
-
-## 🧩 ¿Qué es el Modelo MVC?
-
-El **Modelo-Vista-Controlador (MVC)** es un patrón de arquitectura de software que separa la aplicación en tres componentes principales:
-
-- **Modelo (Model):** Gestiona los datos, lógica y reglas de negocio.
-- **Vista (View):** Interfaz gráfica del usuario, muestra la información.
-- **Controlador (Controller):** Intermediario entre Modelo y Vista, gestiona las peticiones del usuario.
-
-<p align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/MVC-Process.svg" width="400" alt="Modelo MVC"/>
-</p>
-
----
-
-## ⚙️ Funcionamiento del Sistema
-
+```markdown
+![Diagrama MVC](docs/diagrama.png)
 ```mermaid
 flowchart TD
   Usuario([Usuario])
