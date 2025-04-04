@@ -105,17 +105,6 @@
                                 </li>
                             <?php endif; ?>
 
-
-                            <?php if ($_SESSION['Login_Permisos']['Permisos']['Leer'] == 1): ?>
-                                <li class="nav-item">
-                                    <!-- <a href="index.php?ruta=permisos" class="nav-link"> -->
-                                    <a  class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Permisos</p>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-
                         </ul>
                     </li>
                 <?php endif; ?>
