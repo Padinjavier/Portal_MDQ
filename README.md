@@ -12,8 +12,7 @@
 3. Guarda la imagen en tu repositorio (por ejemplo en `/docs/diagrama.png`).
 4. En el `README.md` o donde quieras, incluyes la imagen:
 
-```markdown
-![Diagrama MVC](docs/diagrama.png)
+
 ```mermaid
 flowchart TD
   Controlador -->|Llama| Modelo
