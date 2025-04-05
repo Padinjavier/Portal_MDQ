@@ -1,9 +1,9 @@
 // C:\wamp64\www\helpmdq\vistas\assets\dist\js\funcion_trabajadores.js
-// inicio funcionamiento de tabla trabajadores
+// inicio funcionamiento de Tabla trabajadores
 $(document).ready(function () {
-    const table = $('#tableTrabajadores').DataTable({
+    const table = $('#TablaTrabajadores').DataTable({
         "language": {
-            "url": `${BASE_URL}/vistas/assets/dist/js/Spanish.json` // Asegúrate de que esta URL sea correcta
+            "url": `${BASE_URL}/vistas/assets/dist/js/Spanish.json`
         },
         "columnDefs": [
             { "orderable": true, "targets": [0, 1, 2, 3, 4, 5, 6, 7] }, // Columnas ordenables
@@ -22,66 +22,14 @@ $(document).ready(function () {
         "iDisplayLength": 10,
         "lengthMenu": [5, 10, 25, 50, 100], // Opciones de longitud de página
         "order": [[0, "desc"]],
-        'buttons': [
-            {
-                "extend": "copyHtml5",
-                "text": "<i class='far fa-copy'></i> Copiar",
-                "titleAttr": "Copiar",
-                "className": "btn btn-secondary",
-                "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
-                "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5, 6]
-                }
-            }, {
-                "extend": "excelHtml5",
-                "text": "<i class='bi bi-file-earmark-excel'></i> Excel",
-                "titleAttr": "Exportar a Excel",
-                "className": "btn btn-success",
-                "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
-                "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5, 6]
-                }
-            }, {
-                "extend": "pdfHtml5",
-                "text": "<i class='bi bi-filetype-pdf'></i> Pdf",
-                "titleAttr": "Exportar a PDF",
-                "className": "btn btn-danger",
-                "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
-                "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5, 6]
-                }
-            }, {
-                "extend": "csvHtml5",
-                "text": "<i class='fas fa-file-csv'></i> CSV",
-                "titleAttr": "Exportar a CSV",
-                "className": "btn btn-info d-none",
-                "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
-                "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5, 6]
-                }
-            },
-            {
-                "extend": "csv",
-                "text": "<i class='fas fa-file-code'></i> JSON",
-                "titleAttr": "Exportar a JSON",
-                "className": "btn btn-info",
-                // "filename": "Trabajadores_" + new Date().toISOString().split("T")[0],
-                "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5, 6]
-                }
-            }
-        ],
     });
     CargarTablaTrabajadores();
-    // cargarRoles();
 });
 // fin funcionamiento de tabla trabajadores
 
 
 
-
-
-// inicio completar trabajadores 
+// Inicio completar Table Trabajadores 
 window.CargarTablaTrabajadores = function () {
     fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=CargarTablaTrabajadores`, { method: 'GET' })
         .then(response => response.json())
@@ -89,7 +37,7 @@ window.CargarTablaTrabajadores = function () {
             if (!response.success) {
                 throw new Error(response.msg || 'Error al cargar los datos');
             }
-            const table = $('#tableTrabajadores').DataTable();
+            const table = $('#TablaTrabajadores').DataTable();
             table.clear(); // Limpiar los datos existentes
             if (response.data.length === 0) {
                 table.draw(); // Redibujar la tabla para que se vea vacía
@@ -133,8 +81,7 @@ window.CargarTablaTrabajadores = function () {
             });
         });
 };
-
-// fin completar trabajadores 
+// Fin completar Table Trabajadores
 
 
 
@@ -149,13 +96,13 @@ function verTrabajador(id) {
                 throw new Error('Error en la solicitud: ' + response.statusText);
             }
             const trabajador = response.data;
-            document.getElementById('viewNombre').textContent = trabajador.NombresUsuario;
-            document.getElementById('viewApellido').textContent = trabajador.ApellidosUsuario;
-            document.getElementById('viewDni').textContent = trabajador.DNIUsuario;
-            document.getElementById('viewTelefono').textContent = trabajador.TelefonoUsuario;
-            document.getElementById('viewCorreo').textContent = trabajador.CorreoUsuario;
-            document.getElementById('viewUsuario').textContent = trabajador.UsernameUsuario;
-            $('#modalViewTrabajador').modal('show');
+            document.getElementById('ViewNombresTrabajador').textContent = trabajador.NombresUsuario;
+            document.getElementById('ViewApellidosTrabajador').textContent = trabajador.ApellidosUsuario;
+            document.getElementById('ViewDNITrabajador').textContent = trabajador.DNIUsuario;
+            document.getElementById('ViewTelefonoTrabajador').textContent = trabajador.TelefonoUsuario;
+            document.getElementById('ViewCorreoTrabajador').textContent = trabajador.CorreoUsuario;
+            document.getElementById('ViewUsernameTrabajador').textContent = trabajador.UsernameUsuario;
+            $('#ModalViewTrabajador').modal('show');
         })
         .catch(error => {
             Swal.fire("Error", error.message, "error");
@@ -223,22 +170,18 @@ async function editarTrabajador(id) {
         const response = await fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=obtenerTrabajadorPorId&id=${id}`);
         const result = await response.json();
         if (result.success) {
-            document.getElementById('formTrabajador').reset();
-            // Carga los roles y espera a que termine
+            document.getElementById('FormularioTrabajador').reset();
             await cargarRolesSelect();
-            // Llena el formulario
-            document.getElementById('idTrabajador').value = result.data.IdUsuario;
-            document.getElementById('nombre').value = result.data.NombresUsuario;
-            document.getElementById('apellido').value = result.data.ApellidosUsuario;
-            document.getElementById('dni').value = result.data.DNIUsuario;
-            document.getElementById('telefono').value = result.data.TelefonoUsuario;
-            document.getElementById('correo').value = result.data.CorreoUsuario;
-            document.getElementById('usuario').value = result.data.UsernameUsuario;
-            // Asigna el valor del rol (¡sin selectpicker!)
-            document.getElementById('rol').value = result.data.RolUsuario;
-            // Muestra el modal
-            document.getElementById('modalFormTrabajadorLabel').innerText = 'Editar Trabajador';
-            $('#modalFormTrabajador').modal('show');
+            document.getElementById('IdTrabajador').value = result.data.IdUsuario;
+            document.getElementById('NombresTrabajador').value = result.data.NombresUsuario;
+            document.getElementById('ApellidosTrabajador').value = result.data.ApellidosUsuario;
+            document.getElementById('DNITrabajador').value = result.data.DNIUsuario;
+            document.getElementById('TelefonoTrabajador').value = result.data.TelefonoUsuario;
+            document.getElementById('CorreoTrabajador').value = result.data.CorreoUsuario;
+            document.getElementById('UsernameTrabajador').value = result.data.UsernameUsuario;
+            document.getElementById('RolTrabajador').value = result.data.RolUsuario;
+            document.getElementById('ModalFormLabelTrabajador').innerText = 'Editar Trabajador';
+            $('#ModalFormTrabajador').modal('show');
         } else {
             Swal.fire("Error", result.msg, "error");
         }
@@ -254,9 +197,9 @@ async function editarTrabajador(id) {
 
 
 // inicio guardar trabajador
-function guardarTrabajador() {
-    const formData = new FormData(document.getElementById('formTrabajador'));
-    const accion = document.getElementById('idTrabajador').value ? 'editarTrabajador' : 'crearTrabajador';
+function GuardarTrabajador() {
+    const formData = new FormData(document.getElementById('FormularioTrabajador'));
+    const accion = document.getElementById('IdTrabajador').value ? 'editarTrabajador' : 'crearTrabajador';
 
     fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=${accion}`, {
         method: 'POST',
@@ -271,7 +214,7 @@ function guardarTrabajador() {
         .then(data => {
             if (data.success) {
                 Swal.fire("Éxito", data.msg, "success").then(() => {
-                    $('#modalFormTrabajador').modal('hide');
+                    $('#ModalFormTrabajador').modal('hide');
                     CargarTablaTrabajadores(); // Recargar la tabla
                 });
             } else {
@@ -291,11 +234,11 @@ function guardarTrabajador() {
 
 // inicio editar trabajador
 function openModal() {
-    document.getElementById('formTrabajador').reset();
-    document.getElementById('idTrabajador').value = "";
-    document.getElementById('modalFormTrabajadorLabel').innerText = 'Nuevo Trabajador';
+    document.getElementById('FormularioTrabajador').reset();
+    document.getElementById('IdTrabajador').value = "";
+    document.getElementById('ModalFormLabelTrabajador').innerText = 'Nuevo Trabajador';
     cargarRolesSelect();
-    $('#modalFormTrabajador').modal('show');
+    $('#ModalFormTrabajador').modal('show');
 }
 // fin editar trabajador
 
@@ -304,25 +247,25 @@ function openModal() {
 
 
 // inicio funcionesde open and close menu opciones
-function toggleConfigMenu() {
-    const menu = document.getElementById('configMenu');
+function AbrirConfiguracion() {
+    const menu = document.getElementById('MenuConfiguracion');
     if (menu.style.display === 'none' || menu.style.display === '') {
         menu.style.display = 'block';
         // Agregar event listener para cerrar al hacer clic fuera
-        document.addEventListener('click', closeConfigMenuOnClickOutside);
+        document.addEventListener('click', CerrarClickFuera);
     } else {
         menu.style.display = 'none';
-        document.removeEventListener('click', closeConfigMenuOnClickOutside);
+        document.removeEventListener('click', CerrarClickFuera);
     }
 }
-function closeConfigMenuOnClickOutside(event) {
-    const menu = document.getElementById('configMenu');
-    const button = document.getElementById('configButton');
+function CerrarClickFuera(event) {
+    const menu = document.getElementById('MenuConfiguracion');
+    const button = document.getElementById('BotonConfiguracion');
 
     // Si el clic no fue dentro del menú ni en el botón
     if (!menu.contains(event.target) && !button.contains(event.target)) {
         menu.style.display = 'none';
-        document.removeEventListener('click', closeConfigMenuOnClickOutside);
+        document.removeEventListener('click', CerrarClickFuera);
     }
 }
 // fin funcionesde open and close menu opciones
@@ -333,12 +276,12 @@ function closeConfigMenuOnClickOutside(event) {
 
 // inicio Función para cargar los roles desde el servidor
 let estadoInicialRoles = {}; // Guarda el estado inicial de los roles
-function cargarRoles() {
+function CargarRoles() {
     fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=CargarRoles`, { method: 'GET' })
         .then(response => response.json())
         .then(({ success, data, msg }) => {
             if (!success) throw new Error(msg || 'Error al cargar los roles');
-            const rolesList = document.getElementById('roles-list');
+            const rolesList = document.getElementById('ListaRoles');
             rolesList.innerHTML = ''; // Limpiar lista previa
             estadoInicialRoles = {}; // Resetear el estado inicial
             data.forEach(({ IdRol, NombreRol, NombreModulo }) => {
@@ -378,8 +321,8 @@ function cargarRoles() {
 
 
 // Inicio Función para guardar la configuración
-function guardarConfiguracion() {
-    const checkboxes = document.querySelectorAll('#roles-list .form-check-input');
+function GuardarConfiguracion() {
+    const checkboxes = document.querySelectorAll('#ListaRoles .form-check-input');
     let rolesNuevos = [];
     let rolesEliminados = [];
     checkboxes.forEach(checkbox => {
@@ -399,7 +342,7 @@ function guardarConfiguracion() {
     }
     // Enviar solo los roles activados
     if (rolesNuevos.length > 0) {
-        fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=guardarConfiguracion`, {
+        fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=GuardarConfiguracion`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ roles: rolesNuevos })
@@ -408,7 +351,7 @@ function guardarConfiguracion() {
             .then(data => {
                 if (data.success) {
                     Swal.fire("Éxito", "Roles activados correctamente.", "success");
-                    cargarRoles();
+                    CargarRoles();
                     CargarTablaTrabajadores();
                 } else {
                     Swal.fire("Error", data.msg || "No se pudieron activar los roles.", "error");
@@ -439,7 +382,7 @@ function eliminarRelacionModuloRol(rolesEliminados) {
             if (data.success) {
                 Swal.fire("Éxito", "Relación eliminada correctamente.", "success");
                 CargarTablaTrabajadores(); // Recargar la tabla
-                cargarRoles(); // Recargar los roles para reflejar los cambios
+                CargarRoles(); // Recargar los roles para reflejar los cambios
             } else {
                 Swal.fire("Error", data.msg || "No se pudo eliminar la relación.", "error");
             }
@@ -462,7 +405,7 @@ function cargarRolesSelect() {
                     reject(msg || 'Error al cargar los roles');
                     return;
                 }
-                const select = document.getElementById('rol');
+                const select = document.getElementById('RolTrabajador');
                 select.innerHTML = '<option value="">Seleccione un rol</option>';
 
                 data.forEach(({ IdRol, NombreRol }) => {

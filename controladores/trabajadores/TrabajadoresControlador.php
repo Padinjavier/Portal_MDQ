@@ -70,13 +70,13 @@ class TrabajadoresControlador
             }
 
             $datos = [
-                'NombresUsuario' => $_POST['nombre'] ?? null,
-                'ApellidosUsuario' => $_POST['apellido'] ?? null,
-                'TelefonoUsuario' => $_POST['telefono'] ?? null,
-                'DNIUsuario' => $_POST['dni'] ?? null,
-                'CorreoUsuario' => $_POST['correo'] ?? null,
-                'UsernameUsuario' => $_POST['usuario'] ?? null,
-                'PasswordUsuario' => $_POST['password'] ?? null, // Si es necesario
+                'NombresUsuario' => $_POST['NombresTrabajador'] ?? null,
+                'ApellidosUsuario' => $_POST['ApellidosTrabajador'] ?? null,
+                'TelefonoUsuario' => $_POST['TelefonoTrabajador'] ?? null,
+                'DNIUsuario' => $_POST['DNITrabajador'] ?? null,
+                'CorreoUsuario' => $_POST['CorreoTrabajador'] ?? null,
+                'UsernameUsuario' => $_POST['UsernameTrabajador'] ?? null,
+                'PasswordUsuario' => $_POST['PasswordTrabajador'] ?? null, // Si es necesario
                 'RolUsuario' => $_POST['rol'] ?? null
             ];
 
@@ -109,17 +109,16 @@ class TrabajadoresControlador
                 throw new Exception('Método no permitido');
             }
             $datos = [
-                'NombresUsuario' => $_POST['nombre'] ?? null,
-                'ApellidosUsuario' => $_POST['apellido'] ?? null,
-                'TelefonoUsuario' => $_POST['telefono'] ?? null,
-                'DNIUsuario' => $_POST['dni'] ?? null,
-                'CorreoUsuario' => $_POST['correo'] ?? null,
-                'UsernameUsuario' => $_POST['usuario'] ?? null,
-                'RolUsuario' => $_POST['rol'] ?? null,
-                'IdTrabajador' => $_POST['idTrabajador'] ?? null,
+                'NombresUsuario' => $_POST['NombresTrabajador'] ?? null,
+                'ApellidosUsuario' => $_POST['ApellidosTrabajador'] ?? null,
+                'TelefonoUsuario' => $_POST['TelefonoTrabajador'] ?? null,
+                'DNIUsuario' => $_POST['DNITrabajador'] ?? null,
+                'CorreoUsuario' => $_POST['CorreoTrabajador'] ?? null,
+                'UsernameUsuario' => $_POST['UsernameTrabajador'] ?? null,
+                'RolUsuario' => $_POST['RolTrabajador'] ?? null,
             ];
-            if (!empty($_POST['password'])) {
-                $datos['PasswordUsuario'] = $_POST['password'];
+            if (!empty($_POST['PasswordTrabajador'])) {
+                $datos['PasswordUsuario'] = $_POST['PasswordTrabajador'];
             }
             foreach ($datos as $key => $value) {
                 if ($key !== 'PasswordUsuario' && empty($value)) {
@@ -182,7 +181,7 @@ class TrabajadoresControlador
 
 
     // inicio Guardar configuración de roles
-    public function guardarConfiguracion()
+    public function GuardarConfiguracion()
     {
         try {
             $data = json_decode(file_get_contents('php://input'), true);
@@ -190,7 +189,7 @@ class TrabajadoresControlador
             if (empty($roles)) {
                 throw new Exception("Datos incompletos para guardar la configuración.");
             }
-            $result = $this->modelo->guardarConfiguracionMODELO($roles);
+            $result = $this->modelo->GuardarConfiguracion($roles);
             echo json_encode(['success' => true, 'data' => $result]);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'msg' => 'Error al guardar la configuración: ' . $e->getMessage()]);
@@ -264,8 +263,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             $id = $input['id'] ?? null; // Leer desde el cuerpo
             $controlador->eliminarTrabajador($id);
             break;
-        case 'guardarConfiguracion':
-            $controlador->guardarConfiguracion();
+        case 'GuardarConfiguracion':
+            $controlador->GuardarConfiguracion();
             break;
         case 'eliminarRelacionModuloRol':
             $controlador->eliminarRelacionModuloRol();

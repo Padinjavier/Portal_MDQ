@@ -16,22 +16,22 @@
                     </button>
                 </h1>
                 <div class="position-relative">
-                    <button class="btn btn-primary btn-sm" type="button" id="configButton"
-                        onclick="toggleConfigMenu(); cargarRoles()">
+                    <button class="btn btn-primary btn-sm" type="button" id="BotonConfiguracion"
+                        onclick="AbrirConfiguracion(); CargarRoles()">
                         <i class="fas fa-cog"></i> Configuración
                     </button>
-                    <div class="config-menu shadow-sm bg-white pb-2 mt-2 border position-absolute " id="configMenu"
-                        style="display: none; right: 0; top: 100%; z-index: 1000;">
+                    <div class="config-menu shadow-sm bg-white pb-2 mt-2 border position-absolute "
+                        id="MenuConfiguracion" style="display: none; right: 0; top: 100%; z-index: 1000;">
                         <h6 class="dropdown-header bg-success fw-bold"
                             title="Estos son los roles que se verán en esta tabla, algunos ya están en otra tabla quitelos de esas para agregarlos a esta.">
-                            Opciones de tabla</h6>
-                        <div id="roles-list" class="px-3">
+                            Configuracion de tabla</h6>
+                        <div id="ListaRoles" class="px-3">
                             <!-- Aquí se cargarán los roles dinámicamente -->
                         </div>
                         <div class="dropdown-divider"></div>
                         <div class="d-flex">
                             <button class="btn btn-success btn-sm mx-auto" type="button"
-                                onclick="guardarConfiguracion()">
+                                onclick="GuardarConfiguracion()">
                                 <i class="fas fa-save"></i> Guardar
                             </button>
                         </div>
@@ -45,35 +45,30 @@
         <div class="col-md-12">
             <div class="card shadow-sm" style="border-radius: 30px;">
                 <div class="card-body p-4">
-                    <div title="Botones para exportar">
+                    <div title="Botones para exportar" class="mb-3">
                         <!-- Botón de Excel -->
                         <button class="btn btn-secondary buttons-excel buttons-html5 btn-success" tabindex="0"
-                            aria-controls="tableTrabajadores" type="button" title="Exportar a Excel">
+                            type="button" title="Exportar a Excel">
                             <span><i class="bi bi-file-earmark-excel"></i> Excel</span>
                         </button>
-
                         <!-- Botón de PDF -->
                         <button class="btn btn-secondary buttons-pdf buttons-html5 btn-danger" tabindex="0"
-                            aria-controls="tableTrabajadores" type="button" title="Exportar a PDF">
+                            type="button" title="Exportar a PDF">
                             <span><i class="bi bi-filetype-pdf"></i> Pdf</span>
                         </button>
-
                         <!-- Botón de CSV (deshabilitado, visible, bloqueado en gris) -->
-                        <button class="btn bg-secondary buttons-csv buttons-html5  disabled" tabindex="0"
-                            aria-controls="tableTrabajadores" type="button" title="Exportar a CSV" disabled>
+                        <button class="btn bg-secondary buttons-csv buttons-html5  disabled" tabindex="0" type="button"
+                            title="Exportar a CSV" disabled>
                             <span><i class="fas fa-file-csv"></i> CSV</span>
                         </button>
-
                         <!-- Botón de JSON (deshabilitado, visible, bloqueado en gris) -->
-                        <button class="btn bg-secondary buttons-csv buttons-html5  disabled" tabindex="0"
-                            aria-controls="tableTrabajadores" type="button" title="Exportar a JSON" disabled>
+                        <button class="btn bg-secondary buttons-csv buttons-html5  disabled" tabindex="0" type="button"
+                            title="Exportar a JSON" disabled>
                             <span><i class="fas fa-file-code"></i> JSON</span>
                         </button>
                     </div>
-                    <div class="dt-buttons btn-group flex-wrap">
-                    </div>
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered w-100" id="tableTrabajadores"
+                        <table class="table table-hover table-bordered w-100" id="TablaTrabajadores"
                             style="background-color: white;">
                             <thead class="bg-success">
                                 <tr>
@@ -103,77 +98,79 @@
 
 
 <!-- Inicio Modal para Crear/Editar Trabajador -->
-<div class="modal fade" id="modalFormTrabajador" tabindex="-1" role="dialog" aria-labelledby="modalFormTrabajadorLabel"
+<div class="modal fade" id="ModalFormTrabajador" tabindex="-1" role="dialog" aria-labelledby="ModalFormLabelTrabajador"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success">
-                <h5 class="modal-title" id="modalFormTrabajadorLabel">Trabajador</h5>
+                <h5 class="modal-title" id="ModalFormLabelTrabajador">Trabajador</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="formTrabajador">
-                    <input type="hidden" id="idTrabajador" name="idTrabajador">
+                <form id="FormularioTrabajador">
+                    <input type="hidden" id="IdTrabajador" name="IdTrabajador">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nombre">Nombre</label>
-                                <input type="text" class="form-control form-control-sm" id="nombre" name="nombre"
-                                    required>
+                                <label for="NombresTrabajador">Nombre</label>
+                                <input type="text" class="form-control form-control-sm" id="NombresTrabajador"
+                                    name="NombresTrabajador" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="apellido">Apellido</label>
-                                <input type="text" class="form-control form-control-sm" id="apellido" name="apellido"
-                                    required>
+                                <label for="ApellidosTrabajador">Apellido</label>
+                                <input type="text" class="form-control form-control-sm" id="ApellidosTrabajador"
+                                    name="ApellidosTrabajador" required>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="dni">DNI</label>
-                                <input type="text" class="form-control form-control-sm" id="dni" name="dni"
-                                    minlength="8" maxlength="8" required>
+                                <label for="DNITrabajador">DNI</label>
+                                <input type="text" class="form-control form-control-sm" id="DNITrabajador"
+                                    name="DNITrabajador" minlength="8" maxlength="8" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="telefono">Teléfono</label>
-                                <input type="text" class="form-control form-control-sm" id="telefono" name="telefono"
-                                    minlength="9" maxlength="9" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="correo">Correo</label>
-                                <input type="email" class="form-control form-control-sm" id="correo" name="correo">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="usuario">Usuario</label>
-                                <input type="text" class="form-control form-control-sm" id="usuario" name="usuario"
-                                    required>
+                                <label for="TelefonoTrabajador">Teléfono</label>
+                                <input type="text" class="form-control form-control-sm" id="TelefonoTrabajador"
+                                    name="TelefonoTrabajador" minlength="9" maxlength="9" required>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="password">Contraseña</label>
-                                <input type="text" class="form-control form-control-sm" id="password" name="password">
+                                <label for="CorreoTrabajador">Correo</label>
+                                <input type="email" class="form-control form-control-sm" id="CorreoTrabajador"
+                                    name="CorreoTrabajador">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="rol">Rol</label>
-                                <select class="form-control form-control-sm" id="rol" name="rol">
+                                <label for="UsernameTrabajador">Usuario</label>
+                                <input type="text" class="form-control form-control-sm" id="UsernameTrabajador"
+                                    name="UsernameTrabajador" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="PasswordTrabajador">Contraseña</label>
+                                <input type="text" class="form-control form-control-sm" id="PasswordTrabajador"
+                                    name="PasswordTrabajador">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="RolTrabajador">Rol</label>
+                                <select class="form-control form-control-sm" id="RolTrabajador" name="RolTrabajador">
                                     <option value="">Seleccione un rol</option>
                                     <!-- Las opciones se cargarán dinámicamente -->
                                 </select>
@@ -184,7 +181,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cerrar</button>
-                <button class="btn btn-success btn-sm" type="button" onclick="guardarTrabajador()">Guardar</button>
+                <button class="btn btn-success btn-sm" type="button" onclick="GuardarTrabajador()">Guardar</button>
             </div>
         </div>
     </div>
@@ -192,13 +189,14 @@
 <!-- Fin Modal para Crear/Editar Trabajador -->
 
 
-<!-- Inicio Modal para Ver Trabajador -->
-<div class="modal fade" id="modalViewTrabajador" tabindex="-1" role="dialog" aria-labelledby="modalViewTrabajadorLabel"
+
+<!-- Inicio Modal para Ver Trabajador modalVistaTrabajador-->
+<div class="modal fade" id="ModalViewTrabajador" tabindex="-1" role="dialog" aria-labelledby="ModalViewLabelTrabajador"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success">
-                <h5 class="modal-title" id="modalViewTrabajadorLabel">Ver Trabajador</h5>
+                <h5 class="modal-title" id="ModalViewLabelTrabajador">Ver Trabajador</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -206,14 +204,14 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <p><strong>Nombre:</strong> <span id="viewNombre"></span></p>
-                        <p><strong>DNI:</strong> <span id="viewDni"></span></p>
-                        <p><strong>Correo:</strong> <span id="viewCorreo"></span></p>
+                        <p><strong>Nombres:</strong> <span id="ViewNombresTrabajador"></span></p>
+                        <p><strong>DNI:</strong> <span id="ViewDNITrabajador"></span></p>
+                        <p><strong>Correo:</strong> <span id="ViewCorreoTrabajador"></span></p>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>Apellido:</strong> <span id="viewApellido"></span></p>
-                        <p><strong>Teléfono:</strong> <span id="viewTelefono"></span></p>
-                        <p><strong>Usuario:</strong> <span id="viewUsuario"></span></p>
+                        <p><strong>Apellidos:</strong> <span id="ViewApellidosTrabajador"></span></p>
+                        <p><strong>Teléfono:</strong> <span id="ViewTelefonoTrabajador"></span></p>
+                        <p><strong>Usuario:</strong> <span id="ViewUsernameTrabajador"></span></p>
                     </div>
                 </div>
             </div>

@@ -202,7 +202,7 @@ class TrabajadoresModelo
 
 
       // inicio guardar configuración de roles que se muestran en las tablas tener en cuenta el ID del modulo cambia dependiendo del modulo donde se aplique
-    public function guardarConfiguracionMODELO($roles)
+    public function GuardarConfiguracion($roles)
     {
         try {
             $this->db->beginTransaction();
