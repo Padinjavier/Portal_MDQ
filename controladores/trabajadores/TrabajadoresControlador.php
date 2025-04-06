@@ -41,7 +41,7 @@ class TrabajadoresControlador
                 throw new Exception('ID no proporcionado');
             }
             $trabajador = $this->modelo->BuscarTrabajador($id);
-            if ($trabajador) {
+            if ($trabajador !== false) {
                 echo json_encode(['success' => true, 'data' => $trabajador]);
             } else {
                 echo json_encode(['success' => false, 'msg' => 'Trabajador no encontrado']);

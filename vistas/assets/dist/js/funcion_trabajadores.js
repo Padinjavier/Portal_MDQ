@@ -1,5 +1,5 @@
 // C:\wamp64\www\helpmdq\vistas\assets\dist\js\funcion_trabajadores.js
-// inicio funcionamiento de Tabla trabajadores
+// INICIO FUNCIONAMIENTO DE TABLA TRABAJADORES
 $(document).ready(function () {
     const table = $('#TablaTrabajadores').DataTable({
         "language": {
@@ -29,27 +29,29 @@ $(document).ready(function () {
 
 
 
+
+
 // INICIO COMPLETAR TABLE TRABAJADORES 
 window.CargarDatosTrabajadores = function () {
     fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=CargarDatosTrabajadores`, { method: 'GET' })
-    .then(response => response.text())
-    .then(text => {
-        try {
-            const data = JSON.parse(text);
-            if (!data.success) throw data.msg || "Error en el servidor";
-            const table = $('#TablaTrabajadores').DataTable();
-            table.clear();
-            data.data?.forEach(Trabajador => {
-                table.row.add([
-                    Trabajador.IdUsuario, 
-                    Trabajador.NombresUsuario, 
-                    Trabajador.ApellidosUsuario, 
-                    Trabajador.DNIUsuario,
-                    Trabajador.TelefonoUsuario, 
-                    Trabajador.CorreoUsuario, 
-                    Trabajador.UsernameUsuario, 
-                    Trabajador.NombreRol, 
-                    `<div class="dropdown">
+        .then(response => response.text())
+        .then(text => {
+            try {
+                const data = JSON.parse(text);
+                if (!data.success) throw data.msg || "Error en el servidor";
+                const table = $('#TablaTrabajadores').DataTable();
+                table.clear();
+                data.data?.forEach(Trabajador => {
+                    table.row.add([
+                        Trabajador.IdUsuario,
+                        Trabajador.NombresUsuario,
+                        Trabajador.ApellidosUsuario,
+                        Trabajador.DNIUsuario,
+                        Trabajador.TelefonoUsuario,
+                        Trabajador.CorreoUsuario,
+                        Trabajador.UsernameUsuario,
+                        Trabajador.NombreRol,
+                        `<div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown"><i class="fas fa-cog"></i> Opciones</button>
                         <div class="dropdown-menu">
                             <button class="btn dropdown-item text-success bg-transparent" onclick="VerTrabajador(${Trabajador.IdUsuario})"><i class="fas fa-eye"></i> Ver</button>
@@ -57,17 +59,17 @@ window.CargarDatosTrabajadores = function () {
                             <button class="btn dropdown-item text-danger bg-transparent" onclick="EliminarTrabajador(${Trabajador.IdUsuario})"><i class="fas fa-trash"></i> Eliminar</button>
                         </div>
                     </div>`
-                ]).draw(false);
-            });
-        } catch {
-            throw text; // Si no es JSON válido, lanzamos el HTML
-        }
-    })
-    .catch(error => Swal.fire({
-        title: "Error",
-        html: typeof error === 'string' ? error : "Error desconocido",
-        icon: "error",
-    }));
+                    ]).draw(false);
+                });
+            } catch {
+                throw text; // Si no es JSON válido, lanzamos el HTML
+            }
+        })
+        .catch(error => Swal.fire({
+            title: "Error",
+            html: typeof error === 'string' ? error : "Error desconocido",
+            icon: "error",
+        }));
 };
 // FIN COMPLETAR TABLE TRABAJADORES
 
@@ -78,23 +80,28 @@ window.CargarDatosTrabajadores = function () {
 // INICIO VER TRABAJADOR
 function VerTrabajador(id) {
     fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=BuscarTrabajador&id=${id}`, { method: 'GET' })
-        .then(response => response.json())
-        .then(response => {
-            if (!response.success) {
-                throw new Error('Error en la solicitud: ' + response.statusText);
+        .then(response => response.text())
+        .then(text => {
+            try {
+                const data = JSON.parse(text);
+                if (!data.success) throw data.msg || "Error en el servidor";
+                const trabajador = data.data;
+                document.getElementById('ViewNombresTrabajador').textContent = trabajador.NombresUsuario;
+                document.getElementById('ViewApellidosTrabajador').textContent = trabajador.ApellidosUsuario;
+                document.getElementById('ViewDNITrabajador').textContent = trabajador.DNIUsuario;
+                document.getElementById('ViewTelefonoTrabajador').textContent = trabajador.TelefonoUsuario;
+                document.getElementById('ViewCorreoTrabajador').textContent = trabajador.CorreoUsuario;
+                document.getElementById('ViewUsernameTrabajador').textContent = trabajador.UsernameUsuario;
+                $('#ModalViewTrabajador').modal('show');
+            } catch {
+                throw text; // Si no es JSON válido, lanzamos el HTML
             }
-            const trabajador = response.data;
-            document.getElementById('ViewNombresTrabajador').textContent = trabajador.NombresUsuario;
-            document.getElementById('ViewApellidosTrabajador').textContent = trabajador.ApellidosUsuario;
-            document.getElementById('ViewDNITrabajador').textContent = trabajador.DNIUsuario;
-            document.getElementById('ViewTelefonoTrabajador').textContent = trabajador.TelefonoUsuario;
-            document.getElementById('ViewCorreoTrabajador').textContent = trabajador.CorreoUsuario;
-            document.getElementById('ViewUsernameTrabajador').textContent = trabajador.UsernameUsuario;
-            $('#ModalViewTrabajador').modal('show');
         })
-        .catch(error => {
-            Swal.fire("Error", error.message, "error");
-        });
+        .catch(error => Swal.fire({
+            title: "Error",
+            html: typeof error === 'string' ? error : "Error desconocido",
+            icon: "error",
+        }));
 }
 // FIN VER TRABAJADOR
 

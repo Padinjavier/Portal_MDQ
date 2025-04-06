@@ -35,7 +35,7 @@ class TrabajadoresModelo
             $Trabajadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $Trabajadores;
         } catch (PDOException $e) {
-            throw new Exception("Error al cargar Trabajadores  " . $e);
+            throw new Exception("Error al cargar Trabajadores  " . $e->getMessage());
         }
     }
     // FIN FUNCION CargarDatosTrabajadores
@@ -48,13 +48,13 @@ class TrabajadoresModelo
     public function BuscarTrabajador($IdTrabajador)
     {
         try {
-            $sql = "SELECT * FROM usuarios WHERE IdUsuario = ?";
+            $sql = "SELECT * FROM usuarios WHERE IdUsuario = :IdUsuario";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([$IdTrabajador]);
-            $Trabajador = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $Trabajador;
+            $stmt->execute(['IdUsuario' => $IdTrabajador]);
+            $Trabajadores = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $Trabajadores;
         } catch (PDOException $e) {
-            throw new Exception("Error al Buscar Trabajdor" . $e);
+            throw new Exception("Error al buscar trabajador: " . $e->getMessage());
         }
     }
     // FIN FUNCION BuscarTrabajador 
