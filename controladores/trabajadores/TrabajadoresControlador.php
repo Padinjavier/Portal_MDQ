@@ -20,12 +20,7 @@ class TrabajadoresControlador
     public function CargarDatosTrabajadores()
     {
         try {
-            ob_start();
             $trabajadores = $this->modelo->CargarDatosTrabajadores();
-            $output = ob_get_clean();
-            if (!empty($output)) {
-                throw new Exception($output);
-            }
             echo json_encode(['success' => true, 'data' => $trabajadores]);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'msg' => $e->getMessage()]);
@@ -133,7 +128,7 @@ class TrabajadoresControlador
         } catch (Exception $e) {
             echo json_encode([
                 'success' => false,
-                'msg' => 'Error al editar el trabajador: '. $e->getMessage()
+                'msg' => 'Error al editar el trabajador: ' . $e->getMessage()
             ]);
         }
     }
@@ -145,23 +140,23 @@ class TrabajadoresControlador
 
     // Eliminar un trabajador
 // Eliminar un trabajador
-public function eliminarTrabajador($id)
-{
-    try {
-        if (empty($id)) {
-            throw new Exception('ID no proporcionado');
+    public function eliminarTrabajador($id)
+    {
+        try {
+            if (empty($id)) {
+                throw new Exception('ID no proporcionado');
+            }
+            // Llamada al modelo para eliminar al trabajador
+            $resultado = $this->modelo->eliminarTrabajador($id);
+            if (!$resultado) {
+                throw new Exception('No se pudo eliminar el trabajador en la base de datos.');
+            }
+            echo json_encode(['success' => true, 'msg' => 'Trabajador eliminado correctamente.']);
+        } catch (Exception $e) {
+            // Aquí se captura el error y se manda a frontend para mostrar
+            echo json_encode(['success' => false, 'msg' => 'Error al eliminar el trabajador: ' . $e->getMessage()]);
         }
-        // Llamada al modelo para eliminar al trabajador
-        $resultado = $this->modelo->eliminarTrabajador($id);
-        if (!$resultado) {
-            throw new Exception('No se pudo eliminar el trabajador en la base de datos.');
-        }
-        echo json_encode(['success' => true, 'msg' => 'Trabajador eliminado correctamente.']);
-    } catch (Exception $e) {
-        // Aquí se captura el error y se manda a frontend para mostrar
-        echo json_encode(['success' => false, 'msg' => 'Error al eliminar el trabajador: ' . $e->getMessage()]);
     }
-}
 
 
 

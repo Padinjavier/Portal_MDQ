@@ -87,7 +87,7 @@ window.CargarTablaSoportes = function () {
         .then(response => response.json())
         .then(response => {
             if (!response.success) {
-                throw new Error(response.msg || 'Error al cargar los datos');
+                throw new Error(response);
             }
             const table = $('#tableSoportes').DataTable();
             table.clear(); // Limpiar los datos existentes

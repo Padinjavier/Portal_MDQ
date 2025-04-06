@@ -25,69 +25,57 @@ $(document).ready(function () {
     });
     CargarDatosTrabajadores();
 });
-// fin funcionamiento de tabla trabajadores
+// FIN FUNCIONAMIENTO DE TABLA TRABAJADORES
 
 
 
-// Inicio completar Table Trabajadores 
+// INICIO COMPLETAR TABLE TRABAJADORES 
 window.CargarDatosTrabajadores = function () {
     fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=CargarDatosTrabajadores`, { method: 'GET' })
-        .then(response => response.json())
-        .then(response => {
-            if (!response.success) {
-                throw new Error(response.msg || 'Error al cargar los datos');
-            }
+    .then(response => response.text())
+    .then(text => {
+        try {
+            const data = JSON.parse(text);
+            if (!data.success) throw data.msg || "Error en el servidor";
             const table = $('#TablaTrabajadores').DataTable();
-            table.clear(); // Limpiar los datos existentes
-            if (response.data.length === 0) {
-                table.draw(); // Redibujar la tabla para que se vea vacía
-            }
-            response.data.forEach(trabajador => {
+            table.clear();
+            data.data?.forEach(trabajador => {
                 table.row.add([
-                    trabajador.IdUsuario,
-                    trabajador.NombresUsuario,
-                    trabajador.ApellidosUsuario,
+                    trabajador.IdUsuario, 
+                    trabajador.NombresUsuario, 
+                    trabajador.ApellidosUsuario, 
                     trabajador.DNIUsuario,
-                    trabajador.TelefonoUsuario,
-                    trabajador.CorreoUsuario,
-                    trabajador.UsernameUsuario,
-                    trabajador.NombreRol,
+                    trabajador.TelefonoUsuario, 
+                    trabajador.CorreoUsuario, 
+                    trabajador.UsernameUsuario, 
+                    trabajador.NombreRol, 
                     `<div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-cog"></i> Opciones
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <button class="btn dropdown-item text-success bg-transparent" href="#" onclick="VerTrabajador(${trabajador.IdUsuario})">
-                                <i class="fas fa-eye"></i> Ver
-                            </button>
-                            <button class="btn dropdown-item text-warning  bg-transparent" href="#" onclick="editarTrabajador(${trabajador.IdUsuario})">
-                                <i class="fas fa-edit"></i> Editar
-                            </button>
-                            <button class="btn dropdown-item text-danger bg-transparent" href="#" onclick="eliminarTrabajador(${trabajador.IdUsuario})">
-                                <i class="fas fa-trash"></i> Eliminar
-                            </button>
+                        <button class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown"><i class="fas fa-cog"></i> Opciones</button>
+                        <div class="dropdown-menu">
+                            <button class="dropdown-item text-success" onclick="VerTrabajador(${trabajador.IdUsuario})"><i class="fas fa-eye"></i> Ver</button>
+                            <button class="dropdown-item text-warning" onclick="editarTrabajador(${trabajador.IdUsuario})"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="dropdown-item text-danger" onclick="eliminarTrabajador(${trabajador.IdUsuario})"><i class="fas fa-trash"></i> Eliminar</button>
                         </div>
                     </div>`
                 ]).draw(false);
             });
-        })
-        .catch(error => {
-            Swal.fire({
-                title: "Error en la respuesta",
-                html: error.message, // Muestra el error como HTML
-                icon: "error",
-                width: "70%",
-                customClass: { popup: 'text-start' }
-            });
-        });
+        } catch {
+            throw text; // Si no es JSON válido, lanzamos el HTML
+        }
+    })
+    .catch(error => Swal.fire({
+        title: "Error",
+        html: typeof error === 'string' ? error : "Error desconocido",
+        icon: "error",
+    }));
 };
-// Fin completar Table Trabajadores
+// FIN COMPLETAR TABLE TRABAJADORES
 
 
 
 
 
-// inicio ver trabajador
+// INICIO VER TRABAJADOR
 function VerTrabajador(id) {
     fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=BuscarTrabajador&id=${id}`, { method: 'GET' })
         .then(response => response.json())
@@ -108,7 +96,37 @@ function VerTrabajador(id) {
             Swal.fire("Error", error.message, "error");
         });
 }
-// fin ver trabajador
+// FIN VER TRABAJADOR
+
+
+
+// inicio editar trabajador
+async function editarTrabajador(id) {
+    try {
+        const response = await fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=BuscarTrabajador&id=${id}`);
+        const result = await response.json();
+        if (result.success) {
+            document.getElementById('FormularioTrabajador').reset();
+            await cargarRolesSelect();
+            document.getElementById('IdTrabajador').value = result.data.IdUsuario;
+            document.getElementById('NombresTrabajador').value = result.data.NombresUsuario;
+            document.getElementById('ApellidosTrabajador').value = result.data.ApellidosUsuario;
+            document.getElementById('DNITrabajador').value = result.data.DNIUsuario;
+            document.getElementById('TelefonoTrabajador').value = result.data.TelefonoUsuario;
+            document.getElementById('CorreoTrabajador').value = result.data.CorreoUsuario;
+            document.getElementById('UsernameTrabajador').value = result.data.UsernameUsuario;
+            document.getElementById('RolTrabajador').value = result.data.RolUsuario;
+            document.getElementById('ModalFormLabelTrabajador').innerText = 'Editar Trabajador';
+            $('#ModalFormTrabajador').modal('show');
+        } else {
+            Swal.fire("Error", result.msg, "error");
+        }
+    } catch (error) {
+        console.error('Error al obtener el trabajador:', error);
+        Swal.fire("Error", "No se pudo obtener la información del trabajador.", "error");
+    }
+}
+// fin editar trabajador
 
 
 
@@ -160,37 +178,6 @@ function eliminarTrabajador(id) {
 }
 // fin eliminar trabajador 
 
-
-
-
-
-// inicio editar trabajador
-async function editarTrabajador(id) {
-    try {
-        const response = await fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=BuscarTrabajador&id=${id}`);
-        const result = await response.json();
-        if (result.success) {
-            document.getElementById('FormularioTrabajador').reset();
-            await cargarRolesSelect();
-            document.getElementById('IdTrabajador').value = result.data.IdUsuario;
-            document.getElementById('NombresTrabajador').value = result.data.NombresUsuario;
-            document.getElementById('ApellidosTrabajador').value = result.data.ApellidosUsuario;
-            document.getElementById('DNITrabajador').value = result.data.DNIUsuario;
-            document.getElementById('TelefonoTrabajador').value = result.data.TelefonoUsuario;
-            document.getElementById('CorreoTrabajador').value = result.data.CorreoUsuario;
-            document.getElementById('UsernameTrabajador').value = result.data.UsernameUsuario;
-            document.getElementById('RolTrabajador').value = result.data.RolUsuario;
-            document.getElementById('ModalFormLabelTrabajador').innerText = 'Editar Trabajador';
-            $('#ModalFormTrabajador').modal('show');
-        } else {
-            Swal.fire("Error", result.msg, "error");
-        }
-    } catch (error) {
-        console.error('Error al obtener el trabajador:', error);
-        Swal.fire("Error", "No se pudo obtener la información del trabajador.", "error");
-    }
-}
-// fin editar trabajador
 
 
 

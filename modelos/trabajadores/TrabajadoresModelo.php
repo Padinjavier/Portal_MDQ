@@ -28,9 +28,6 @@ class TrabajadoresModelo
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        error_log("Usuarios encontrados: " . count($usuarios));
-
         return $usuarios;
     }
 // FIN OBTENER TODOS LOS TRABAJADORES ASIGNADOS AL MÓDULO DE TRABAJADORES
