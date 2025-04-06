@@ -14,13 +14,12 @@ class TrabajadoresModelo
 
 
 
-    // inicio Obtener todos los trabajadores (rol = 3)
-// inicio Obtener todos los trabajadores asignados al módulo de Trabajadores
-    public function CargarTablaTrabajadores()
+// INICIO OBTENER TODOS LOS TRABAJADORES ASIGNADOS AL MÓDULO DE TRABAJADORES
+    public function CargarDatosTrabajadores()
     {
         $sql = "SELECT u.*, r.NombreRol
                 FROM usuarios u, rol r,modulo_roles mr ,modulos m
-                WHERE m.NombreModulo = 'Trabajadores' 
+                WHERE m.NombreModulo = 'Trabajadores'
                 AND u.StatusUsuario = 1 
                 AND u.RolUsuario = r.IdRol
                 AND mr.IdRol = u.RolUsuario
@@ -34,38 +33,54 @@ class TrabajadoresModelo
 
         return $usuarios;
     }
-
-
-    // fin Obtener todos los trabajadores asignados al módulo de Trabajadores
-// fin Obtener todos los trabajadores (rol = 3)
-// return $stmtUsuarios->fetchAll(PDO::FETCH_ASSOC);
+// FIN OBTENER TODOS LOS TRABAJADORES ASIGNADOS AL MÓDULO DE TRABAJADORES
 
 
 
 
 
-    // inicio funcion obtenerporid 
-    public function obtenerTrabajadorPorId($id)
+    // INICIO FUNCION OBTENERPORID 
+    public function BuscarTrabajador($id)
     {
         $sql = "SELECT * FROM usuarios WHERE IdUsuario = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    // fin funcion obtenerporid 
+    // FIN FUNCION OBTENERPORID 
 
 
 
 
 
-    // inicio Eliminar (desactivar) un trabajador (cambiar StatusUsuario a 0)
-    public function eliminarTrabajador($id)
-    {
+// INICIO ELIMINAR (DESACTIVAR) UN TRABAJADOR (CAMBIAR STATUSUSUARIO A 0)
+public function eliminarTrabajador($id)
+{
+    try {
+        if (empty($id)) {
+            throw new Exception("ID de trabajador no proporcionado.");
+        }
+        
+        $this->db->beginTransaction();
         $sql = "UPDATE usuarios SET StatusUsuario = 0 WHERE IdUsuario = ?";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$id]);
+        
+        // Si la ejecución no es exitosa, lanzamos un error
+        $resultado = $stmt->execute([$id]);
+        if (!$resultado || $stmt->rowCount() === 0) {
+            throw new Exception("No se pudo desactivar al trabajador o el trabajador no existe.");
+        }
+        
+        $this->db->commit();
+        return true;
+    } catch (Exception $e) {
+        // Si ocurre algún error, se revierte la transacción y se lanza el error
+        $this->db->rollBack();
+        // Enviar el mensaje de error detallado
+        throw new Exception("Error al eliminar (desactivar) trabajador: " . $e->getMessage());
     }
-    // fin Eliminar (desactivar) un trabajador (cambiar StatusUsuario a 0)
+}
+
 
 
 

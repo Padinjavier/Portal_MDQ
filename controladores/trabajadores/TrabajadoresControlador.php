@@ -17,14 +17,14 @@ class TrabajadoresControlador
 
 
     // inicio Obtener todos los trabajadores
-    public function CargarTablaTrabajadores()
+    public function CargarDatosTrabajadores()
     {
         try {
-            ob_start(); // Captura cualquier salida de error o warning
-            $trabajadores = $this->modelo->CargarTablaTrabajadores();
-            $output = ob_get_clean(); // Obtiene los errores capturados
+            ob_start();
+            $trabajadores = $this->modelo->CargarDatosTrabajadores();
+            $output = ob_get_clean();
             if (!empty($output)) {
-                throw new Exception($output); // Lanza una excepción con el error capturado
+                throw new Exception($output);
             }
             echo json_encode(['success' => true, 'data' => $trabajadores]);
         } catch (Exception $e) {
@@ -38,14 +38,14 @@ class TrabajadoresControlador
 
 
     // inicio Obtener un trabajador por ID
-    public function obtenerTrabajadorPorId($id)
+    public function BuscarTrabajador($id)
     {
         try {
             // Verificar si el ID está vacío
             if (empty($id)) {
                 throw new Exception('ID no proporcionado');
             }
-            $trabajador = $this->modelo->obtenerTrabajadorPorId($id);
+            $trabajador = $this->modelo->BuscarTrabajador($id);
             if ($trabajador) {
                 echo json_encode(['success' => true, 'data' => $trabajador]);
             } else {
@@ -144,22 +144,24 @@ class TrabajadoresControlador
 
 
     // Eliminar un trabajador
-    public function eliminarTrabajador($id)
-    {
-        try {
-            if (empty($id)) {
-                throw new Exception('ID no proporcionado');
-            }
-            $resultado = $this->modelo->eliminarTrabajador($id);
-            if (!$resultado) {
-                throw new Exception('No se pudo eliminar el trabajador en la base de datos.');
-            }
-            echo json_encode(['success' => true, 'msg' => 'Trabajador eliminado correctamente.']);
-        } catch (Exception $e) {
-            echo json_encode(['success' => false, 'msg' => 'Error al eliminar el trabajador: ' . $e->getMessage()]);
+// Eliminar un trabajador
+public function eliminarTrabajador($id)
+{
+    try {
+        if (empty($id)) {
+            throw new Exception('ID no proporcionado');
         }
+        // Llamada al modelo para eliminar al trabajador
+        $resultado = $this->modelo->eliminarTrabajador($id);
+        if (!$resultado) {
+            throw new Exception('No se pudo eliminar el trabajador en la base de datos.');
+        }
+        echo json_encode(['success' => true, 'msg' => 'Trabajador eliminado correctamente.']);
+    } catch (Exception $e) {
+        // Aquí se captura el error y se manda a frontend para mostrar
+        echo json_encode(['success' => false, 'msg' => 'Error al eliminar el trabajador: ' . $e->getMessage()]);
     }
-
+}
 
 
 
@@ -232,12 +234,12 @@ class TrabajadoresControlador
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     $controlador = new TrabajadoresControlador();
     switch ($_GET['action']) {
-        case 'CargarTablaTrabajadores':
-            $controlador->CargarTablaTrabajadores();
+        case 'CargarDatosTrabajadores':
+            $controlador->CargarDatosTrabajadores();
             break;
-        case 'obtenerTrabajadorPorId':
+        case 'BuscarTrabajador':
             $id = $_GET['id'] ?? null;
-            $controlador->obtenerTrabajadorPorId($id);
+            $controlador->BuscarTrabajador($id);
             break;
         case 'CargarRoles':
             $controlador->CargarRoles();
@@ -256,7 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             $controlador->crearTrabajador();
             break;
         case 'editarTrabajador':
-            $id = $_POST['idTrabajador'] ?? null; // Leer desde el cuerpo
+            $id = $_POST['IdTrabajador'] ?? null; // Leer desde el cuerpo
             $controlador->editarTrabajador($id);
             break;
         case 'eliminarTrabajador':

@@ -23,15 +23,15 @@ $(document).ready(function () {
         "lengthMenu": [5, 10, 25, 50, 100], // Opciones de longitud de página
         "order": [[0, "desc"]],
     });
-    CargarTablaTrabajadores();
+    CargarDatosTrabajadores();
 });
 // fin funcionamiento de tabla trabajadores
 
 
 
 // Inicio completar Table Trabajadores 
-window.CargarTablaTrabajadores = function () {
-    fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=CargarTablaTrabajadores`, { method: 'GET' })
+window.CargarDatosTrabajadores = function () {
+    fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=CargarDatosTrabajadores`, { method: 'GET' })
         .then(response => response.json())
         .then(response => {
             if (!response.success) {
@@ -57,7 +57,7 @@ window.CargarTablaTrabajadores = function () {
                             <i class="fas fa-cog"></i> Opciones
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <button class="btn dropdown-item text-success bg-transparent" href="#" onclick="verTrabajador(${trabajador.IdUsuario})">
+                            <button class="btn dropdown-item text-success bg-transparent" href="#" onclick="VerTrabajador(${trabajador.IdUsuario})">
                                 <i class="fas fa-eye"></i> Ver
                             </button>
                             <button class="btn dropdown-item text-warning  bg-transparent" href="#" onclick="editarTrabajador(${trabajador.IdUsuario})">
@@ -88,8 +88,8 @@ window.CargarTablaTrabajadores = function () {
 
 
 // inicio ver trabajador
-function verTrabajador(id) {
-    fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=obtenerTrabajadorPorId&id=${id}`, { method: 'GET' })
+function VerTrabajador(id) {
+    fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=BuscarTrabajador&id=${id}`, { method: 'GET' })
         .then(response => response.json())
         .then(response => {
             if (!response.success) {
@@ -134,7 +134,7 @@ function eliminarTrabajador(id) {
                 .then(data => {
                     if (data.success) {
                         Swal.fire('¡Eliminado!', 'El trabajador ha sido eliminado correctamente.', 'success')
-                            .then(() => CargarTablaTrabajadores());
+                            .then(() => CargarDatosTrabajadores());
                     } else {
                         // Mostrar el error completo
                         Swal.fire({
@@ -167,7 +167,7 @@ function eliminarTrabajador(id) {
 // inicio editar trabajador
 async function editarTrabajador(id) {
     try {
-        const response = await fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=obtenerTrabajadorPorId&id=${id}`);
+        const response = await fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=BuscarTrabajador&id=${id}`);
         const result = await response.json();
         if (result.success) {
             document.getElementById('FormularioTrabajador').reset();
@@ -215,7 +215,7 @@ function GuardarTrabajador() {
             if (data.success) {
                 Swal.fire("Éxito", data.msg, "success").then(() => {
                     $('#ModalFormTrabajador').modal('hide');
-                    CargarTablaTrabajadores(); // Recargar la tabla
+                    CargarDatosTrabajadores(); // Recargar la tabla
                 });
             } else {
                 Swal.fire("Error", data.msg, "error");
@@ -352,7 +352,7 @@ function GuardarConfiguracion() {
                 if (data.success) {
                     Swal.fire("Éxito", "Roles activados correctamente.", "success");
                     CargarRoles();
-                    CargarTablaTrabajadores();
+                    CargarDatosTrabajadores();
                 } else {
                     Swal.fire("Error", data.msg || "No se pudieron activar los roles.", "error");
                 }
@@ -381,7 +381,7 @@ function eliminarRelacionModuloRol(rolesEliminados) {
         .then(data => {
             if (data.success) {
                 Swal.fire("Éxito", "Relación eliminada correctamente.", "success");
-                CargarTablaTrabajadores(); // Recargar la tabla
+                CargarDatosTrabajadores(); // Recargar la tabla
                 CargarRoles(); // Recargar los roles para reflejar los cambios
             } else {
                 Swal.fire("Error", data.msg || "No se pudo eliminar la relación.", "error");
