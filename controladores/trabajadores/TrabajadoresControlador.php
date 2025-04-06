@@ -20,8 +20,8 @@ class TrabajadoresControlador
     public function CargarDatosTrabajadores()
     {
         try {
-            $trabajadores = $this->modelo->CargarDatosTrabajadores();
-            echo json_encode(['success' => true, 'data' => $trabajadores]);
+            $Trabajadores = $this->modelo->CargarDatosTrabajadores();
+            echo json_encode(['success' => true, 'data' => $Trabajadores]);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'msg' => $e->getMessage()]);
         }
@@ -57,7 +57,7 @@ class TrabajadoresControlador
 
 
     // inicio Crear un nuevo trabajador
-    public function crearTrabajador()
+    public function CrearTrabajador()
     {
         try {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -82,7 +82,7 @@ class TrabajadoresControlador
                 }
             }
 
-            $resultado = $this->modelo->crearTrabajador($datos);
+            $resultado = $this->modelo->CrearTrabajador($datos);
             echo json_encode(['success' => $resultado, 'msg' => $resultado ? 'Trabajador creado exitosamente.' : 'Error al crear el trabajador.']);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'msg' => 'Error al crear el trabajador: ' . $e->getMessage()]);
@@ -97,7 +97,7 @@ class TrabajadoresControlador
 
 
     // Editar un trabajador
-    public function editarTrabajador($id)
+    public function EditarTrabajador($id)
     {
         try {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -120,7 +120,7 @@ class TrabajadoresControlador
                     throw new Exception("El campo $key es requerido");
                 }
             }
-            $resultado = $this->modelo->editarTrabajador($id, $datos);
+            $resultado = $this->modelo->EditarTrabajador($id, $datos);
             echo json_encode([
                 'success' => $resultado,
                 'msg' => $resultado ? 'Trabajador editado exitosamente. ' : 'Error al editar el trabajador.'
@@ -140,14 +140,14 @@ class TrabajadoresControlador
 
     // Eliminar un trabajador
 // Eliminar un trabajador
-    public function eliminarTrabajador($id)
+    public function EliminarTrabajador($id)
     {
         try {
             if (empty($id)) {
                 throw new Exception('ID no proporcionado');
             }
             // Llamada al modelo para eliminar al trabajador
-            $resultado = $this->modelo->eliminarTrabajador($id);
+            $resultado = $this->modelo->EliminarTrabajador($id);
             if (!$resultado) {
                 throw new Exception('No se pudo eliminar el trabajador en la base de datos.');
             }
@@ -249,16 +249,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
 
     $controlador = new TrabajadoresControlador();
     switch ($_GET['action']) {
-        case 'crearTrabajador':
-            $controlador->crearTrabajador();
+        case 'CrearTrabajador':
+            $controlador->CrearTrabajador();
             break;
-        case 'editarTrabajador':
+        case 'EditarTrabajador':
             $id = $_POST['IdTrabajador'] ?? null; // Leer desde el cuerpo
-            $controlador->editarTrabajador($id);
+            $controlador->EditarTrabajador($id);
             break;
-        case 'eliminarTrabajador':
+        case 'EliminarTrabajador':
             $id = $input['id'] ?? null; // Leer desde el cuerpo
-            $controlador->eliminarTrabajador($id);
+            $controlador->EliminarTrabajador($id);
             break;
         case 'GuardarConfiguracion':
             $controlador->GuardarConfiguracion();

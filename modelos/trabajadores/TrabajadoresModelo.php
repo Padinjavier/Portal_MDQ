@@ -13,249 +13,277 @@ class TrabajadoresModelo
 
 
 
-
-// INICIO OBTENER TODOS LOS TRABAJADORES ASIGNADOS AL MÓDULO DE TRABAJADORES
+    // INICIO FUNCION CargarDatosTrabajadores
     public function CargarDatosTrabajadores()
     {
-        $sql = "SELECT u.*, r.NombreRol
-                FROM usuarios u, rol r,modulo_roles mr ,modulos m
-                WHERE m.NombreModulo = 'Trabajadores'
-                AND u.StatusUsuario = 1 
-                AND u.RolUsuario = r.IdRol
+        try {
+            $sql = "SELECT 
+                    u.IdUsuario, u.NombresUsuario, u.ApellidosUsuario, 
+                    u.DNIUsuario, u.TelefonoUsuario, u.CorreoUsuario,
+                    u.UsernameUsuario, r.NombreRol
+                FROM usuarios u, rol r, modulo_roles mr, modulos m
+                WHERE u.RolUsuario = r.IdRol
                 AND mr.IdRol = u.RolUsuario
-                AND mr.IdModulo = m.IdModulo";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-        $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $usuarios;
+                AND mr.IdModulo = m.IdModulo
+                AND  m.NombreModulo = :NombreModulo
+                AND u.StatusUsuario = :StatusUsuario";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                ':NombreModulo' => 'Trabajadores',
+                ':StatusUsuario' => 1
+            ]);
+            $Trabajadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $Trabajadores;
+        } catch (PDOException $e) {
+            throw new Exception("Error al cargar Trabajadores  " . $e);
+        }
     }
-// FIN OBTENER TODOS LOS TRABAJADORES ASIGNADOS AL MÓDULO DE TRABAJADORES
+    // FIN FUNCION CargarDatosTrabajadores
 
 
 
 
 
-    // INICIO FUNCION OBTENERPORID 
-    public function BuscarTrabajador($id)
+    // INICIO FUNCION BuscarTrabajador 
+    public function BuscarTrabajador($IdTrabajador)
     {
-        $sql = "SELECT * FROM usuarios WHERE IdUsuario = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-    // FIN FUNCION OBTENERPORID 
-
-
-
-
-
-// INICIO ELIMINAR (DESACTIVAR) UN TRABAJADOR (CAMBIAR STATUSUSUARIO A 0)
-public function eliminarTrabajador($id)
-{
-    try {
-        if (empty($id)) {
-            throw new Exception("ID de trabajador no proporcionado.");
+        try {
+            $sql = "SELECT * FROM usuarios WHERE IdUsuario = ?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$IdTrabajador]);
+            $Trabajador = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $Trabajador;
+        } catch (PDOException $e) {
+            throw new Exception("Error al Buscar Trabajdor" . $e);
         }
-        
-        $this->db->beginTransaction();
-        $sql = "UPDATE usuarios SET StatusUsuario = 0 WHERE IdUsuario = ?";
-        $stmt = $this->db->prepare($sql);
-        
-        // Si la ejecución no es exitosa, lanzamos un error
-        $resultado = $stmt->execute([$id]);
-        if (!$resultado || $stmt->rowCount() === 0) {
-            throw new Exception("No se pudo desactivar al trabajador o el trabajador no existe.");
-        }
-        
-        $this->db->commit();
-        return true;
-    } catch (Exception $e) {
-        // Si ocurre algún error, se revierte la transacción y se lanza el error
-        $this->db->rollBack();
-        // Enviar el mensaje de error detallado
-        throw new Exception("Error al eliminar (desactivar) trabajador: " . $e->getMessage());
     }
-}
+    // FIN FUNCION BuscarTrabajador 
 
 
 
 
 
-
-    // inicio Crear un nuevo trabajador
-    public function crearTrabajador($datos)
+    // INICIO ELIMINAR (DESACTIVAR) UN TRABAJADOR (CAMBIAR STATUSUSUARIO A 0)
+    public function EliminarTrabajador($IdTrabajador)
     {
-        $error = $this->verificarDatosUnicos($datos);
-        if ($error) {
-            throw new Exception($error);
+        try {
+            if (empty($IdTrabajador)) {
+                throw new Exception("ID de trabajador no proporcionado.");
+            }
+            $sql = "UPDATE usuarios SET StatusUsuario = 0 WHERE IdUsuario = ?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$IdTrabajador]);
+            if ($stmt->rowCount() === 0) {
+                throw new Exception("No se pudo desactivar al trabajador o el trabajador no existe.");
+            }
+            return true;
+        } catch (Exception $e) {
+            throw new Exception("Error al eliminar (desactivar) trabajador: " . $e);
         }
-        $sql = "INSERT INTO usuarios (NombresUsuario, ApellidosUsuario, TelefonoUsuario, DNIUsuario, CorreoUsuario, UsernameUsuario, PasswordUsuario, RolUsuario) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $this->db->prepare($sql);
-        $passwordHash = hash('sha256', $datos['PasswordUsuario']);
-        return $stmt->execute([
-            $datos['NombresUsuario'],
-            $datos['ApellidosUsuario'],
-            $datos['TelefonoUsuario'],
-            $datos['DNIUsuario'],
-            $datos['CorreoUsuario'],
-            $datos['UsernameUsuario'],
-            $passwordHash,
-            $datos['RolUsuario'],
-        ]);
     }
-    // fin Crear un nuevo trabajador
+    // FIN ELIMINAR (DESACTIVAR) UN TRABAJADOR
+
+
+
+
+
+    // INICIO Crear un nuevo trabajador
+    public function CrearTrabajador($datos)
+    {
+        try {
+            $error = $this->VerificarDatosUnicos($datos);
+            if ($error) {
+                throw new Exception($error);
+            }
+            $passwordHash = hash('sha256', $datos['PasswordUsuario']);
+            $sql = "INSERT INTO usuarios (NombresUsuario, ApellidosUsuario, TelefonoUsuario, DNIUsuario, CorreoUsuario, UsernameUsuario, PasswordUsuario, RolUsuario) 
+                VALUES(:NombresUsuario, :ApellidosUsuario, :TelefonoUsuario, :DNIUsuario, :CorreoUsuario, :UsernameUsuario, :PasswordUsuario, :RolUsuario)";
+            $stmt = $this->db->prepare($sql);
+            $resultado = $stmt->execute([
+                ':NombresUsuario' => $datos['NombresUsuario'],
+                ':ApellidosUsuario' => $datos['ApellidosUsuario'],
+                ':TelefonoUsuario' => $datos['TelefonoUsuario'],
+                ':DNIUsuario' => $datos['DNIUsuario'],
+                ':CorreoUsuario' => $datos['CorreoUsuario'],
+                ':UsernameUsuario' => $datos['UsernameUsuario'],
+                ':PasswordUsuario' => $passwordHash,
+                ':RolUsuario' => $datos['RolUsuario']
+            ]);
+            if (!$resultado) {
+                throw new Exception("No se pudo crear el trabajador.");
+            }
+            return true;
+        } catch (Exception $e) {
+            throw new Exception("Error al crear trabajador: " . $e);
+        }
+    }
+    // FIN Crear un nuevo trabajador
 
 
 
 
 
     // inicio editar un nuevo trabajador
-    public function editarTrabajador($id, $datos)
+    public function EditarTrabajador($IdTrabajador, $datos)
     {
-        $error = $this->verificarDatosUnicos($datos, $id);
-        if ($error) {
-            throw new Exception($error);
-        }
-        if (!empty($datos['PasswordUsuario'])) {
-            $sql = "UPDATE usuarios 
-                  SET NombresUsuario = ?, ApellidosUsuario = ?, TelefonoUsuario = ?, DNIUsuario = ?, CorreoUsuario = ?, UsernameUsuario = ?, PasswordUsuario = ?, RolUsuario = ? 
-                  WHERE IdUsuario = ?";
-            $stmt = $this->db->prepare($sql);
-            $passwordHash = hash('sha256', $datos['PasswordUsuario']);
-            $params = [
-                $datos['NombresUsuario'],
-                $datos['ApellidosUsuario'],
-                $datos['TelefonoUsuario'],
-                $datos['DNIUsuario'],
-                $datos['CorreoUsuario'],
-                $datos['UsernameUsuario'],
-                $passwordHash,
-                $datos['RolUsuario'],
-                $id
-            ];
-        } else {
-            $sql = "UPDATE usuarios 
-                  SET NombresUsuario = ?, ApellidosUsuario = ?, TelefonoUsuario = ?, DNIUsuario = ?, CorreoUsuario = ?, UsernameUsuario = ?, RolUsuario = ? 
-                  WHERE IdUsuario = ?";
-            $stmt = $this->db->prepare($sql);
-            $params = [
-                $datos['NombresUsuario'],
-                $datos['ApellidosUsuario'],
-                $datos['TelefonoUsuario'],
-                $datos['DNIUsuario'],
-                $datos['CorreoUsuario'],
-                $datos['UsernameUsuario'],
-                $datos['RolUsuario'],
-                $id
-            ];
-        }
-        return $stmt->execute($params);
-    }
-    // fin editar un nuevo trabajador
-
-
-
-
-
-    public function verificarDatosUnicos($datos, $id = null)
-    {
-        $campos = [
-            'CorreoUsuario' => "El correo ya está registrado.",
-            'DNIUsuario' => "El DNI ya está registrado.",
-            'TelefonoUsuario' => "El teléfono ya está registrado.",
-            'UsernameUsuario' => "El nombre de usuario ya está registrado."
-        ];
-        foreach ($campos as $campo => $mensaje) {
-            $sql = "SELECT COUNT(*) as count FROM usuarios WHERE $campo = ?";
-            if ($id !== null) {
-                $sql .= " AND IdUsuario != ?";
+        try {
+            $error = $this->VerificarDatosUnicos($datos, $IdTrabajador);
+            if ($error) {
+                throw new Exception($error);
+            }
+            if (!empty($datos['PasswordUsuario'])) {
+                $sql = "UPDATE usuarios SET NombresUsuario = :NombresUsuario, ApellidosUsuario = :ApellidosUsuario, TelefonoUsuario = :TelefonoUsuario, DNIUsuario = :DNIUsuario, 
+                                            CorreoUsuario = :CorreoUsuario, UsernameUsuario = :UsernameUsuario, PasswordUsuario = :PasswordUsuario, RolUsuario = :RolUsuario
+                        WHERE IdUsuario = :IdUsuario";
+                $params = [
+                    ':NombresUsuario' => $datos['NombresUsuario'],
+                    ':ApellidosUsuario' => $datos['ApellidosUsuario'],
+                    ':TelefonoUsuario' => $datos['TelefonoUsuario'],
+                    ':DNIUsuario' => $datos['DNIUsuario'],
+                    ':CorreoUsuario' => $datos['CorreoUsuario'],
+                    ':UsernameUsuario' => $datos['UsernameUsuario'],
+                    ':PasswordUsuario' => hash('sha256', $datos['PasswordUsuario']),
+                    ':RolUsuario' => $datos['RolUsuario'],
+                    ':IdUsuario' => $IdTrabajador
+                ];
+            } else {
+                $sql = "UPDATE usuarios SET NombresUsuario = :NombresUsuario, ApellidosUsuario = :ApellidosUsuario, TelefonoUsuario = :TelefonoUsuario, DNIUsuario = :DNIUsuario,
+                                            CorreoUsuario = :CorreoUsuario, UsernameUsuario = :UsernameUsuario, RolUsuario = :RolUsuario
+                        WHERE IdUsuario = :IdUsuario";
+                $params = [
+                    ':NombresUsuario' => $datos['NombresUsuario'],
+                    ':ApellidosUsuario' => $datos['ApellidosUsuario'],
+                    ':TelefonoUsuario' => $datos['TelefonoUsuario'],
+                    ':DNIUsuario' => $datos['DNIUsuario'],
+                    ':CorreoUsuario' => $datos['CorreoUsuario'],
+                    ':UsernameUsuario' => $datos['UsernameUsuario'],
+                    ':RolUsuario' => $datos['RolUsuario'],
+                    ':IdUsuario' => $IdTrabajador
+                ];
             }
             $stmt = $this->db->prepare($sql);
-            $params = ($id !== null) ? [$datos[$campo], $id] : [$datos[$campo]];
-            $stmt->execute($params);
-            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($resultado['count'] > 0) {
-                return $mensaje; // Retorna el mensaje del error encontrado
+            $resultado = $stmt->execute($params);
+            if (!$resultado) {
+                throw new Exception("No se pudo actualizar el trabajador.");
             }
+            return true;
+        } catch (Exception $e) {
+            throw new Exception("Error al editar trabajador: " . $e);
         }
-         return false; // No hay duplicados
     }
+    // fin editar un trabajador
 
 
 
 
 
+    // INICIO DE FUNCION VERIFICAR DATOS UNICOS  
+    public function VerificarDatosUnicos($datos, $IdTrabajador = null)
+    {
+        try {
+            $campos = [
+                'CorreoUsuario' => "El correo ya está registrado.",
+                'DNIUsuario' => "El DNI ya está registrado.",
+                'TelefonoUsuario' => "El teléfono ya está registrado.",
+                'UsernameUsuario' => "El nombre de usuario ya está registrado."
+            ];
+            foreach ($campos as $campo => $mensaje) {
+                $sql = "SELECT COUNT(*) as count FROM usuarios WHERE $campo = :valor";
+                if ($IdTrabajador !== null) {
+                    $sql .= " AND IdUsuario != :IdUsuario";
+                }
+                $stmt = $this->db->prepare($sql);
+                $params = [':valor' => $datos[$campo]];
+                if ($IdTrabajador !== null) {
+                    $params[':IdUsuario'] = $IdTrabajador;
+                }
+                $stmt->execute($params);
+                $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($resultado && $resultado['count'] > 0) {
+                    return $mensaje;
+                }
+            }
+            return false;
+        } catch (PDOException $e) {
+            throw new Exception("Error al verificar datos únicos: " . $e);
+        }
+    }
+    // FIN DE FUNCION VERIFICAR DATOS UNICOS  
 
 
 
-    // inicio Obtener todos los roles con su estado de asignación
+
+
+    // INICIO FUNCIÓN: Obtener todos los roles activos con su estado de asignación a módulos 
     public function CargarRoles()
     {
-        $sql = "SELECT 
-                r.IdRol,
-                r.NombreRol,
-                COALESCE(m.IdModulo, 'No asignado') AS IdModulo,
-                COALESCE(m.NombreModulo, 'No asignado') AS NombreModulo
-            FROM rol r
-            LEFT JOIN modulo_roles mr ON r.IdRol = mr.IdRol
-            LEFT JOIN modulos m ON mr.IdModulo = m.IdModulo
-            WHERE r.StatusRol = 1";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $sql = "SELECT 
+            r.IdRol, 
+            r.NombreRol,
+             COALESCE(m.IdModulo, 'No asignado') AS IdModulo, 
+             COALESCE(m.NombreModulo, 'No asignado') AS NombreModulo 
+             FROM rol r 
+             LEFT JOIN modulo_roles mr ON r.IdRol = mr.IdRol 
+             LEFT JOIN modulos m ON mr.IdModulo = m.IdModulo 
+             WHERE r.StatusRol = :StatusRol";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':StatusRol' => 1]);
+            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $resultado;
+        } catch (PDOException $e) {
+            throw new Exception("Error al ejecutar la función CargarRoles: " . $e);
+        }
     }
-    // fin Obtener todos los roles con su estado de asignación
+    // FIN FUNCIÓN: Obtener todos los roles activos con su estado de asignación a módulos
 
 
 
 
 
-      // inicio guardar configuración de roles que se muestran en las tablas tener en cuenta el ID del modulo cambia dependiendo del modulo donde se aplique
+    // INICIO FUNCION: Guarda la configuración de roles para el módulo, insertando nuevos registros o actualizando los existentes.
     public function GuardarConfiguracion($roles)
     {
         try {
-            $this->db->beginTransaction();
-            $sqlInsert = "INSERT INTO modulo_roles (IdModulo, IdRol) VALUES (2, ?) 
-                      ON DUPLICATE KEY UPDATE IdRol = VALUES(IdRol)";
+            $sqlInsert = "INSERT INTO modulo_roles (IdModulo, IdRol) VALUES (IdModulo, :IdRol) 
+                          ON DUPLICATE KEY UPDATE IdRol = VALUES(IdRol)";
             $stmtInsert = $this->db->prepare($sqlInsert);
-
             foreach ($roles as $idRol) {
-                $stmtInsert->execute([$idRol]);
+                $stmtInsert->execute([':IdRol' => $idRol, ':IdModulo' => 2]);
             }
-            $this->db->commit();
             return true;
         } catch (Exception $e) {
-            $this->db->rollBack();
             throw new Exception("Error al guardar la configuración: " . $e->getMessage());
         }
     }
-    // fin guardar configuración de roles
+    // FIN FUNCION: Guarda la configuración de roles para el módulo, insertando nuevos registros o actualizando los existentes.
 
 
 
 
 
-    // inicio eliminar configuración de roles que se muestran en las tablas tener en cuenta el ID del modulo cambia dependiendo del modulo donde se aplique 
-    public function eliminarRelacionModuloRolMODELO($roles)
+    // INICIO FUNCION: Elimina relaciones entre módulos y roles (IdModulo fijo = 2)
+    public function eliminarRelacionModuloRolMODELO(array $roles): bool
     {
         try {
-            $this->db->beginTransaction();
-            $sqlDelete = "DELETE FROM modulo_roles WHERE IdModulo = 2 AND IdRol = ?";
+            $sqlDelete = "DELETE FROM modulo_roles WHERE IdModulo = :IdModulo AND IdRol = :IdRol";
             $stmtDelete = $this->db->prepare($sqlDelete);
             foreach ($roles as $idRol) {
-                $stmtDelete->execute([$idRol]);
+                $stmtDelete->execute([
+                    ':IdModulo' => 2,  // Valor fijo pasado como parámetro nombrado
+                    ':IdRol' => $idRol // Variable referenciada con nombre consistente
+                ]);
             }
-            $this->db->commit();
-            return true;
-        } catch (Exception $e) {
-            $this->db->rollBack();
+            if ($stmtDelete->rowCount() > 0) {
+                return true; // Se eliminaron registros
+            } else {
+                return false; // No se eliminaron registros
+            }
+        } catch (PDOException $e) {
             throw new Exception("Error al eliminar la relación: " . $e->getMessage());
         }
     }
-    // fin eliminar configuración de roles
+    // FIN FUNCION: Elimina relaciones entre módulos y roles (IdModulo fijo = 2)
 
 
 

@@ -39,22 +39,22 @@ window.CargarDatosTrabajadores = function () {
             if (!data.success) throw data.msg || "Error en el servidor";
             const table = $('#TablaTrabajadores').DataTable();
             table.clear();
-            data.data?.forEach(trabajador => {
+            data.data?.forEach(Trabajador => {
                 table.row.add([
-                    trabajador.IdUsuario, 
-                    trabajador.NombresUsuario, 
-                    trabajador.ApellidosUsuario, 
-                    trabajador.DNIUsuario,
-                    trabajador.TelefonoUsuario, 
-                    trabajador.CorreoUsuario, 
-                    trabajador.UsernameUsuario, 
-                    trabajador.NombreRol, 
+                    Trabajador.IdUsuario, 
+                    Trabajador.NombresUsuario, 
+                    Trabajador.ApellidosUsuario, 
+                    Trabajador.DNIUsuario,
+                    Trabajador.TelefonoUsuario, 
+                    Trabajador.CorreoUsuario, 
+                    Trabajador.UsernameUsuario, 
+                    Trabajador.NombreRol, 
                     `<div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown"><i class="fas fa-cog"></i> Opciones</button>
                         <div class="dropdown-menu">
-                            <button class="dropdown-item text-success" onclick="VerTrabajador(${trabajador.IdUsuario})"><i class="fas fa-eye"></i> Ver</button>
-                            <button class="dropdown-item text-warning" onclick="editarTrabajador(${trabajador.IdUsuario})"><i class="fas fa-edit"></i> Editar</button>
-                            <button class="dropdown-item text-danger" onclick="eliminarTrabajador(${trabajador.IdUsuario})"><i class="fas fa-trash"></i> Eliminar</button>
+                            <button class="btn dropdown-item text-success bg-transparent" onclick="VerTrabajador(${Trabajador.IdUsuario})"><i class="fas fa-eye"></i> Ver</button>
+                            <button class="btn dropdown-item text-warning  bg-transparent" onclick="EditarTrabajador(${Trabajador.IdUsuario})"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="btn dropdown-item text-danger bg-transparent" onclick="EliminarTrabajador(${Trabajador.IdUsuario})"><i class="fas fa-trash"></i> Eliminar</button>
                         </div>
                     </div>`
                 ]).draw(false);
@@ -101,7 +101,7 @@ function VerTrabajador(id) {
 
 
 // inicio editar trabajador
-async function editarTrabajador(id) {
+async function EditarTrabajador(id) {
     try {
         const response = await fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=BuscarTrabajador&id=${id}`);
         const result = await response.json();
@@ -133,7 +133,7 @@ async function editarTrabajador(id) {
 
 
 // inicio eliminar trabajador 
-function eliminarTrabajador(id) {
+function EliminarTrabajador(id) {
     Swal.fire({
         title: "Eliminar Trabajador",
         text: "¿Realmente quiere eliminar al Trabajador?",
@@ -143,7 +143,7 @@ function eliminarTrabajador(id) {
         cancelButtonText: "No, cancelar!",
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=eliminarTrabajador`, {
+            fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=EliminarTrabajador`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: id }),
@@ -186,7 +186,7 @@ function eliminarTrabajador(id) {
 // inicio guardar trabajador
 function GuardarTrabajador() {
     const formData = new FormData(document.getElementById('FormularioTrabajador'));
-    const accion = document.getElementById('IdTrabajador').value ? 'editarTrabajador' : 'crearTrabajador';
+    const accion = document.getElementById('IdTrabajador').value ? 'EditarTrabajador' : 'CrearTrabajador';
 
     fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=${accion}`, {
         method: 'POST',
