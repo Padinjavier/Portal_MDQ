@@ -44,51 +44,8 @@ class TrabajadoresModelo
 
 
 
-    // INICIO FUNCION BuscarTrabajador 
-    public function BuscarTrabajador($IdTrabajador)
-    {
-        try {
-            $sql = "SELECT * FROM usuarios WHERE IdUsuario = :IdUsuario";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute(['IdUsuario' => $IdTrabajador]);
-            $Trabajadores = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $Trabajadores;
-        } catch (PDOException $e) {
-            throw new Exception("Error al buscar trabajador: " . $e->getMessage());
-        }
-    }
-    // FIN FUNCION BuscarTrabajador 
-
-
-
-
-
-    // INICIO ELIMINAR (DESACTIVAR) UN TRABAJADOR (CAMBIAR STATUSUSUARIO A 0)
-    public function EliminarTrabajador($IdTrabajador)
-    {
-        try {
-            if (empty($IdTrabajador)) {
-                throw new Exception("ID de trabajador no proporcionado.");
-            }
-            $sql = "UPDATE usuarios SET StatusUsuario = 0 WHERE IdUsuario = ?";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute([$IdTrabajador]);
-            if ($stmt->rowCount() === 0) {
-                throw new Exception("No se pudo desactivar al trabajador o el trabajador no existe.");
-            }
-            return true;
-        } catch (Exception $e) {
-            throw new Exception("Error al eliminar (desactivar) trabajador: " . $e);
-        }
-    }
-    // FIN ELIMINAR (DESACTIVAR) UN TRABAJADOR
-
-
-
-
-
     // INICIO Crear un nuevo trabajador
-    public function CrearTrabajador($datos)
+    public function GuardarTrabajador($datos)
     {
         try {
             $error = $this->VerificarDatosUnicos($datos);
@@ -118,6 +75,31 @@ class TrabajadoresModelo
         }
     }
     // FIN Crear un nuevo trabajador
+
+
+
+
+
+    // INICIO FUNCION BuscarTrabajador 
+    public function BuscarTrabajador($IdTrabajador)
+    {
+        try {
+            $sql = "SELECT * FROM usuarios WHERE IdUsuario = :IdUsuario";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['IdUsuario' => $IdTrabajador]);
+            $Trabajadores = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $Trabajadores;
+        } catch (PDOException $e) {
+            throw new Exception("Error al buscar trabajador: " . $e->getMessage());
+        }
+    }
+    // FIN FUNCION BuscarTrabajador 
+
+
+
+
+
+
 
 
 
@@ -172,6 +154,30 @@ class TrabajadoresModelo
         }
     }
     // fin editar un trabajador
+
+
+
+
+
+    // INICIO ELIMINAR (DESACTIVAR) UN TRABAJADOR (CAMBIAR STATUSUSUARIO A 0)
+    public function EliminarTrabajador($IdTrabajador)
+    {
+        try {
+            if (empty($IdTrabajador)) {
+                throw new Exception("ID de trabajador no proporcionado.");
+            }
+            $sql = "UPDATE usuarios SET StatusUsuario = 0 WHERE IdUsuario = ?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$IdTrabajador]);
+            if ($stmt->rowCount() === 0) {
+                throw new Exception("No se pudo desactivar al trabajador o el trabajador no existe.");
+            }
+            return true;
+        } catch (Exception $e) {
+            throw new Exception("Error al eliminar (desactivar) trabajador: " . $e);
+        }
+    }
+    // FIN ELIMINAR (DESACTIVAR) UN TRABAJADOR
 
 
 

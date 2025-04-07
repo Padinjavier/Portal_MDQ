@@ -21,12 +21,47 @@ class TrabajadoresControlador
     {
         try {
             $Trabajadores = $this->modelo->CargarDatosTrabajadores();
-            echo json_encode(['success' => true, 'data' => $Trabajadores]);
+            if ($Trabajadores !== false) {
+                echo json_encode(['success' => true, 'data' => $Trabajadores]);
+            } else {
+                echo json_encode(['success' => false, 'msg' => 'Trabajadores no encontrados']);
+            }
         } catch (Exception $e) {
-            echo json_encode(['success' => false, 'msg' => $e->getMessage()]);
+            echo json_encode(['success' => false, 'msg' => 'Error al obtener el trabajador: ' . $e->getMessage()]);
         }
     }
     // fin Obtener todos los trabajadores
+
+
+
+
+
+    // inicio Crear un nuevo trabajador
+    public function GuardarTrabajador()
+    {
+        try {
+            $datos = [
+                'NombresUsuario' => $_POST['NombresTrabajador'] ?? null,
+                'ApellidosUsuario' => $_POST['ApellidosTrabajador'] ?? null,
+                'TelefonoUsuario' => $_POST['TelefonoTrabajador'] ?? null,
+                'DNIUsuario' => $_POST['DNITrabajador'] ?? null,
+                'CorreoUsuario' => $_POST['CorreoTrabajador'] ?? null,
+                'UsernameUsuario' => $_POST['UsernameTrabajador'] ?? null,
+                'PasswordUsuario' => $_POST['PasswordTrabajador'] ?? null, // Si es necesario
+                'RolUsuario' => $_POST['RolTrabajador'] ?? null
+            ];
+            foreach ($datos as $key => $value) {
+                if (empty($value)) {
+                    throw new Exception("El campo $key es requerido");
+                }
+            }
+            $resultado = $this->modelo->GuardarTrabajador($datos);
+            echo json_encode(['success' => $resultado, 'msg' => $resultado ? 'Trabajador creado exitosamente.' : 'Error al crear el trabajador.']);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'msg' => 'Error al crear el trabajador: ' . $e->getMessage()]);
+        }
+    }
+    // fin Crear un nuevo trabajador
 
 
 
@@ -56,39 +91,6 @@ class TrabajadoresControlador
 
 
 
-    // inicio Crear un nuevo trabajador
-    public function CrearTrabajador()
-    {
-        try {
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                throw new Exception('Método no permitido');
-            }
-
-            $datos = [
-                'NombresUsuario' => $_POST['NombresTrabajador'] ?? null,
-                'ApellidosUsuario' => $_POST['ApellidosTrabajador'] ?? null,
-                'TelefonoUsuario' => $_POST['TelefonoTrabajador'] ?? null,
-                'DNIUsuario' => $_POST['DNITrabajador'] ?? null,
-                'CorreoUsuario' => $_POST['CorreoTrabajador'] ?? null,
-                'UsernameUsuario' => $_POST['UsernameTrabajador'] ?? null,
-                'PasswordUsuario' => $_POST['PasswordTrabajador'] ?? null, // Si es necesario
-                'RolUsuario' => $_POST['rol'] ?? null
-            ];
-
-            // Validar datos
-            foreach ($datos as $key => $value) {
-                if (empty($value)) {
-                    throw new Exception("El campo $key es requerido");
-                }
-            }
-
-            $resultado = $this->modelo->CrearTrabajador($datos);
-            echo json_encode(['success' => $resultado, 'msg' => $resultado ? 'Trabajador creado exitosamente.' : 'Error al crear el trabajador.']);
-        } catch (Exception $e) {
-            echo json_encode(['success' => false, 'msg' => 'Error al crear el trabajador: ' . $e->getMessage()]);
-        }
-    }
-    // fin Crear un nuevo trabajador
 
 
 
@@ -249,8 +251,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
 
     $controlador = new TrabajadoresControlador();
     switch ($_GET['action']) {
-        case 'CrearTrabajador':
-            $controlador->CrearTrabajador();
+        case 'GuardarTrabajador':
+            $controlador->GuardarTrabajador();
             break;
         case 'EditarTrabajador':
             $id = $_POST['IdTrabajador'] ?? null; // Leer desde el cuerpo

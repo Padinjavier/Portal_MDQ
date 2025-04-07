@@ -77,6 +77,37 @@ window.CargarDatosTrabajadores = function () {
 
 
 
+// inicio guardar trabajador
+function GuardarTrabajador() {
+    const formData = new FormData(document.getElementById('FormularioTrabajador'));
+    const accion = document.getElementById('IdTrabajador').value ? 'EditarTrabajador' : 'GuardarTrabajador';
+
+    fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=${accion}`, { method: 'POST', body: formData })
+        .then(response => response.text())
+        .then(text => {
+            try {
+                const data = JSON.parse(text);
+                if (!data.success) throw data.msg || "Error en el servidor";
+                Swal.fire("Éxito", data.msg, "success").then(() => {
+                    $('#ModalFormTrabajador').modal('hide'); // Cerramos el modal
+                    CargarDatosTrabajadores(); // Recargamos la tabla de trabajadores
+                });                
+            } catch {
+                throw text; // Si no es JSON válido, lanzamos el HTML
+            }
+        })
+        .catch(error => Swal.fire({
+            title: "Error",
+            html: typeof error === 'string' ? error : "Error desconocido",
+            icon: "error",
+        }));
+}
+// fin guardar trabajador
+
+
+
+
+
 // INICIO VER TRABAJADOR
 function VerTrabajador(id) {
     fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=BuscarTrabajador&id=${id}`, { method: 'GET' })
@@ -189,43 +220,6 @@ function EliminarTrabajador(id) {
 
 
 
-
-// inicio guardar trabajador
-function GuardarTrabajador() {
-    const formData = new FormData(document.getElementById('FormularioTrabajador'));
-    const accion = document.getElementById('IdTrabajador').value ? 'EditarTrabajador' : 'CrearTrabajador';
-
-    fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=${accion}`, {
-        method: 'POST',
-        body: formData
-    })
-        .then(response => {
-            return response.text(); // Primero obtenemos el texto para ver qué contiene
-        })
-        .then(text => {
-            return JSON.parse(text); // Luego intentamos parsearlo como JSON
-        })
-        .then(data => {
-            if (data.success) {
-                Swal.fire("Éxito", data.msg, "success").then(() => {
-                    $('#ModalFormTrabajador').modal('hide');
-                    CargarDatosTrabajadores(); // Recargar la tabla
-                });
-            } else {
-                Swal.fire("Error", data.msg, "error");
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            Swal.fire("Error", "Hubo un problema al procesar la solicitud", "error");
-        });
-}
-// fin guardar trabajador
-
-
-
-
-
 // inicio editar trabajador
 function openModal() {
     document.getElementById('FormularioTrabajador').reset();
@@ -263,7 +257,6 @@ function CerrarClickFuera(event) {
     }
 }
 // fin funcionesde open and close menu opciones
-
 
 
 
@@ -309,7 +302,6 @@ function CargarRoles() {
         });
 }
 // fin Función para cargar los roles desde el servidor
-
 
 
 
@@ -384,8 +376,6 @@ function eliminarRelacionModuloRol(rolesEliminados) {
         .catch(() => Swal.fire("Error", "Hubo un problema al eliminar la relación.", "error"));
 }
 // fin Función para eliminar la configuración
-
-
 
 
 
