@@ -35,7 +35,7 @@ class TrabajadoresModelo
             $Trabajadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $Trabajadores;
         } catch (PDOException $e) {
-            throw new Exception("Error al cargar Trabajadores  " . $e->getMessage());
+            throw new Exception($e->getMessage());
         }
     }
     // FIN FUNCION CargarDatosTrabajadores
@@ -71,7 +71,7 @@ class TrabajadoresModelo
             }
             return true;
         } catch (Exception $e) {
-            throw new Exception("Error al crear trabajador: " . $e);
+            throw new Exception( $e->getMessage());
         }
     }
     // FIN Crear un nuevo trabajador
@@ -90,16 +90,10 @@ class TrabajadoresModelo
             $Trabajadores = $stmt->fetch(PDO::FETCH_ASSOC);
             return $Trabajadores;
         } catch (PDOException $e) {
-            throw new Exception("Error al buscar trabajador: " . $e->getMessage());
+            throw new Exception( $e->getMessage());
         }
     }
     // FIN FUNCION BuscarTrabajador 
-
-
-
-
-
-
 
 
 
@@ -150,7 +144,7 @@ class TrabajadoresModelo
             }
             return true;
         } catch (Exception $e) {
-            throw new Exception("Error al editar trabajador: " . $e);
+            throw new Exception($e->getMessage());
         }
     }
     // fin editar un trabajador
@@ -168,13 +162,13 @@ class TrabajadoresModelo
             }
             $sql = "UPDATE usuarios SET StatusUsuario = 0 WHERE IdUsuario = ?";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([$IdTrabajador]);
-            if ($stmt->rowCount() === 0) {
-                throw new Exception("No se pudo desactivar al trabajador o el trabajador no existe.");
+            $resultado =  $stmt->execute([$IdTrabajador]);
+            if (!$resultado) {
+                throw new Exception("No se pudo eliminar al trabajador.");
             }
             return true;
         } catch (Exception $e) {
-            throw new Exception("Error al eliminar (desactivar) trabajador: " . $e);
+            throw new Exception($e->getMessage());
         }
     }
     // FIN ELIMINAR (DESACTIVAR) UN TRABAJADOR
@@ -211,13 +205,19 @@ class TrabajadoresModelo
             }
             return false;
         } catch (PDOException $e) {
-            throw new Exception("Error al verificar datos únicos: " . $e);
+            throw new Exception($e->getMessage());
         }
     }
     // FIN DE FUNCION VERIFICAR DATOS UNICOS  
 
 
 
+
+
+
+
+
+    
 
 
     // INICIO FUNCIÓN: Obtener todos los roles activos con su estado de asignación a módulos 
@@ -238,7 +238,7 @@ class TrabajadoresModelo
             $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $resultado;
         } catch (PDOException $e) {
-            throw new Exception("Error al ejecutar la función CargarRoles: " . $e);
+            throw new Exception($e->getMessage());
         }
     }
     // FIN FUNCIÓN: Obtener todos los roles activos con su estado de asignación a módulos
