@@ -160,7 +160,7 @@
 
                             <?php if ($_SESSION['Login_Permisos']['Gestión de Tickets']['Leer'] == 1): ?>
                                 <li class="nav-item">
-                                    <a href="index.php?ruta=gestiontickets" class="nav-link">
+                                    <a href="index.php?ruta=tickets" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Gestión de Tickets</p>
                                     </a>

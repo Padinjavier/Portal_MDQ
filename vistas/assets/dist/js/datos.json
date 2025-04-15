@@ -1,0 +1,139 @@
+{
+    "area_principal": "ALCALDÍA",
+    "sub_areas": [
+      {
+        "Gerencia General": "Gerencia Municipal",
+        "sub_areas": [
+          {
+            "Gerencia": "Gerencia de Administración y Finanzas",
+            "sub_areas": [
+              {
+                "Subgerencia": "Subgerencia de Contabilidad"
+              },
+              {
+                "Subgerencia": "Subgerencia de Recursos Humanos"
+              },
+              {
+                "Subgerencia": "Subgerencia de Tesorería"
+              },
+              {
+                "Subgerencia": "Subgerencia de Logística, Abastecimiento y Control Patrimonial"
+              },
+              {
+                "Unidad": "Unidad Informática"
+              }
+            ]
+          },
+          {
+            "Gerencia": "Gerencia de Asesoría Jurídica",
+            "sub_areas": [         ]
+          },
+          {
+            "Gerencia": "Gerencia de Planificación, Presupuesto y Racionalización",
+            "sub_areas": [
+              {
+                "Unidad": "Oficina de Programación Multianual de Inversiones (OPMI)"
+              }
+            ]
+          },
+          {
+            "Gerencia": "Gerencia de Administración Tributaria y Desarrollo Económico",
+            "sub_areas": [
+              {
+                "Subgerencia": "Subgerencia de Registro, Orientación y Recaudación Tributaria"
+              },
+              {
+                "Subgerencia": "Subgerencia de Fiscalización Tributaria"
+              },
+              {
+                "Subgerencia": "Subgerencia de Ejecutoría Coactiva"
+              },
+              {
+                "Unidad": "División de Desarrollo Económico"
+              }
+            ]
+          },
+          {
+            "Gerencia": "Gerencia de Servicio Público y Gestión Ambiental",
+            "sub_areas": [
+              {
+                "Subgerencia": "Subgerencia de Saneamiento Ambiental, Limpieza Pública, Parques y Jardines"
+              },
+              {
+                "Unidad": "Área Técnica Municipal para Gestión de los Servicios de Agua y Saneamiento (ATM-APS)"
+              },
+              {
+                "Unidad": "Unidad de Parque Zonal"
+              },
+              {
+                "Unidad": "Unidad de Equipo Mecánico"
+              }
+            ]
+          },
+          {
+            "Gerencia": "Gerencia de Desarrollo Social y Humano",
+            "sub_areas": [
+              {
+                "Subgerencia": "Subgerencia de Educación, Cultura, Deporte y Juventud"
+              },
+              {
+                "Subgerencia": "Subgerencia de Servicios Sociales"
+              },
+              {
+                "Unidad": "Oficina de DEMUNA"
+              },
+              {
+                "Unidad": "Unidad de Salud y Desarrollo Humano"
+              }
+            ]
+          },
+          {
+            "Gerencia": "Gerencia de Seguridad Ciudadana y Gestión de Riesgo de Desastres y Defensa Civil",
+            "sub_areas": [
+              {
+                "Subgerencia": "Subgerencia de Seguridad Ciudadana"
+              },
+              {
+                "Subgerencia": "Subgerencia de Transporte"
+              },
+              {
+                "Subgerencia": "Subgerencia de Gestión de Riesgo de Desastres y Defensa Civil"
+              }
+            ]
+          },
+          {
+            "Gerencia": "Gerencia de Desarrollo Urbano y Rural",
+            "sub_areas": [
+              {
+                "Subgerencia": "Subgerencia de Obras Públicas y Privadas"
+              },
+              {
+                "Subgerencia": "Subgerencia de Desarrollo Urbano y Rural"
+              },
+              {
+                "Unidad": "Oficina de Formulación de Estudios y Proyectos (UFI)"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "Secretaría General": "Gerencia de Secretaría General",
+        "sub_areas": [
+          {
+            "Subgerencia": "Subgerencia de Registro Civil"
+          },
+          {
+            "Unidad": "Unidad de Archivo General"
+          },
+          {
+            "Unidad": "Unidad de Imagen Institucional"
+          },
+          {
+            "Unidad": "Unidad de Trámite Documentario y Orientación al Ciudadano"
+          }
+        ]
+      }
+    ]
+  }
+  
