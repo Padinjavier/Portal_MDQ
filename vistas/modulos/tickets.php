@@ -50,14 +50,13 @@
                             style="background-color: white;">
                             <thead class="bg-success">
                                 <tr>
-                                    <th class="font-weight-bold">ID</th>
-                                    <th class="font-weight-bold">Nombre</th>
-                                    <th class="font-weight-bold">Apellido</th>
-                                    <th class="font-weight-bold">DNI</th>
-                                    <th class="font-weight-bold">Teléfono</th>
-                                    <th class="font-weight-bold">Correo</th>
-                                    <th class="font-weight-bold">Usuario</th>
-                                    <th class="font-weight-bold">Rol</th>
+                                    <th class="font-weight-bold">Codigo</th>
+                                    <th class="font-weight-bold">Ticket</th>
+                                    <th class="font-weight-bold">Departamento</th>
+                                    <th class="font-weight-bold">Problema</th>
+                                    <th class="font-weight-bold">Subproblema</th>
+                                    <th class="font-weight-bold">Fecha de creacion</th>
+                                    <th class="font-weight-bold">Estado</th>
                                     <th class="font-weight-bold">Acciones</th>
                                 </tr>
                             </thead>
@@ -92,13 +91,14 @@
                     <input type="hidden" id="IdTicket" name="IdTicket">
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="IdUsuarioCreadorTicket">Nombre Trabajador</label>
-                                <input type="text" class="form-control form-control-sm" id="IdUsuarioCreadorTicket"
+                        <div class="form-group">
+                                <label for="IdUsuarioCreadorTicket">Nombre</label>
+                                <select class="form-control form-control-sm" id="IdUsuarioCreadorTicket"
                                     name="IdUsuarioCreadorTicket" required>
+                                    <option value="">Seleccione una opción</option>
+                                </select>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="DepartamentoTicket">Departamento</label>
@@ -108,8 +108,6 @@
                                 </select>
                             </div>
                         </div>
-
-
                     </div>
                     <div class="row">
 
@@ -137,7 +135,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="editor">Descripción</label>
-                            <textarea id="editor" name="descripcion" class="form-control"></textarea>
+                            <textarea id="editor" name="descripcion" class="form-control summernote" ></textarea>
                         </div>
 
                     </div>
@@ -145,22 +143,22 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cerrar</button>
-                <button class="btn btn-success btn-sm" type="button" onclick="GuardarTrabajador()">Guardar</button>
+                <button class="btn btn-success btn-sm" type="button" onclick="GuardarTicket()">Guardar</button>
             </div>
         </div>
     </div>
 </div>
-<!-- Fin Modal para Crear/Editar Trabajador -->
+<!-- Fin Modal para Crear/Editar Ticket -->
 
 
 
-<!-- Inicio Modal para Ver Trabajador modalVistaTrabajador-->
-<div class="modal fade" id="ModalViewTrabajador" tabindex="-1" role="dialog" aria-labelledby="ModalViewLabelTrabajador"
+<!-- Inicio Modal para Ver Ticket modalVistaTicket-->
+<div class="modal fade" id="ModalViewTicket" tabindex="-1" role="dialog" aria-labelledby="ModalViewLabelTicket"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success">
-                <h5 class="modal-title" id="ModalViewLabelTrabajador">Ver Trabajador</h5>
+                <h5 class="modal-title" id="ModalViewLabelTicket">Ver Ticket</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -168,14 +166,14 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <p><strong>Nombres:</strong> <span id="ViewNombresTrabajador"></span></p>
-                        <p><strong>DNI:</strong> <span id="ViewDNITrabajador"></span></p>
-                        <p><strong>Correo:</strong> <span id="ViewCorreoTrabajador"></span></p>
+                        <p><strong>Nombres:</strong> <span id="ViewNombresTicket"></span></p>
+                        <p><strong>DNI:</strong> <span id="ViewDNITicket"></span></p>
+                        <p><strong>Correo:</strong> <span id="ViewCorreoTicket"></span></p>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>Apellidos:</strong> <span id="ViewApellidosTrabajador"></span></p>
-                        <p><strong>Teléfono:</strong> <span id="ViewTelefonoTrabajador"></span></p>
-                        <p><strong>Usuario:</strong> <span id="ViewUsernameTrabajador"></span></p>
+                        <p><strong>Apellidos:</strong> <span id="ViewApellidosTicket"></span></p>
+                        <p><strong>Teléfono:</strong> <span id="ViewTelefonoTicket"></span></p>
+                        <p><strong>Usuario:</strong> <span id="ViewUsernameTicket"></span></p>
                     </div>
                 </div>
             </div>
@@ -185,4 +183,4 @@
         </div>
     </div>
 </div>
-<!-- Fin Modal para Ver Trabajador -->
+<!-- Fin Modal para Ver Ticket -->

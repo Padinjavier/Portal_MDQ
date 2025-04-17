@@ -1,13 +1,13 @@
 // C:\wamp64\www\Portal_MDQ\vistas\assets\dist\js\funcion_tickets.js
-// INICIO FUNCIONAMIENTO DE TABLA TRABAJADORES
+// INICIO FUNCIONAMIENTO DE TABLA Tickets
 $(document).ready(function () {
-    const table = $('#TablaTrabajadores').DataTable({
+    const table = $('#TablaTickets').DataTable({
         "language": {
             "url": `${BASE_URL}/vistas/assets/dist/js/Spanish.json`
         },
         "columnDefs": [
-            { "orderable": true, "targets": [0, 1, 2, 3, 4, 5, 6, 7] }, // Columnas ordenables
-            { "orderable": false, "targets": [8] } // Columna de acciones no ordenable
+            { "orderable": true, "targets": [0, 1, 2, 3, 4, 5, 6] }, // Columnas ordenables
+            { "orderable": false, "targets": [7] } // Columna de acciones no ordenable
         ],
         "paging": true, // Habilitar paginación
         "pageLength": 10, // Número de filas por página
@@ -23,9 +23,11 @@ $(document).ready(function () {
         "lengthMenu": [5, 10, 25, 50, 100], // Opciones de longitud de página
         "order": [[0, "desc"]],
     });
-    CargarDatosTrabajadores();
+    CargarDatosTickets();
+    SelectProblemasySubproblemas();
+    SelectNombre();
 });
-// FIN FUNCIONAMIENTO DE TABLA TRABAJADORES
+// FIN FUNCIONAMIENTO DE TABLA Tickets
 
 
 $(document).ready(function () {
@@ -34,13 +36,11 @@ $(document).ready(function () {
         .then(res => res.json())
         .then(data => {
             const $select = $('#DepartamentoTicket');
-            // $select.empty(); // Limpia opciones previas
             data.sub_areas.forEach(area => {
                 if (!area.sub_areas) return;
                 area.sub_areas.forEach(gerenciaObj => {
                     const gerencia = gerenciaObj.Gerencia;
                     if (!gerencia) return;
-                    // Agregar Gerencia como opción principal
                     $select.append(`<option style="color:rgb(0, 0, 0); font-weight: bold;" value="${gerencia}">${gerencia}</option>`);
                     if (gerenciaObj.sub_areas) {
                         gerenciaObj.sub_areas.forEach(nivel => {
@@ -63,52 +63,61 @@ $(document).ready(function () {
         .catch(err => console.error("Error al cargar JSON:", err));
 });
 
-// summernote 
+// Descripción summernote 
 $(document).ready(function() {
     $('#editor').summernote({
         placeholder: 'Escribe aquí tu texto...',
-        tabsize: 2,
         height: 150,
-        toolbar: [
-            ['style', ['bold', 'italic', 'underline', 'clear']],
-            ['font', ['strikethrough', 'superscript', 'subscript']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['insert', ['link', 'picture', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']]
-        ]
     });
 });
 
 
 
-// INICIO COMPLETAR TABLE TRABAJADORES 
-window.CargarDatosTrabajadores = function () {
-    fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=CargarDatosTrabajadores`, { method: 'GET' })
+// INICIO COMPLETAR TABLE Tickets 
+window.CargarDatosTickets = function () {
+    fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=CargarDatosTickets`, { method: 'GET' })
         .then(response => response.text())
         .then(text => {
             try {
                 const data = JSON.parse(text);
                 if (!data.success) throw data.msg || "Error en el servidor";
-                const table = $('#TablaTrabajadores').DataTable();
+                const table = $('#TablaTickets').DataTable();
                 table.clear();
-                data.data?.forEach(Trabajador => {
+                data.data?.forEach(Ticket => {
+                    let statusLabel = '';
+                    switch (parseInt(Ticket.StatusTicket)) {
+                        case 1:
+                            statusLabel = '<span class="badge badge-primary">Abierto</span>';
+                            break;
+                        case 2:
+                            statusLabel = '<span class="badge badge-info">En Atención</span>';
+                            break;
+                        case 3:
+                            statusLabel = '<span class="badge badge-success">Resuelto</span>';
+                            break;
+                        case 4:
+                            statusLabel = '<span class="badge badge-warning">Reabierto</span>';
+                            break;
+                        case 5:
+                            statusLabel = '<span class="badge badge-dark">Cerrado</span>';
+                            break;
+                        default:
+                            statusLabel = '<span class="badge badge-danger">Eliminado</span>';
+                    }
                     table.row.add([
-                        Trabajador.IdUsuario,
-                        Trabajador.NombresUsuario,
-                        Trabajador.ApellidosUsuario,
-                        Trabajador.DNIUsuario,
-                        Trabajador.TelefonoUsuario,
-                        Trabajador.CorreoUsuario,
-                        Trabajador.UsernameUsuario,
-                        Trabajador.NombreRol,
+                        Ticket.CodTicket,
+                        Ticket.trabajador,
+                        Ticket.DepartamentoTicket,
+                        Ticket.NombreProblema,
+                        Ticket.NombreSubproblema,
+                        Ticket.DataCreateTicket,
+                        statusLabel,
                         `<div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown"><i class="fas fa-cog"></i> Opciones</button>
                         <div class="dropdown-menu">
-                            <button class="btn dropdown-item text-success bg-transparent" onclick="VerTrabajador(${Trabajador.IdUsuario})"><i class="fas fa-eye"></i> Ver</button>
-                            <button class="btn dropdown-item text-warning  bg-transparent" onclick="EditarTrabajador(${Trabajador.IdUsuario})"><i class="fas fa-edit"></i> Editar</button>
-                            <button class="btn dropdown-item text-danger bg-transparent" onclick="EliminarTrabajador(${Trabajador.IdUsuario})"><i class="fas fa-trash"></i> Eliminar</button>
+                            <button class="btn dropdown-item text-success bg-transparent" onclick="VerTicket(${Ticket.IdTicket})"><i class="fas fa-eye"></i> Ver</button>
+                            <button class="btn dropdown-item text-warning  bg-transparent" onclick="EditarTicket(${Ticket.IdTicket})"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="btn dropdown-item text-danger bg-transparent" onclick="EliminarTicket(${Ticket.IdTicket})"><i class="fas fa-trash"></i> Eliminar</button>
                         </div>
                     </div>`
                     ]).draw(false);
@@ -123,30 +132,161 @@ window.CargarDatosTrabajadores = function () {
             icon: "error",
         }));
 };
-// FIN COMPLETAR TABLE TRABAJADORES
+// FIN COMPLETAR TABLE Tickets
 
 
 
 
 
-// INICIO EDITAR TRABAJADOR
+// INICIO EDITAR Ticket
 function openModal() {
     document.getElementById('FormularioTicket').reset();
     document.getElementById('IdTicket').value = "";
     document.getElementById('ModalFormLabelTicket').innerText = 'Nuevo Ticket';
     $('#ModalFormTicket').modal('show');
 }
-// FIN EDITAR TRABAJADOR
+// FIN EDITAR Ticket
+
+
+
+
+// inicio funcion cargar roles en select para formuladio de nuevo o editar
+let subproblemasMap = {};
+function SelectProblemasySubproblemas() {
+    return fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=SelectProblemasySubproblemas`)
+        .then(res => res.json())
+        .then(response => {
+            if (!response.success) throw new Error(response.msg);
+            const selectProblema = document.getElementById('IdProblemaTicket');
+            const selectSubproblema = document.getElementById('IdSubproblemaTicket');
+            selectProblema.innerHTML = '<option value="">Seleccione un Problema</option>';
+            selectSubproblema.innerHTML = '<option value="">Seleccione un Subproblema</option>';
+            const problemasMap = {};
+            response.data.forEach(item => {
+                if (!problemasMap[item.IdProblema]) {
+                    problemasMap[item.IdProblema] = {
+                        nombre: item.NombreProblema,
+                        subproblemas: []
+                    };
+                }
+                if (item.IdSubproblema) {
+                    problemasMap[item.IdProblema].subproblemas.push({
+                        id: item.IdSubproblema,
+                        nombre: item.NombreSubproblema
+                    });
+                }
+            });
+            subproblemasMap = problemasMap;
+            for (const id in problemasMap) {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = problemasMap[id].nombre;
+                selectProblema.appendChild(option);
+            }
+            selectProblema.addEventListener('change', () => {
+                const selectedId = selectProblema.value;
+                const subproblemas = subproblemasMap[selectedId]?.subproblemas || [];
+                selectSubproblema.innerHTML = '<option value="">Seleccione un Subproblema</option>';
+                subproblemas.forEach(sp => {
+                    const option = document.createElement('option');
+                    option.value = sp.id;
+                    option.textContent = sp.nombre;
+                    selectSubproblema.appendChild(option);
+                });
+            });
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message
+            });
+        });
+}
+// inicio funcion cargar roles en select para formuladio de nuevo o editar
+
+
+
+function SelectNombre() {
+    return fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=SelectNombre`)
+        .then(res => res.json())
+        .then(response => {
+            if (!response.success) throw new Error(response.msg);
+
+            const select = document.getElementById('IdUsuarioCreadorTicket');
+            select.innerHTML = '<option value="">Seleccione un usuario</option>';
+
+            response.data.forEach(usuario => {
+                const option = document.createElement('option');
+                option.value = usuario.IdUsuario;
+                option.textContent = usuario.NombreCompleto;
+                select.appendChild(option);
+            });
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message
+            });
+        });
+}
 
 
 
 
 
-// inicio guardar trabajador
-function GuardarTrabajador() {
-    const formData = new FormData(document.getElementById('FormularioTrabajador'));
-    const accion = document.getElementById('IdTrabajador').value ? 'EditarTrabajador' : 'GuardarTrabajador';
-    fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=${accion}`, {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// inicio guardar Ticket
+function GuardarTicket() {
+    const formData = new FormData(document.getElementById('FormularioTicket'));
+    const accion = document.getElementById('IdTicket').value ? 'EditarTicket' : 'GuardarTicket';
+    fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=${accion}`, {
         method: 'POST',
         body: formData
     })
@@ -159,8 +299,8 @@ function GuardarTrabajador() {
                     return; // Salir de la función para evitar ejecutar el éxito
                 }
                 Swal.fire("Éxito", data.msg, "success").then(() => {
-                    $('#ModalFormTrabajador').modal('hide');
-                    CargarDatosTrabajadores();
+                    $('#ModalFormTicket').modal('hide');
+                    CargarDatosTickets();
                 });
             } catch {
                 throw text; // Si no es JSON válido, lanzamos el HTML con text
@@ -172,28 +312,28 @@ function GuardarTrabajador() {
             icon: "error",
         }));
 }
-// inicio guardar trabajador
+// inicio guardar Ticket
 
 
 
 
 
-// INICIO VER TRABAJADOR
-function VerTrabajador(id) {
-    fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=BuscarTrabajador&id=${id}`, { method: 'GET' })
+// INICIO VER Ticket
+function VerTicket(id) {
+    fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=BuscarTicket&id=${id}`, { method: 'GET' })
         .then(response => response.text())
         .then(text => {
             try {
                 const data = JSON.parse(text);
                 if (!data.success) throw data.msg || "Error en el servidor";
-                const trabajador = data.data;
-                document.getElementById('ViewNombresTrabajador').textContent = trabajador.NombresUsuario;
-                document.getElementById('ViewApellidosTrabajador').textContent = trabajador.ApellidosUsuario;
-                document.getElementById('ViewDNITrabajador').textContent = trabajador.DNIUsuario;
-                document.getElementById('ViewTelefonoTrabajador').textContent = trabajador.TelefonoUsuario;
-                document.getElementById('ViewCorreoTrabajador').textContent = trabajador.CorreoUsuario;
-                document.getElementById('ViewUsernameTrabajador').textContent = trabajador.UsernameUsuario;
-                $('#ModalViewTrabajador').modal('show');
+                const Ticket = data.data;
+                document.getElementById('ViewNombresTicket').textContent = Ticket.NombresUsuario;
+                document.getElementById('ViewApellidosTicket').textContent = Ticket.ApellidosUsuario;
+                document.getElementById('ViewDNITicket').textContent = Ticket.DNIUsuario;
+                document.getElementById('ViewTelefonoTicket').textContent = Ticket.TelefonoUsuario;
+                document.getElementById('ViewCorreoTicket').textContent = Ticket.CorreoUsuario;
+                document.getElementById('ViewUsernameTicket').textContent = Ticket.UsernameUsuario;
+                $('#ModalViewTicket').modal('show');
             } catch {
                 throw text; // Si no es JSON válido, lanzamos el HTML
             }
@@ -204,53 +344,19 @@ function VerTrabajador(id) {
             icon: "error",
         }));
 }
-// FIN VER TRABAJADOR
+// FIN VER Ticket
 
 
 
 
 
-// inicio funcion cargar roles en select para formuladio de nuevo o editar
-function cargarRolesSelect() {
-    return new Promise((resolve) => {
-        fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=CargarRoles`)
-            .then(response => response.text())
-            .then(text => {
-                let Roles;
-                try {
-                    Roles = JSON.parse(text);
-                } catch {
-                    throw new Error(text);
-                }
-                if (!Roles.success) throw new Error(Roles.msg || "Error en el servidor");
-                const select = document.getElementById('RolTrabajador');
-                select.innerHTML = '<option value="">Seleccione un rol</option>';
-                Roles.data.forEach(({ IdRol, NombreRol }) => {
-                    const option = document.createElement('option');
-                    option.value = IdRol;
-                    option.textContent = NombreRol;
-                    select.appendChild(option);
-                });
-                resolve();
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: "Error",
-                    html: error.message || String(error),
-                    icon: "error",
-                })
-            })
-    })
-}
-// inicio funcion cargar roles en select para formuladio de nuevo o editar
 
 
 
 
-
-// inicio editar trabajador (llena el formulario ocn los datos del trabajdor)
-async function EditarTrabajador(id) {
-    const url = `${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=BuscarTrabajador&id=${id}`;
+// inicio editar Ticket (llena el formulario ocn los datos del trabajdor)
+async function EditarTicket(id) {
+    const url = `${BASE_URL}/controladores/tickets/TicketsControlador.php?action=BuscarTicket&id=${id}`;
     try {
         const response = await fetch(url);
         const text = await response.text(); // no asumimos que es JSON todavía
@@ -261,19 +367,19 @@ async function EditarTrabajador(id) {
             throw new Error(text); // Si no es JSON válido, es HTML (probablemente error de PHP)
         }
         if (!result.success) throw new Error(result.msg || "Error en el servidor");
-        document.getElementById('FormularioTrabajador').reset();
+        document.getElementById('FormularioTicket').reset();
         await cargarRolesSelect();
-        const trabajador = result.data;
-        document.getElementById('IdTrabajador').value = trabajador.IdUsuario;
-        document.getElementById('NombresTrabajador').value = trabajador.NombresUsuario;
-        document.getElementById('ApellidosTrabajador').value = trabajador.ApellidosUsuario;
-        document.getElementById('DNITrabajador').value = trabajador.DNIUsuario;
-        document.getElementById('TelefonoTrabajador').value = trabajador.TelefonoUsuario;
-        document.getElementById('CorreoTrabajador').value = trabajador.CorreoUsuario;
-        document.getElementById('UsernameTrabajador').value = trabajador.UsernameUsuario;
-        document.getElementById('RolTrabajador').value = trabajador.RolUsuario;
-        document.getElementById('ModalFormLabelTrabajador').innerText = 'Editar Trabajador';
-        $('#ModalFormTrabajador').modal('show');
+        const Ticket = result.data;
+        document.getElementById('IdTicket').value = Ticket.IdUsuario;
+        document.getElementById('NombresTicket').value = Ticket.NombresUsuario;
+        document.getElementById('ApellidosTicket').value = Ticket.ApellidosUsuario;
+        document.getElementById('DNITicket').value = Ticket.DNIUsuario;
+        document.getElementById('TelefonoTicket').value = Ticket.TelefonoUsuario;
+        document.getElementById('CorreoTicket').value = Ticket.CorreoUsuario;
+        document.getElementById('UsernameTicket').value = Ticket.UsernameUsuario;
+        document.getElementById('RolTicket').value = Ticket.RolUsuario;
+        document.getElementById('ModalFormLabelTicket').innerText = 'Editar Ticket';
+        $('#ModalFormTicket').modal('show');
     } catch (error) {
         Swal.fire({
             title: "Error",
@@ -282,24 +388,24 @@ async function EditarTrabajador(id) {
         });
     }
 }
-// fin  editar trabajador (llena el formulario ocn los datos del trabajdor)
+// fin  editar Ticket (llena el formulario ocn los datos del trabajdor)
 
 
 
 
 
-// inicio eliminar trabajador 
-function EliminarTrabajador(id) {
+// inicio eliminar Ticket 
+function EliminarTicket(id) {
     Swal.fire({
-        title: "Eliminar Trabajador",
-        text: "¿Realmente quiere eliminar al Trabajador?",
+        title: "Eliminar Ticket",
+        text: "¿Realmente quiere eliminar al Ticket?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Si, eliminar!",
         cancelButtonText: "No, cancelar!",
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=EliminarTrabajador`, {
+            fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=EliminarTicket`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: id }),
@@ -313,8 +419,8 @@ function EliminarTrabajador(id) {
                         throw new Error(text); // Si no es JSON válido, es HTML (probablemente error de PHP)
                     }
                     if (!result.success) throw result.msg || "Error en el servidor";
-                    Swal.fire('¡Eliminado!', 'El trabajador ha sido eliminado correctamente.', 'success')
-                        .then(() => CargarDatosTrabajadores());
+                    Swal.fire('¡Eliminado!', 'El Ticket ha sido eliminado correctamente.', 'success')
+                        .then(() => CargarDatosTickets());
                 })
                 .catch(error => {
                     Swal.fire({
@@ -326,36 +432,7 @@ function EliminarTrabajador(id) {
         }
     });
 }
-// fin eliminar trabajador 
-
-
-
-
-
-// inicio funcionesde open and close menu opciones
-function AbrirConfiguracion() {
-    const menu = document.getElementById('MenuConfiguracion');
-    if (menu.style.display === 'none' || menu.style.display === '') {
-        menu.style.display = 'block';
-        document.addEventListener('click', CerrarClickFuera);
-    } else {
-        menu.style.display = 'none';
-        document.removeEventListener('click', CerrarClickFuera);
-    }
-}
-function CerrarClickFuera(event) {
-    const menu = document.getElementById('MenuConfiguracion');
-    const button = document.getElementById('BotonConfiguracion');
-    if (!menu.contains(event.target) && !button.contains(event.target)) {
-        menu.style.display = 'none';
-        document.removeEventListener('click', CerrarClickFuera);
-    }
-}
-// fin funcionesde open and close menu opciones
-
-
-
-
+// fin eliminar Ticket 
 
 
 
@@ -363,7 +440,7 @@ function CerrarClickFuera(event) {
 // inicio Función para cargar los roles desde el servidor
 let estadoInicialRoles = {}; // Guarda el estado inicial de los roles
 function CargarRoles() {
-    fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=CargarRoles`, { method: 'GET' })
+    fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=CargarRoles`, { method: 'GET' })
         .then(response => response.json())
         .then(({ success, data, msg }) => {
             if (!success) throw new Error(msg || 'Error al cargar los roles');
@@ -371,10 +448,10 @@ function CargarRoles() {
             rolesList.innerHTML = ''; // Limpiar lista previa
             estadoInicialRoles = {}; // Resetear el estado inicial
             data.forEach(({ IdRol, NombreRol, NombreModulo }) => {
-                const asignadoATrabajadores = NombreModulo === "Trabajadores";
+                const asignadoATickets = NombreModulo === "Tickets";
                 const noAsignado = NombreModulo === "No asignado";
-                const asignadoAOtroModulo = !noAsignado && !asignadoATrabajadores;
-                const checked = asignadoATrabajadores || asignadoAOtroModulo;
+                const asignadoAOtroModulo = !noAsignado && !asignadoATickets;
+                const checked = asignadoATickets || asignadoAOtroModulo;
                 const disabled = asignadoAOtroModulo;
                 estadoInicialRoles[IdRol] = checked; // Guardar el estado original
                 const div = document.createElement('div');
@@ -402,77 +479,5 @@ function CargarRoles() {
 // fin Función para cargar los roles desde el servidor
 
 
-
-
-// Inicio Función para guardar la configuración
-function GuardarConfiguracion() {
-    const checkboxes = document.querySelectorAll('#ListaRoles .form-check-input');
-    let rolesNuevos = [];
-    let rolesEliminados = [];
-    checkboxes.forEach(checkbox => {
-        const idRol = checkbox.value;
-        const activo = checkbox.checked;
-        // Si el estado cambió, lo agregamos a la lista de cambios
-        if (estadoInicialRoles[idRol] !== activo) {
-            if (activo) {
-                rolesNuevos.push(idRol); // Se activó
-            } else {
-                rolesEliminados.push(idRol); // Se desactivó
-            }
-        }
-    });
-    if (rolesNuevos.length === 0 && rolesEliminados.length === 0) {
-        return Swal.fire("Sin cambios", "No has realizado cambios en los roles.", "info");
-    }
-    // Enviar solo los roles activados
-    if (rolesNuevos.length > 0) {
-        fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=GuardarConfiguracion`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ roles: rolesNuevos })
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire("Éxito", "Roles activados correctamente.", "success");
-                    CargarRoles();
-                    CargarDatosTrabajadores();
-                } else {
-                    Swal.fire("Error", data.msg || "No se pudieron activar los roles.", "error");
-                }
-            })
-            .catch(() => Swal.fire("Error", "Hubo un problema al activar los roles.", "error"));
-    }
-    // Enviar solo los roles desactivados
-    if (rolesEliminados.length > 0) {
-        eliminarRelacionModuloRol(rolesEliminados);
-    }
-}
-// fin Función para guardar la configuración
-
-
-
-
-
-// Inicio Función para eliminar la configuración
-function eliminarRelacionModuloRol(rolesEliminados) {
-    fetch(`${BASE_URL}/controladores/trabajadores/TrabajadoresControlador.php?action=eliminarRelacionModuloRol`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ roles: rolesEliminados })
-    })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire("Éxito", "Relación eliminada correctamente.", "success");
-                CargarDatosTrabajadores(); // Recargar la tabla
-                CargarRoles(); // Recargar los roles para reflejar los cambios
-            } else {
-                Swal.fire("Error", data.msg || "No se pudo eliminar la relación.", "error");
-            }
-        })
-        .catch(() => Swal.fire("Error", "Hubo un problema al eliminar la relación.", "error"));
-}
-// fin Función para eliminar la configuración
 
 

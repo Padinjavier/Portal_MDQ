@@ -34,11 +34,11 @@ class DashboardModelo
     public function EstadoTickets()
     {
         $sql = "SELECT 
-                (SELECT COUNT(*) FROM tickets WHERE status = 1) AS TicketsAbiertos,
-                (SELECT COUNT(*) FROM tickets WHERE status = 2) AS TicketsEnAtencion,
-                (SELECT COUNT(*) FROM tickets WHERE status = 3) AS TicketsResueltos,
-                (SELECT COUNT(*) FROM tickets WHERE status = 4) AS TicketsReabiertos,
-                (SELECT COUNT(*) FROM tickets WHERE status = 5) AS TicketsCerrados;
+                (SELECT COUNT(*) FROM tickets WHERE StatusTicket = 1) AS TicketsAbiertos,
+                (SELECT COUNT(*) FROM tickets WHERE StatusTicket = 2) AS TicketsEnAtencion,
+                (SELECT COUNT(*) FROM tickets WHERE StatusTicket = 3) AS TicketsResueltos,
+                (SELECT COUNT(*) FROM tickets WHERE StatusTicket = 4) AS TicketsReabiertos,
+                (SELECT COUNT(*) FROM tickets WHERE StatusTicket = 5) AS TicketsCerrados;
             ";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();

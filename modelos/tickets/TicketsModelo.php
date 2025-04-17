@@ -13,32 +13,127 @@ class TicketsModelo
 
 
 
-    // INICIO FUNCION CargarDatosTrabajadores
-    public function CargarDatosTrabajadores()
+    // INICIO FUNCION CargarDatosTickets
+    public function CargarDatosTickets()
     {
         try {
-            $sql = "SELECT 
-                    u.IdUsuario, u.NombresUsuario, u.ApellidosUsuario, 
-                    u.DNIUsuario, u.TelefonoUsuario, u.CorreoUsuario,
-                    u.UsernameUsuario, r.NombreRol
-                FROM usuarios u, rol r, modulo_roles mr, modulos m
-                WHERE u.RolUsuario = r.IdRol
-                AND mr.IdRol = u.RolUsuario
-                AND mr.IdModulo = m.IdModulo
-                AND  m.NombreModulo = :NombreModulo
-                AND u.StatusUsuario = :StatusUsuario";
+            $sql = "SELECT t.CodTicket, CONCAT(ut.NombresUsuario, ut.ApellidosUsuario) AS trabajador, 
+                    t.DepartamentoTicket,
+                    p.NombreProblema, sp.NombreSubproblema, 
+                    t.DataCreateTicket, t.DataUpdateTicket, t.StatusTicket FROM
+                    tickets t, usuarios ut,usuarios us, problemas p, subproblemas sp 
+                    WHERE t.IdUsuarioCreadorTicket = ut.IdUsuario AND    
+                    t.IdUsuarioSoporteTicket = us.IdUsuario AND
+                    t.IdProblemaTicket = p.IdProblema AND
+                    t.IdSubproblemaTicket = sp.IdSubproblema AND
+                    t.StatusTicket != :StatusTicket";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([
-                ':NombreModulo' => 'Trabajadores',
-                ':StatusUsuario' => 1
-            ]);
+            $stmt->execute([':StatusTicket' => 0]);
             $Trabajadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $Trabajadores;
         } catch (PDOException $e) {
             throw new Exception($e->getMessage());
         }
     }
-    // FIN FUNCION CargarDatosTrabajadores
+    // FIN FUNCION CargarDatosTickets
+
+
+
+
+
+    // INICIO FUNCIÓN: Obtener todos los roles activos con su estado de asignación a módulos 
+    public function SelectProblemasySubproblemas()
+    {
+        try {
+            $sql = "SELECT p.IdProblema, p.NombreProblema, sp.IdSubproblema, sp.NombreSubproblema
+                FROM problemas p, subproblemas sp
+                WHERE sp.IdProblema = p.IdProblema 
+                AND p.StatusProblema = :StatusProblema
+                AND sp.StatusSubproblema = :StatusSubproblema";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['StatusProblema' => 1,
+                            'StatusSubproblema' => 1,
+                            ]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    // FIN FUNCIÓN: Obtener todos los roles activos con su estado de asignación a módulos
+
+
+
+
+
+    public function SelectNombre($idUsuario, $rolUsuario)
+    {
+        try {
+            if ($rolUsuario == 1) {
+                // Administrador: trae todos los usuarios activos
+                $sql = "SELECT IdUsuario, CONCAT(NombresUsuario, ' ', ApellidosUsuario) AS NombreCompleto 
+                        FROM usuarios 
+                        WHERE StatusUsuario != 0";
+                $stmt = $this->db->prepare($sql);
+                $stmt->execute();
+            } else {
+                // No administrador: solo su propio usuario
+                $sql = "SELECT IdUsuario, CONCAT(NombresUsuario, ' ', ApellidosUsuario) AS NombreCompleto 
+                        FROM usuarios 
+                        WHERE StatusUsuario != 0 AND IdUsuario = :IdUsuario";
+                $stmt = $this->db->prepare($sql);
+                $stmt->execute([':IdUsuario' => $idUsuario]);
+            }
+    
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Error al obtener usuarios: " . $e->getMessage());
+        }
+    }
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -220,28 +315,6 @@ class TicketsModelo
     
 
 
-    // INICIO FUNCIÓN: Obtener todos los roles activos con su estado de asignación a módulos 
-    public function CargarRoles()
-    {
-        try {
-            $sql = "SELECT 
-            r.IdRol, 
-            r.NombreRol,
-             COALESCE(m.IdModulo, 'No asignado') AS IdModulo, 
-             COALESCE(m.NombreModulo, 'No asignado') AS NombreModulo 
-             FROM rol r 
-             LEFT JOIN modulo_roles mr ON r.IdRol = mr.IdRol 
-             LEFT JOIN modulos m ON mr.IdModulo = m.IdModulo 
-             WHERE r.StatusRol = :StatusRol";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute([':StatusRol' => 1]);
-            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $resultado;
-        } catch (PDOException $e) {
-            throw new Exception($e->getMessage());
-        }
-    }
-    // FIN FUNCIÓN: Obtener todos los roles activos con su estado de asignación a módulos
 
 
 
