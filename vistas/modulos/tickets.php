@@ -95,7 +95,7 @@
                                 <label for="IdUsuarioCreadorTicket">Nombre</label>
                                 <select class="form-control form-control-sm" id="IdUsuarioCreadorTicket"
                                     name="IdUsuarioCreadorTicket" required>
-                                    <option value="">Seleccione una opción</option>
+                                    <option value="">Seleccione una nombre</option>
                                 </select>
                             </div>
                         </div>

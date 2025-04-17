@@ -212,10 +212,13 @@ function SelectNombre() {
         .then(res => res.json())
         .then(response => {
             if (!response.success) throw new Error(response.msg);
-
             const select = document.getElementById('IdUsuarioCreadorTicket');
-            select.innerHTML = '<option value="">Seleccione un usuario</option>';
-
+            select.innerHTML = ''; // Limpiar opciones
+            if(response.data.length ==1){
+                select.disabled = true;
+            }else{
+                select.innerHTML = '<option value="">Seleccione un nombre</option>';
+            }
             response.data.forEach(usuario => {
                 const option = document.createElement('option');
                 option.value = usuario.IdUsuario;

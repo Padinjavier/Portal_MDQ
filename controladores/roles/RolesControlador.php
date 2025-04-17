@@ -204,15 +204,11 @@ class RolesControlador
             if (!$idRol) {
                 throw new Exception('ID de rol no proporcionado.');
             }
-
-            // Obtener permisos desde POST
             $permisos = $_POST['permisos'] ?? null;
-
             if (!$permisos || !is_array($permisos)) {
                 throw new Exception('Datos de permisos inválidos.');
             }
-            // Llamar al modelo para actualizar los permisos
-            $resultado = $this->modelo->actualizarPermisosRol($idRol, $permisos);
+            $resultado = $this->modelo->guardarPermisos($idRol, $permisos);
             echo json_encode([
                 'success' => $resultado,
                 'msg' => $resultado ? 'Permisos actualizados correctamente.' : 'Error al actualizar los permisos.'
@@ -221,11 +217,6 @@ class RolesControlador
             echo json_encode(['success' => false, 'msg' => 'Error: ' . $e->getMessage()]);
         }
     }
-
-    // fin Crear un nuevo rol
-
-
-
 }
 
 
