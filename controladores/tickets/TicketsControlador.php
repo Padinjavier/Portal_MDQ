@@ -101,14 +101,11 @@ class TicketsControlador
     {
         try {
             $datos = [
-                'NombresUsuario' => $_POST['NombresTicket'] ?? null,
-                'ApellidosUsuario' => $_POST['ApellidosTicket'] ?? null,
-                'TelefonoUsuario' => $_POST['TelefonoTicket'] ?? null,
-                'DNIUsuario' => $_POST['DNITicket'] ?? null,
-                'CorreoUsuario' => $_POST['CorreoTicket'] ?? null,
-                'UsernameUsuario' => $_POST['UsernameTicket'] ?? null,
-                'PasswordUsuario' => $_POST['PasswordTicket'] ?? null, // Si es necesario
-                'RolUsuario' => $_POST['RolTicket'] ?? null
+                'IdUsuarioCreadorTicket' => $_POST['IdUsuarioCreadorTicket'] ?? null,
+                'DepartamentoTicket' => $_POST['DepartamentoTicket'] ?? null,
+                'IdProblemaTicket' => $_POST['IdProblemaTicket'] ?? null,
+                'IdSubproblemaTicket' => $_POST['IdSubproblemaTicket'] ?? null,
+                'DescripcionTicket' => $_POST['DescripcionTicket'] ?? null,
             ];
             foreach ($datos as $key => $value) {
                 if (empty($value)) {

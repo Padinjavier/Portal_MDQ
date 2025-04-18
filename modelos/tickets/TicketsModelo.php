@@ -17,16 +17,13 @@ class TicketsModelo
     public function CargarDatosTickets()
     {
         try {
-            $sql = "SELECT t.CodTicket, CONCAT(ut.NombresUsuario, ut.ApellidosUsuario) AS trabajador, 
-                    t.DepartamentoTicket,
-                    p.NombreProblema, sp.NombreSubproblema, 
-                    t.DataCreateTicket, t.DataUpdateTicket, t.StatusTicket FROM
-                    tickets t, usuarios ut,usuarios us, problemas p, subproblemas sp 
-                    WHERE t.IdUsuarioCreadorTicket = ut.IdUsuario AND    
-                    t.IdUsuarioSoporteTicket = us.IdUsuario AND
-                    t.IdProblemaTicket = p.IdProblema AND
-                    t.IdSubproblemaTicket = sp.IdSubproblema AND
-                    t.StatusTicket != :StatusTicket";
+            $sql = "SELECT t.CodTicket, CONCAT(u.NombresUsuario, ' ', u.ApellidosUsuario) AS trabajador,
+                    t.DepartamentoTicket, p.NombreProblema, sp.NombreSubproblema, t.DataCreateTicket, t.StatusTicket
+                    FROM tickets t, usuarios u, problemas p, subproblemas sp
+                    WHERE t.IdUsuarioCreadorTicket = u.IdUsuario 
+						  AND t.IdProblemaTicket = p.IdProblema
+						  AND t.IdSubproblemaTicket = sp.IdSubproblema 
+						  AND t.StatusTicket != :StatusTicket";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([':StatusTicket' => 0]);
             $Trabajadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -139,37 +136,36 @@ class TicketsModelo
 
 
 
-    // INICIO Crear un nuevo trabajador
-    public function GuardarTrabajador($datos)
-    {
-        try {
-            $error = $this->VerificarDatosUnicos($datos);
-            if ($error) {
-                throw new Exception($error);
-            }
-            $passwordHash = hash('sha256', $datos['PasswordUsuario']);
-            $sql = "INSERT INTO usuarios (NombresUsuario, ApellidosUsuario, TelefonoUsuario, DNIUsuario, CorreoUsuario, UsernameUsuario, PasswordUsuario, RolUsuario) 
-                VALUES(:NombresUsuario, :ApellidosUsuario, :TelefonoUsuario, :DNIUsuario, :CorreoUsuario, :UsernameUsuario, :PasswordUsuario, :RolUsuario)";
-            $stmt = $this->db->prepare($sql);
-            $resultado = $stmt->execute([
-                ':NombresUsuario' => $datos['NombresUsuario'],
-                ':ApellidosUsuario' => $datos['ApellidosUsuario'],
-                ':TelefonoUsuario' => $datos['TelefonoUsuario'],
-                ':DNIUsuario' => $datos['DNIUsuario'],
-                ':CorreoUsuario' => $datos['CorreoUsuario'],
-                ':UsernameUsuario' => $datos['UsernameUsuario'],
-                ':PasswordUsuario' => $passwordHash,
-                ':RolUsuario' => $datos['RolUsuario']
-            ]);
-            if (!$resultado) {
-                throw new Exception("No se pudo crear el trabajador.");
-            }
-            return true;
-        } catch (Exception $e) {
-            throw new Exception( $e->getMessage());
+// INICIO FUNCION GuardarTicket - Inserta un nuevo ticket generando el CodTicket antes del insert.
+public function GuardarTicket($datos)
+{
+    try {
+        $sqlUltimoId = "SELECT MAX(IdTicket) AS UltimoId FROM tickets";
+        $stmtMax = $this->db->prepare($sqlUltimoId);
+        $stmtMax->execute();
+        $resultadoMax = $stmtMax->fetch(PDO::FETCH_ASSOC);
+        $nuevoId = isset($resultadoMax['UltimoId']) ? (int)$resultadoMax['UltimoId'] + 1 : 1;
+        $codTicket = "C_" . $nuevoId;
+        $sql = "INSERT INTO tickets (CodTicket, IdUsuarioCreadorTicket, DepartamentoTicket, IdProblemaTicket, IdSubproblemaTicket, DescripcionTicket) 
+                VALUES (:CodTicket, :IdUsuarioCreadorTicket, :DepartamentoTicket, :IdProblemaTicket, :IdSubproblemaTicket, :DescripcionTicket)";
+        $stmt = $this->db->prepare($sql);
+        $resultado = $stmt->execute([
+            ':CodTicket'              => $codTicket,
+            ':IdUsuarioCreadorTicket' => $datos['IdUsuarioCreadorTicket'],
+            ':DepartamentoTicket'     => $datos['DepartamentoTicket'],
+            ':IdProblemaTicket'       => $datos['IdProblemaTicket'],
+            ':IdSubproblemaTicket'    => $datos['IdSubproblemaTicket'],
+            ':DescripcionTicket'=> $datos['DescripcionTicket']
+        ]);
+        if (!$resultado) {
+            throw new Exception("No se pudo crear el ticket.");
         }
+        return true;
+    } catch (Exception $e) {
+        throw new Exception($e->getMessage());
     }
-    // FIN Crear un nuevo trabajador
+}
+// FIN FUNCION GuardarTicket - Inserta un nuevo ticket generando el CodTicket antes del insert.
 
 
 

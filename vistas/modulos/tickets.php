@@ -134,8 +134,8 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="editor">Descripción</label>
-                            <textarea id="editor" name="descripcion" class="form-control summernote" ></textarea>
+                            <label for="DescripcionTicket">Descripción</label>
+                            <textarea id="DescripcionTicket" name="DescripcionTicket" class="form-control summernote" ></textarea>
                         </div>
 
                     </div>

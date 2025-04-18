@@ -65,7 +65,7 @@ $(document).ready(function () {
 
 // Descripción summernote 
 $(document).ready(function() {
-    $('#editor').summernote({
+    $('#DescripcionTicket').summernote({
         placeholder: 'Escribe aquí tu texto...',
         height: 150,
     });
@@ -289,6 +289,7 @@ function SelectNombre() {
 function GuardarTicket() {
     const formData = new FormData(document.getElementById('FormularioTicket'));
     const accion = document.getElementById('IdTicket').value ? 'EditarTicket' : 'GuardarTicket';
+    document.getElementById('IdUsuarioCreadorTicket').disabled = false;
     fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=${accion}`, {
         method: 'POST',
         body: formData
