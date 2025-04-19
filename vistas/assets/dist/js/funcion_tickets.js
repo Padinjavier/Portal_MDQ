@@ -34,15 +34,15 @@ $(document).ready(function () {
 $(document).ready(function () {
     const jsonPath = `${BASE_URL}/vistas/assets/dist/js/datos.json`;
     fetch(jsonPath)
-    .then(res => {
-        if (!res.ok) throw new Error("No se pudo cargar el archivo JSON.");
-        return res.json();
-    })
-    .then(data => {
-        const $select = $('#DepartamentoTicket');
-        $select.empty(); // Limpia opciones anteriores si las hay
-        $select.append('<option value="">Seleccione una opción</option>');
-        data.sub_areas?.forEach(area => {
+        .then(res => {
+            if (!res.ok) throw new Error("No se pudo cargar el archivo JSON.");
+            return res.json();
+        })
+        .then(data => {
+            const $select = $('#DepartamentoTicket');
+            $select.empty(); // Limpia opciones anteriores si las hay
+            $select.append('<option value="">Seleccione una opción</option>');
+            data.sub_areas?.forEach(area => {
                 area.sub_areas?.forEach(gerenciaObj => {
                     const gerencia = gerenciaObj.Gerencia;
                     if (!gerencia) return;
@@ -75,12 +75,12 @@ $(document).ready(function () {
                 icon: "error",
             });
         });
-    });
+});
 // funcion para rellenar select de departamentos
 
 
 // Descripción summernote 
-$(document).ready(function() {
+$(document).ready(function () {
     $('#DescripcionTicket').summernote({
         placeholder: 'Escribe aquí tu texto...',
         height: 150,
@@ -209,7 +209,7 @@ function SelectNombre() {
             if (!response.success) throw new Error(response.msg);
             const select = document.getElementById('IdUsuarioCreadorTicket');
             select.innerHTML = ''; // Limpiar opciones
-            if(response.data.length != 1){
+            if (response.data.length != 1) {
                 select.innerHTML = '<option value="">Seleccione un nombre</option>';
             }
             response.data.forEach(usuario => {
@@ -358,31 +358,6 @@ async function EditarTicket(id) {
     }
 }
 // fin  editar Ticket (llena el formulario ocn los datos del trabajdor)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // inicio eliminar Ticket 

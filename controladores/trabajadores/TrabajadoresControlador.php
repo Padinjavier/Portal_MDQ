@@ -135,7 +135,7 @@ class TrabajadoresControlador
                 throw new Exception('ID no proporcionado');
             }
             $trabajador = $this->modelo->EliminarTrabajador($id);
-            if ($trabajador) {
+            if (!$trabajador) {
                 throw new Exception('No se pudo eliminar el trabajador en la base de datos.');
             } else {
                 echo json_encode(['success' => true, 'msg' => 'Trabajador eliminado correctamente.']);

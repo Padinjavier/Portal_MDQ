@@ -91,7 +91,7 @@
                     <input type="hidden" id="IdTicket" name="IdTicket">
                     <div class="row">
                         <div class="col-md-6">
-                        <div class="form-group">
+                            <div class="form-group">
                                 <label for="IdUsuarioCreadorTicket">Nombre</label>
                                 <select class="form-control form-control-sm" id="IdUsuarioCreadorTicket"
                                     name="IdUsuarioCreadorTicket" required>
@@ -135,7 +135,8 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="DescripcionTicket">Descripción</label>
-                            <textarea id="DescripcionTicket" name="DescripcionTicket" class="form-control summernote" ></textarea>
+                            <textarea id="DescripcionTicket" name="DescripcionTicket"
+                                class="form-control summernote"></textarea>
                         </div>
 
                     </div>
@@ -154,7 +155,8 @@
 
 
 <!-- Inicio Modal para Ver Ticket -->
-<div class="modal fade" id="ModalViewTicket" tabindex="-1" role="dialog" aria-labelledby="ModalViewLabelTicket" aria-hidden="true">
+<div class="modal fade" id="ModalViewTicket" tabindex="-1" role="dialog" aria-labelledby="ModalViewLabelTicket"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success text-white">
@@ -189,7 +191,8 @@
                 <div class="border p-2 rounded bg-light" id="ViewDescripcionTicket" style="min-height: 60px;"></div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
+                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal"><i class="fas fa-times"></i>
+                    Cerrar</button>
             </div>
         </div>
     </div>

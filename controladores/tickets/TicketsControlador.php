@@ -36,37 +36,37 @@ class TicketsControlador
 
 
 
-     // inicio Obtener todos los roles
-     public function SelectProblemasySubproblemas()
-     {
-         try {
-             $datos = $this->modelo->SelectProblemasySubproblemas();
-             echo json_encode(['success' => true, 'data' => $datos]);
-         } catch (Exception $e) {
-             echo json_encode(['success' => false, 'msg' => 'Error al obtener datos: ' . $e->getMessage()]);
-         }
-     }
-     // fin Obtener todos los roles
+    // inicio Obtener todos los roles
+    public function SelectProblemasySubproblemas()
+    {
+        try {
+            $datos = $this->modelo->SelectProblemasySubproblemas();
+            echo json_encode(['success' => true, 'data' => $datos]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'msg' => 'Error al obtener datos: ' . $e->getMessage()]);
+        }
+    }
+    // fin Obtener todos los roles
 
 
 
 
 
-     public function SelectNombre()
-     {
-         try {
-             session_start(); // Asegúrate de que la sesión esté iniciada
-             $idUsuario = $_SESSION['Login_IdUsuario'];
-             $rolUsuario = $_SESSION['Login_RolUsuario'];
-     
-             $usuarios = $this->modelo->SelectNombre($idUsuario, $rolUsuario);
-     
-             echo json_encode(['success' => true, 'data' => $usuarios]);
-         } catch (Exception $e) {
-             echo json_encode(['success' => false, 'msg' => 'Error al obtener usuarios: ' . $e->getMessage()]);
-         }
-     }
-     
+    public function SelectNombre()
+    {
+        try {
+            session_start(); // Asegúrate de que la sesión esté iniciada
+            $idUsuario = $_SESSION['Login_IdUsuario'];
+            $rolUsuario = $_SESSION['Login_RolUsuario'];
+
+            $usuarios = $this->modelo->SelectNombre($idUsuario, $rolUsuario);
+
+            echo json_encode(['success' => true, 'data' => $usuarios]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'msg' => 'Error al obtener usuarios: ' . $e->getMessage()]);
+        }
+    }
+
 
 
 
@@ -129,46 +129,23 @@ class TicketsControlador
             }
             $datos = [
                 'IdUsuarioCreadorTicket' => $_POST['IdUsuarioCreadorTicket'] ?? null,
-                'DepartamentoTicket'     => $_POST['DepartamentoTicket'] ?? null,
-                'IdProblemaTicket'       => $_POST['IdProblemaTicket'] ?? null,
-                'IdSubproblemaTicket'    => $_POST['IdSubproblemaTicket'] ?? null,
-                'DescripcionTicket'      => $_POST['DescripcionTicket'] ?? null,
-            ];    
+                'DepartamentoTicket' => $_POST['DepartamentoTicket'] ?? null,
+                'IdProblemaTicket' => $_POST['IdProblemaTicket'] ?? null,
+                'IdSubproblemaTicket' => $_POST['IdSubproblemaTicket'] ?? null,
+                'DescripcionTicket' => $_POST['DescripcionTicket'] ?? null,
+            ];
             foreach ($datos as $key => $value) {
                 if ($key !== 'PasswordUsuario' && empty($value)) {
                     throw new Exception("El campo $key es requerido");
                 }
             }
             $resultado = $this->modelo->EditarTicket($id, $datos);
-            echo json_encode([ 'success' => $resultado, 'msg' => $resultado ? 'Ticket editado exitosamente.' : 'Error al editar el ticket.']);
+            echo json_encode(['success' => $resultado, 'msg' => $resultado ? 'Ticket editado exitosamente.' : 'Error al editar el ticket.']);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'msg' => 'Error al editar el Ticket: <br>' . $e->getMessage()]);
         }
     }
     // FIN FUNCION Editar Ticket
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     // Eliminar un Ticket
@@ -179,7 +156,7 @@ class TicketsControlador
                 throw new Exception('ID no proporcionado');
             }
             $Ticket = $this->modelo->EliminarTicket($id);
-            if ($Ticket) {
+            if (!$Ticket) {
                 throw new Exception('No se pudo eliminar el Ticket en la base de datos.');
             } else {
                 echo json_encode(['success' => true, 'msg' => 'Ticket eliminado correctamente.']);
@@ -192,39 +169,9 @@ class TicketsControlador
 
 
 
-
-
-
-
-
-
-
-
-    
-
-
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 
-
-
-
-
-// Ejecutar la acción correspondiente
 // Ejecutar la acción correspondiente
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     $controlador = new TicketsControlador();
