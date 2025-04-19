@@ -13,26 +13,40 @@ class TicketsModelo
 
 
 
-    // INICIO FUNCION CargarDatosTickets
-    public function CargarDatosTickets()
-    {
-        try {
-            $sql = "SELECT t.CodTicket, CONCAT(u.NombresUsuario, ' ', u.ApellidosUsuario) AS trabajador,
-                    t.DepartamentoTicket, p.NombreProblema, sp.NombreSubproblema, t.DataCreateTicket, t.StatusTicket
-                    FROM tickets t, usuarios u, problemas p, subproblemas sp
-                    WHERE t.IdUsuarioCreadorTicket = u.IdUsuario 
-						  AND t.IdProblemaTicket = p.IdProblema
-						  AND t.IdSubproblemaTicket = sp.IdSubproblema 
-						  AND t.StatusTicket != :StatusTicket";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute([':StatusTicket' => 0]);
-            $Trabajadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $Trabajadores;
-        } catch (PDOException $e) {
-            throw new Exception($e->getMessage());
-        }
+// INICIO FUNCION CargarDatosTickets
+public function CargarDatosTickets()
+{
+    session_start();
+    $isAdmin = $_SESSION['Login_RolUsuario'] == 1;
+    $params = [':StatusTicket' => 0];
+    $sql = "SELECT 
+                t.IdTicket, 
+                t.CodTicket, 
+                CONCAT(u.NombresUsuario, ' ', u.ApellidosUsuario) AS trabajador,
+                t.DepartamentoTicket, 
+                p.NombreProblema, 
+                sp.NombreSubproblema, 
+                t.DataCreateTicket, 
+                t.StatusTicket
+            FROM tickets t
+            INNER JOIN usuarios u ON t.IdUsuarioCreadorTicket = u.IdUsuario
+            INNER JOIN problemas p ON t.IdProblemaTicket = p.IdProblema
+            INNER JOIN subproblemas sp ON t.IdSubproblemaTicket = sp.IdSubproblema
+            WHERE t.StatusTicket != :StatusTicket";
+    if (!$isAdmin) {
+        $sql .= " AND t.IdUsuarioCreadorTicket = :IdUsuarioCreadorTicket";
+        $params[':IdUsuarioCreadorTicket'] = $_SESSION['Login_IdUsuario'];
     }
-    // FIN FUNCION CargarDatosTickets
+    try {
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        throw new Exception("Error al cargar tickets: " . $e->getMessage());
+    }
+}
+// FIN FUNCION CargarDatosTickets
+
 
 
 
@@ -87,55 +101,6 @@ class TicketsModelo
         }
     }
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // INICIO FUNCION GuardarTicket - Inserta un nuevo ticket generando el CodTicket antes del insert.
 public function GuardarTicket($datos)
 {
@@ -145,7 +110,7 @@ public function GuardarTicket($datos)
         $stmtMax->execute();
         $resultadoMax = $stmtMax->fetch(PDO::FETCH_ASSOC);
         $nuevoId = isset($resultadoMax['UltimoId']) ? (int)$resultadoMax['UltimoId'] + 1 : 1;
-        $codTicket = "C_" . $nuevoId;
+        $codTicket = "TK_" . $nuevoId;
         $sql = "INSERT INTO tickets (CodTicket, IdUsuarioCreadorTicket, DepartamentoTicket, IdProblemaTicket, IdSubproblemaTicket, DescripcionTicket) 
                 VALUES (:CodTicket, :IdUsuarioCreadorTicket, :DepartamentoTicket, :IdProblemaTicket, :IdSubproblemaTicket, :DescripcionTicket)";
         $stmt = $this->db->prepare($sql);
@@ -168,84 +133,99 @@ public function GuardarTicket($datos)
 // FIN FUNCION GuardarTicket - Inserta un nuevo ticket generando el CodTicket antes del insert.
 
 
-
-
-
-    // INICIO FUNCION BuscarTrabajador 
-    public function BuscarTrabajador($IdTrabajador)
+    // INICIO FUNCION BuscarTicket 
+    public function BuscarTicket($IdTicket)
     {
         try {
-            $sql = "SELECT * FROM usuarios WHERE IdUsuario = :IdUsuario";
+            $sql = "SELECT t.IdTicket, t.CodTicket, t.IdUsuarioCreadorTicket,
+                    CONCAT(ut.NombresUsuario, ' ', ut.ApellidosUsuario) AS Trabajador,
+                    t.DepartamentoTicket,
+                    t.IdProblemaTicket,
+                    t.IdSubproblemaTicket,
+                    p.NombreProblema,
+                    sp.NombreSubproblema,
+                    t.DescripcionTicket,
+                    CONCAT(us.NombresUsuario, ' ', us.ApellidosUsuario) AS Soporte,
+                    t.DataCreateTicket,
+                    t.DataUpdateTicket,
+                    t.StatusTicket
+                FROM tickets t
+                INNER JOIN usuarios ut ON t.IdUsuarioCreadorTicket = ut.IdUsuario
+                LEFT JOIN usuarios us ON t.IdUsuarioSoporteTicket = us.IdUsuario
+                INNER JOIN problemas p ON t.IdProblemaTicket = p.IdProblema
+                INNER JOIN subproblemas sp ON t.IdSubproblemaTicket = sp.IdSubproblema
+                WHERE t.StatusTicket != :StatusTicket
+                AND t.IdTicket = :IdTicket;
+                ";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute(['IdUsuario' => $IdTrabajador]);
+            $stmt->execute(['StatusTicket' => 0,'IdTicket' => $IdTicket]);
             $Trabajadores = $stmt->fetch(PDO::FETCH_ASSOC);
             return $Trabajadores;
         } catch (PDOException $e) {
             throw new Exception( $e->getMessage());
         }
     }
-    // FIN FUNCION BuscarTrabajador 
+    // FIN FUNCION BuscarTicket 
 
+// INICIO FUNCION EditarTicket - Actualiza los datos de un ticket existente
+public function EditarTicket($IdTicket, $datos)
+{
+    try {
+        $sql = "UPDATE tickets 
+                SET IdUsuarioCreadorTicket = :IdUsuarioCreadorTicket,
+                    DepartamentoTicket = :DepartamentoTicket,
+                    IdProblemaTicket = :IdProblemaTicket,
+                    IdSubproblemaTicket = :IdSubproblemaTicket,
+                    DescripcionTicket = :DescripcionTicket,
+                    DataUpdateTicket = NOW()
+                WHERE IdTicket = :IdTicket";
 
+        $params = [
+            ':IdUsuarioCreadorTicket' => $datos['IdUsuarioCreadorTicket'],
+            ':DepartamentoTicket'     => $datos['DepartamentoTicket'],
+            ':IdProblemaTicket'       => $datos['IdProblemaTicket'],
+            ':IdSubproblemaTicket'    => $datos['IdSubproblemaTicket'],
+            ':DescripcionTicket'      => $datos['DescripcionTicket'],
+            ':IdTicket'               => $IdTicket
+        ];
+        $stmt = $this->db->prepare($sql);
+        $resultado = $stmt->execute($params);
 
-
-
-    // inicio editar un nuevo trabajador
-    public function EditarTrabajador($IdTrabajador, $datos)
-    {
-        try {
-            $error = $this->VerificarDatosUnicos($datos, $IdTrabajador);
-            if ($error) {
-                throw new Exception($error);
-            }
-            if (!empty($datos['PasswordUsuario'])) {
-                $sql = "UPDATE usuarios SET NombresUsuario = :NombresUsuario, ApellidosUsuario = :ApellidosUsuario, TelefonoUsuario = :TelefonoUsuario, DNIUsuario = :DNIUsuario, 
-                                            CorreoUsuario = :CorreoUsuario, UsernameUsuario = :UsernameUsuario, PasswordUsuario = :PasswordUsuario, RolUsuario = :RolUsuario
-                        WHERE IdUsuario = :IdUsuario";
-                $params = [
-                    ':NombresUsuario' => $datos['NombresUsuario'],
-                    ':ApellidosUsuario' => $datos['ApellidosUsuario'],
-                    ':TelefonoUsuario' => $datos['TelefonoUsuario'],
-                    ':DNIUsuario' => $datos['DNIUsuario'],
-                    ':CorreoUsuario' => $datos['CorreoUsuario'],
-                    ':UsernameUsuario' => $datos['UsernameUsuario'],
-                    ':PasswordUsuario' => hash('sha256', $datos['PasswordUsuario']),
-                    ':RolUsuario' => $datos['RolUsuario'],
-                    ':IdUsuario' => $IdTrabajador
-                ];
-            } else {
-                $sql = "UPDATE usuarios SET NombresUsuario = :NombresUsuario, ApellidosUsuario = :ApellidosUsuario, TelefonoUsuario = :TelefonoUsuario, DNIUsuario = :DNIUsuario,
-                                            CorreoUsuario = :CorreoUsuario, UsernameUsuario = :UsernameUsuario, RolUsuario = :RolUsuario
-                        WHERE IdUsuario = :IdUsuario";
-                $params = [
-                    ':NombresUsuario' => $datos['NombresUsuario'],
-                    ':ApellidosUsuario' => $datos['ApellidosUsuario'],
-                    ':TelefonoUsuario' => $datos['TelefonoUsuario'],
-                    ':DNIUsuario' => $datos['DNIUsuario'],
-                    ':CorreoUsuario' => $datos['CorreoUsuario'],
-                    ':UsernameUsuario' => $datos['UsernameUsuario'],
-                    ':RolUsuario' => $datos['RolUsuario'],
-                    ':IdUsuario' => $IdTrabajador
-                ];
-            }
-            $stmt = $this->db->prepare($sql);
-            $resultado = $stmt->execute($params);
-            if (!$resultado) {
-                throw new Exception("No se pudo actualizar el trabajador.");
-            }
-            return true;
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+        if (!$resultado) {
+            throw new Exception("No se pudo actualizar el ticket.");
         }
+        return true;
+    } catch (Exception $e) {
+        throw new Exception($e->getMessage());
     }
-    // fin editar un trabajador
+}
+// FIN FUNCION EditarTicket
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
     // INICIO ELIMINAR (DESACTIVAR) UN TRABAJADOR (CAMBIAR STATUSUSUARIO A 0)
-    public function EliminarTrabajador($IdTrabajador)
+    public function EliminarTicket($IdTrabajador)
     {
         try {
             if (empty($IdTrabajador)) {
@@ -264,101 +244,6 @@ public function GuardarTicket($datos)
     }
     // FIN ELIMINAR (DESACTIVAR) UN TRABAJADOR
 
-
-
-
-
-    // INICIO DE FUNCION VERIFICAR DATOS UNICOS  
-    public function VerificarDatosUnicos($datos, $IdTrabajador = null)
-    {
-        try {
-            $campos = [
-                'CorreoUsuario' => "El correo ya está registrado.",
-                'DNIUsuario' => "El DNI ya está registrado.",
-                'TelefonoUsuario' => "El teléfono ya está registrado.",
-                'UsernameUsuario' => "El nombre de usuario ya está registrado."
-            ];
-            foreach ($campos as $campo => $mensaje) {
-                $sql = "SELECT COUNT(*) as count FROM usuarios WHERE $campo = :valor";
-                if ($IdTrabajador !== null) {
-                    $sql .= " AND IdUsuario != :IdUsuario";
-                }
-                $stmt = $this->db->prepare($sql);
-                $params = [':valor' => $datos[$campo]];
-                if ($IdTrabajador !== null) {
-                    $params[':IdUsuario'] = $IdTrabajador;
-                }
-                $stmt->execute($params);
-                $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-                if ($resultado && $resultado['count'] > 0) {
-                    return $mensaje;
-                }
-            }
-            return false;
-        } catch (PDOException $e) {
-            throw new Exception($e->getMessage());
-        }
-    }
-    // FIN DE FUNCION VERIFICAR DATOS UNICOS  
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-    // INICIO FUNCION: Guarda la configuración de roles para el módulo, insertando nuevos registros o actualizando los existentes.
-    public function GuardarConfiguracion($roles)
-    {
-        try {
-            $sqlInsert = "INSERT INTO modulo_roles (IdModulo, IdRol) VALUES (IdModulo, :IdRol) 
-                          ON DUPLICATE KEY UPDATE IdRol = VALUES(IdRol)";
-            $stmtInsert = $this->db->prepare($sqlInsert);
-            foreach ($roles as $idRol) {
-                $stmtInsert->execute([':IdRol' => $idRol, ':IdModulo' => 2]);
-            }
-            return true;
-        } catch (Exception $e) {
-            throw new Exception("Error al guardar la configuración: " . $e->getMessage());
-        }
-    }
-    // FIN FUNCION: Guarda la configuración de roles para el módulo, insertando nuevos registros o actualizando los existentes.
-
-
-
-
-
-    // INICIO FUNCION: Elimina relaciones entre módulos y roles (IdModulo fijo = 2)
-    public function eliminarRelacionModuloRolMODELO(array $roles): bool
-    {
-        try {
-            $sqlDelete = "DELETE FROM modulo_roles WHERE IdModulo = :IdModulo AND IdRol = :IdRol";
-            $stmtDelete = $this->db->prepare($sqlDelete);
-            foreach ($roles as $idRol) {
-                $stmtDelete->execute([
-                    ':IdModulo' => 2,  // Valor fijo pasado como parámetro nombrado
-                    ':IdRol' => $idRol // Variable referenciada con nombre consistente
-                ]);
-            }
-            if ($stmtDelete->rowCount() > 0) {
-                return true; // Se eliminaron registros
-            } else {
-                return false; // No se eliminaron registros
-            }
-        } catch (PDOException $e) {
-            throw new Exception("Error al eliminar la relación: " . $e->getMessage());
-        }
-    }
-    // FIN FUNCION: Elimina relaciones entre módulos y roles (IdModulo fijo = 2)
 
 
 

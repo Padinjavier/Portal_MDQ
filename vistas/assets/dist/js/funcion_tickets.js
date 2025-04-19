@@ -30,38 +30,54 @@ $(document).ready(function () {
 // FIN FUNCIONAMIENTO DE TABLA Tickets
 
 
+// funcion para rellenar select de departamentos
 $(document).ready(function () {
     const jsonPath = `${BASE_URL}/vistas/assets/dist/js/datos.json`;
     fetch(jsonPath)
-        .then(res => res.json())
-        .then(data => {
-            const $select = $('#DepartamentoTicket');
-            data.sub_areas.forEach(area => {
-                if (!area.sub_areas) return;
-                area.sub_areas.forEach(gerenciaObj => {
+    .then(res => {
+        if (!res.ok) throw new Error("No se pudo cargar el archivo JSON.");
+        return res.json();
+    })
+    .then(data => {
+        const $select = $('#DepartamentoTicket');
+        $select.empty(); // Limpia opciones anteriores si las hay
+        $select.append('<option value="">Seleccione una opción</option>');
+        data.sub_areas?.forEach(area => {
+                area.sub_areas?.forEach(gerenciaObj => {
                     const gerencia = gerenciaObj.Gerencia;
                     if (!gerencia) return;
-                    $select.append(`<option style="color:rgb(0, 0, 0); font-weight: bold;" value="${gerencia}">${gerencia}</option>`);
-                    if (gerenciaObj.sub_areas) {
-                        gerenciaObj.sub_areas.forEach(nivel => {
-                            const tipo = Object.keys(nivel)[0];
-                            const nombre = nivel[tipo];
-                            if (tipo === "Subgerencia") {
-                                $select.append(`<option style="color:rgb(0, 0, 0);"  value="${nombre} > ${gerencia}">${nombre}</option>`);
-                            } else if (tipo === "Unidad") {
-                                $select.append(`<option style="color: rgb(0, 0, 0); font-style: italic;" value="${nombre} > ${gerencia}">${nombre}</option>`);
-                            }
-                        });
-                    }
+                    // Gerencia (negrita)
+                    $select.append(`<option style="font-weight:bold; color:#000;" value="${gerencia}">${gerencia}</option>`);
+                    gerenciaObj.sub_areas?.forEach(nivel => {
+                        const tipo = Object.keys(nivel)[0];
+                        const nombre = nivel[tipo];
+                        // Subgerencia (normal)
+                        if (tipo === "Subgerencia") {
+                            $select.append(`<option style="padding-left:10px; color:#000;" value="${nombre}">${nombre}</option>`);
+                        }
+                        // Unidad (itálica)
+                        if (tipo === "Unidad") {
+                            $select.append(`<option style="padding-left:20px; font-style:italic; color:#000;" value="${nombre}">${nombre}</option>`);
+                        }
+                    });
                 });
             });
-            $select.attr("size", 1); // mostrar como dropdown normal
+            $select.attr("size", 1);
             $select.on("change", function () {
-                $(this).blur(); // oculta menú al elegir
+                $(this).blur(); // Oculta lista tras seleccionar
             });
         })
-        .catch(err => console.error("Error al cargar JSON:", err));
-});
+        .catch(err => {
+            console.error("Error al cargar JSON:", err);
+            Swal.fire({
+                title: "Error",
+                text: "No se pudo cargar la lista de departamentos.",
+                icon: "error",
+            });
+        });
+    });
+// funcion para rellenar select de departamentos
+
 
 // Descripción summernote 
 $(document).ready(function() {
@@ -75,63 +91,42 @@ $(document).ready(function() {
 
 // INICIO COMPLETAR TABLE Tickets 
 window.CargarDatosTickets = function () {
-    fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=CargarDatosTickets`, { method: 'GET' })
-        .then(response => response.text())
-        .then(text => {
-            try {
-                const data = JSON.parse(text);
-                if (!data.success) throw data.msg || "Error en el servidor";
-                const table = $('#TablaTickets').DataTable();
-                table.clear();
-                data.data?.forEach(Ticket => {
-                    let statusLabel = '';
-                    switch (parseInt(Ticket.StatusTicket)) {
-                        case 1:
-                            statusLabel = '<span class="badge badge-primary">Abierto</span>';
-                            break;
-                        case 2:
-                            statusLabel = '<span class="badge badge-info">En Atención</span>';
-                            break;
-                        case 3:
-                            statusLabel = '<span class="badge badge-success">Resuelto</span>';
-                            break;
-                        case 4:
-                            statusLabel = '<span class="badge badge-warning">Reabierto</span>';
-                            break;
-                        case 5:
-                            statusLabel = '<span class="badge badge-dark">Cerrado</span>';
-                            break;
-                        default:
-                            statusLabel = '<span class="badge badge-danger">Eliminado</span>';
-                    }
-                    table.row.add([
-                        Ticket.CodTicket,
-                        Ticket.trabajador,
-                        Ticket.DepartamentoTicket,
-                        Ticket.NombreProblema,
-                        Ticket.NombreSubproblema,
-                        Ticket.DataCreateTicket,
-                        statusLabel,
-                        `<div class="dropdown">
+    fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=CargarDatosTickets`)
+        .then(res => res.json())
+        .then(({ success, data, msg }) => {
+            if (!success) {
+                return Swal.fire({
+                    title: "Error",
+                    html: msg || "Error en el servidor",
+                    icon: "error",
+                });
+            }
+            const table = $('#TablaTickets').DataTable();
+            table.clear();
+            data?.forEach(Ticket => {
+                const statusLabel = getStatusBadge(parseInt(Ticket.StatusTicket));
+                table.row.add([
+                    Ticket.CodTicket,
+                    Ticket.trabajador,
+                    Ticket.DepartamentoTicket,
+                    Ticket.NombreProblema,
+                    Ticket.NombreSubproblema,
+                    Ticket.DataCreateTicket,
+                    statusLabel,
+                    `<div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown"><i class="fas fa-cog"></i> Opciones</button>
                         <div class="dropdown-menu">
                             <button class="btn dropdown-item text-success bg-transparent" onclick="VerTicket(${Ticket.IdTicket})"><i class="fas fa-eye"></i> Ver</button>
-                            <button class="btn dropdown-item text-warning  bg-transparent" onclick="EditarTicket(${Ticket.IdTicket})"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="btn dropdown-item text-info bg-transparent" onclick="AtenderTicket(${Ticket.IdTicket})"><i class="bi bi-journal-check"></i> Atender</button>
+                            <button class="btn dropdown-item text-warning bg-transparent" onclick="EditarTicket(${Ticket.IdTicket})"><i class="fas fa-edit"></i> Editar</button>
                             <button class="btn dropdown-item text-danger bg-transparent" onclick="EliminarTicket(${Ticket.IdTicket})"><i class="fas fa-trash"></i> Eliminar</button>
                         </div>
                     </div>`
-                    ]).draw(false);
-                });
-            } catch {
-                throw text; // Si no es JSON válido, lanzamos el HTML
-            }
-        })
-        .catch(error => Swal.fire({
-            title: "Error",
-            html: typeof error === 'string' ? error : "Error desconocido",
-            icon: "error",
-        }));
+                ]).draw(false);
+            });
+        });
 };
+
 // FIN COMPLETAR TABLE Tickets
 
 
@@ -214,9 +209,7 @@ function SelectNombre() {
             if (!response.success) throw new Error(response.msg);
             const select = document.getElementById('IdUsuarioCreadorTicket');
             select.innerHTML = ''; // Limpiar opciones
-            if(response.data.length ==1){
-                select.disabled = true;
-            }else{
+            if(response.data.length != 1){
                 select.innerHTML = '<option value="">Seleccione un nombre</option>';
             }
             response.data.forEach(usuario => {
@@ -234,54 +227,6 @@ function SelectNombre() {
             });
         });
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -319,42 +264,51 @@ function GuardarTicket() {
 // inicio guardar Ticket
 
 
+function getStatusBadge(status) {
+    const labelMap = {
+        1: ['primary', 'Abierto'],
+        2: ['info', 'En Atención'],
+        3: ['success', 'Resuelto'],
+        4: ['warning', 'Reabierto'],
+        5: ['dark', 'Cerrado'],
+        6: ['secondary', 'Desestimado']
+    };
+    const [color, label] = labelMap[status] || ['danger', 'Eliminado'];
+    return `<span class="badge badge-${color}">${label}</span>`;
+}
 
 
 
 // INICIO VER Ticket
 function VerTicket(id) {
-    fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=BuscarTicket&id=${id}`, { method: 'GET' })
-        .then(response => response.text())
-        .then(text => {
-            try {
-                const data = JSON.parse(text);
-                if (!data.success) throw data.msg || "Error en el servidor";
-                const Ticket = data.data;
-                document.getElementById('ViewNombresTicket').textContent = Ticket.NombresUsuario;
-                document.getElementById('ViewApellidosTicket').textContent = Ticket.ApellidosUsuario;
-                document.getElementById('ViewDNITicket').textContent = Ticket.DNIUsuario;
-                document.getElementById('ViewTelefonoTicket').textContent = Ticket.TelefonoUsuario;
-                document.getElementById('ViewCorreoTicket').textContent = Ticket.CorreoUsuario;
-                document.getElementById('ViewUsernameTicket').textContent = Ticket.UsernameUsuario;
-                $('#ModalViewTicket').modal('show');
-            } catch {
-                throw text; // Si no es JSON válido, lanzamos el HTML
+    fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=BuscarTicket&id=${id}`)
+        .then(res => res.json())
+        .then(({ success, data, msg }) => {
+            if (!success) {
+                return Swal.fire({
+                    title: "Error",
+                    html: msg || "Error en el servidor",
+                    icon: "error",
+                });
             }
-        })
-        .catch(error => Swal.fire({
-            title: "Error",
-            html: typeof error === 'string' ? error : "Error desconocido",
-            icon: "error",
-        }));
+            const Ticket = data;
+            const set = (id, val, html = false) => {
+                document.getElementById(id)[html ? 'innerHTML' : 'textContent'] = val ?? 'No asignado';
+            };
+            set('ViewCodigoTicket', Ticket.CodTicket);
+            set('ViewTrabajadorTicket', Ticket.Trabajador);
+            set('ViewDepartamentoTicket', Ticket.DepartamentoTicket);
+            set('ViewProblemaTicket', Ticket.NombreProblema);
+            set('ViewSubproblemaTicket', Ticket.NombreSubproblema);
+            set('ViewSoporteTicket', Ticket.soporte || 'No asignado');
+            set('ViewDataCreateTicket', Ticket.DataCreateTicket);
+            set('ViewDataUpdateTicket', Ticket.DataUpdateTicket);
+            set('ViewDescripcionTicket', Ticket.DescripcionTicket, true);
+            set('ViewStatusTicket', getStatusBadge(Ticket.StatusTicket), true);
+            $('#ModalViewTicket').modal('show');
+        });
 }
 // FIN VER Ticket
-
-
-
-
-
-
 
 
 
@@ -372,16 +326,27 @@ async function EditarTicket(id) {
         }
         if (!result.success) throw new Error(result.msg || "Error en el servidor");
         document.getElementById('FormularioTicket').reset();
-        await cargarRolesSelect();
         const Ticket = result.data;
-        document.getElementById('IdTicket').value = Ticket.IdUsuario;
-        document.getElementById('NombresTicket').value = Ticket.NombresUsuario;
-        document.getElementById('ApellidosTicket').value = Ticket.ApellidosUsuario;
-        document.getElementById('DNITicket').value = Ticket.DNIUsuario;
-        document.getElementById('TelefonoTicket').value = Ticket.TelefonoUsuario;
-        document.getElementById('CorreoTicket').value = Ticket.CorreoUsuario;
-        document.getElementById('UsernameTicket').value = Ticket.UsernameUsuario;
-        document.getElementById('RolTicket').value = Ticket.RolUsuario;
+        document.getElementById('IdTicket').value = Ticket.IdTicket;
+        document.getElementById('IdUsuarioCreadorTicket').value = Ticket.IdUsuarioCreadorTicket;
+        document.getElementById('DepartamentoTicket').value = Ticket.DepartamentoTicket;
+        document.getElementById('IdProblemaTicket').value = Ticket.IdProblemaTicket;
+        // Simular el cambio del select de Problemas
+        const selectProblema = document.getElementById('IdProblemaTicket');
+        const selectSubproblema = document.getElementById('IdSubproblemaTicket');
+        // Cargar subproblemas antes de asignar el subproblema seleccionado
+        const subproblemas = subproblemasMap[Ticket.IdProblemaTicket]?.subproblemas || [];
+        selectSubproblema.innerHTML = '<option value="">Seleccione un Subproblema</option>';
+        subproblemas.forEach(sp => {
+            const option = document.createElement('option');
+            option.value = sp.id;
+            option.textContent = sp.nombre;
+            selectSubproblema.appendChild(option);
+        });
+        // Ahora sí asignar el subproblema
+        document.getElementById('IdSubproblemaTicket').value = Ticket.IdSubproblemaTicket;
+        $('#DescripcionTicket').summernote('code', Ticket.DescripcionTicket);
+        console.log(Ticket.DescripcionTicket)
         document.getElementById('ModalFormLabelTicket').innerText = 'Editar Ticket';
         $('#ModalFormTicket').modal('show');
     } catch (error) {
@@ -393,6 +358,28 @@ async function EditarTicket(id) {
     }
 }
 // fin  editar Ticket (llena el formulario ocn los datos del trabajdor)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -440,47 +427,6 @@ function EliminarTicket(id) {
 
 
 
-
-// inicio Función para cargar los roles desde el servidor
-let estadoInicialRoles = {}; // Guarda el estado inicial de los roles
-function CargarRoles() {
-    fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=CargarRoles`, { method: 'GET' })
-        .then(response => response.json())
-        .then(({ success, data, msg }) => {
-            if (!success) throw new Error(msg || 'Error al cargar los roles');
-            const rolesList = document.getElementById('ListaRoles');
-            rolesList.innerHTML = ''; // Limpiar lista previa
-            estadoInicialRoles = {}; // Resetear el estado inicial
-            data.forEach(({ IdRol, NombreRol, NombreModulo }) => {
-                const asignadoATickets = NombreModulo === "Tickets";
-                const noAsignado = NombreModulo === "No asignado";
-                const asignadoAOtroModulo = !noAsignado && !asignadoATickets;
-                const checked = asignadoATickets || asignadoAOtroModulo;
-                const disabled = asignadoAOtroModulo;
-                estadoInicialRoles[IdRol] = checked; // Guardar el estado original
-                const div = document.createElement('div');
-                div.className = 'form-check';
-                div.innerHTML = `
-                    <input class="form-check-input" type="checkbox" value="${IdRol}" id="rol-${IdRol}" 
-                        ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}>
-                    <label class="form-check-label" for="rol-${IdRol}" data-bs-toggle="tooltip" title="Asignado a ${NombreModulo}">
-                        ${NombreRol}
-                    </label>
-                `;
-                // Prevenir que el clic en el checkbox o label cierre el menú
-                div.querySelector('input').addEventListener('click', e => e.stopPropagation());
-                div.querySelector('label').addEventListener('click', e => e.stopPropagation());
-
-                rolesList.appendChild(div);
-            });
-            document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
-        })
-        .catch(error => {
-            console.error('Error al cargar roles:', error);
-            Swal.fire("Error", "No se pudieron cargar los roles.", "error");
-        });
-}
-// fin Función para cargar los roles desde el servidor
 
 
 

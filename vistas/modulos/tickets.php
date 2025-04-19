@@ -51,7 +51,7 @@
                             <thead class="bg-success">
                                 <tr>
                                     <th class="font-weight-bold">Codigo</th>
-                                    <th class="font-weight-bold">Ticket</th>
+                                    <th class="font-weight-bold">Nombre</th>
                                     <th class="font-weight-bold">Departamento</th>
                                     <th class="font-weight-bold">Problema</th>
                                     <th class="font-weight-bold">Subproblema</th>
@@ -60,7 +60,7 @@
                                     <th class="font-weight-bold">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody style="font-size: 13px;">
                                 <!-- se agregan los datos automaticamente con js   -->
                             </tbody>
                         </table>
@@ -104,7 +104,7 @@
                                 <label for="DepartamentoTicket">Departamento</label>
                                 <select class="form-control form-control-sm" id="DepartamentoTicket"
                                     name="DepartamentoTicket" required>
-                                    <option value="">Seleccione una opción</option>
+                                    <option value="">Seleccione una Departamento</option>
                                 </select>
                             </div>
                         </div>
@@ -152,33 +152,44 @@
 
 
 
-<!-- Inicio Modal para Ver Ticket modalVistaTicket-->
-<div class="modal fade" id="ModalViewTicket" tabindex="-1" role="dialog" aria-labelledby="ModalViewLabelTicket"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+
+<!-- Inicio Modal para Ver Ticket -->
+<div class="modal fade" id="ModalViewTicket" tabindex="-1" role="dialog" aria-labelledby="ModalViewLabelTicket" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-success">
-                <h5 class="modal-title" id="ModalViewLabelTicket">Ver Ticket</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="ModalViewLabelTicket"><i class="fas fa-ticket-alt"></i> Ver Ticket</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Nombres:</strong> <span id="ViewNombresTicket"></span></p>
-                        <p><strong>DNI:</strong> <span id="ViewDNITicket"></span></p>
-                        <p><strong>Correo:</strong> <span id="ViewCorreoTicket"></span></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Apellidos:</strong> <span id="ViewApellidosTicket"></span></p>
-                        <p><strong>Teléfono:</strong> <span id="ViewTelefonoTicket"></span></p>
-                        <p><strong>Usuario:</strong> <span id="ViewUsernameTicket"></span></p>
-                    </div>
-                </div>
+            <div class="modal-body px-4">
+                <dl class="row mb-0 ">
+                    <dt class="col-sm-2">Código</dt>
+                    <dd class="col-sm-3 border rounded bg-light" id="ViewCodigoTicket"></dd>
+                    <dt class="col-sm-2">Nombre</dt>
+                    <dd class="col-sm-4 border rounded bg-light" id="ViewTrabajadorTicket"></dd>
+                    <dt class="col-sm-2">Departamento</dt>
+                    <dd class="col-sm-9 border rounded bg-light" id="ViewDepartamentoTicket"></dd>
+                    <dt class="col-sm-2">Problema</dt>
+                    <dd class="col-sm-3 border rounded bg-light" id="ViewProblemaTicket"></dd>
+                    <dt class="col-sm-2">Subproblema</dt>
+                    <dd class="col-sm-4 border rounded bg-light" id="ViewSubproblemaTicket"></dd>
+                    <dt class="col-sm-2">Creación</dt>
+                    <dd class="col-sm-3 border rounded bg-light" id="ViewDataCreateTicket"></dd>
+                    <dt class="col-sm-2">Actualización</dt>
+                    <dd class="col-sm-4 border rounded bg-light" id="ViewDataUpdateTicket"></dd>
+                    <dt class="col-sm-2">Estado</dt>
+                    <dd class="col-sm-3 border rounded bg-light" id="ViewStatusTicket"></dd>
+                    <dt class="col-sm-2">Soporte</dt>
+                    <dd class="col-sm-4 border rounded bg-light" id="ViewSoporteTicket"></dd>
+                </dl>
+                <hr>
+                <h6><strong>Comentarios</strong></h6>
+                <div class="border p-2 rounded bg-light" id="ViewDescripcionTicket" style="min-height: 60px;"></div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cerrar</button>
+                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
             </div>
         </div>
     </div>

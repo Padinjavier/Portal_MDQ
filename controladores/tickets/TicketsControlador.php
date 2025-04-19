@@ -72,30 +72,6 @@ class TicketsControlador
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // inicio Crear un nuevo Ticket
     public function GuardarTicket()
     {
@@ -144,9 +120,6 @@ class TicketsControlador
     }
     // fin Obtener un Ticket por ID
 
-
-
-
     // INICIO FUNCION Editar Ticket
     public function EditarTicket($id)
     {
@@ -155,30 +128,44 @@ class TicketsControlador
                 throw new Exception('ID no proporcionado');
             }
             $datos = [
-                'NombresUsuario' => $_POST['NombresTicket'] ?? null,
-                'ApellidosUsuario' => $_POST['ApellidosTicket'] ?? null,
-                'TelefonoUsuario' => $_POST['TelefonoTicket'] ?? null,
-                'DNIUsuario' => $_POST['DNITicket'] ?? null,
-                'CorreoUsuario' => $_POST['CorreoTicket'] ?? null,
-                'UsernameUsuario' => $_POST['UsernameTicket'] ?? null,
-                'RolUsuario' => $_POST['RolTicket'] ?? null,
-            ];
+                'IdUsuarioCreadorTicket' => $_POST['IdUsuarioCreadorTicket'] ?? null,
+                'DepartamentoTicket'     => $_POST['DepartamentoTicket'] ?? null,
+                'IdProblemaTicket'       => $_POST['IdProblemaTicket'] ?? null,
+                'IdSubproblemaTicket'    => $_POST['IdSubproblemaTicket'] ?? null,
+                'DescripcionTicket'      => $_POST['DescripcionTicket'] ?? null,
+            ];    
             foreach ($datos as $key => $value) {
                 if ($key !== 'PasswordUsuario' && empty($value)) {
                     throw new Exception("El campo $key es requerido");
                 }
             }
-            if (!empty($_POST['PasswordTicket'])) {
-                $datos['PasswordUsuario'] = $_POST['PasswordTicket'];
-            }
             $resultado = $this->modelo->EditarTicket($id, $datos);
-            $respuesta = ['success' => $resultado, 'msg' => $resultado ? 'Ticket editado exitosamente.' : 'Error al editar el Ticket.'];
-            echo json_encode($respuesta);
+            echo json_encode([ 'success' => $resultado, 'msg' => $resultado ? 'Ticket editado exitosamente.' : 'Error al editar el ticket.']);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'msg' => 'Error al editar el Ticket: <br>' . $e->getMessage()]);
         }
     }
     // FIN FUNCION Editar Ticket
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -222,43 +209,11 @@ class TicketsControlador
 
 
 
-    // inicio Guardar configuración de roles
-    public function GuardarConfiguracion()
-    {
-        try {
-            $data = json_decode(file_get_contents('php://input'), true);
-            $roles = $data['roles'] ?? [];
-            if (empty($roles)) {
-                throw new Exception("Datos incompletos para guardar la configuración.");
-            }
-            $result = $this->modelo->GuardarConfiguracion($roles);
-            echo json_encode(['success' => true, 'data' => $result]);
-        } catch (Exception $e) {
-            echo json_encode(['success' => false, 'msg' => 'Error al guardar la configuración: ' . $e->getMessage()]);
-        }
-    }
-    // fin Guardar configuración de roles
 
 
 
 
 
-    // inicio eliminar configuración de roles
-    public function eliminarRelacionModuloRol()
-    {
-        try {
-            $data = json_decode(file_get_contents('php://input'), true);
-            $roles = $data['roles'] ?? [];
-            if (!$roles) {
-                throw new Exception("Datos incompletos para eliminar la relación.");
-            }
-            $result = $this->modelo->eliminarRelacionModuloRolMODELO($roles);
-            echo json_encode(['success' => true, 'data' => $result]);
-        } catch (Exception $e) {
-            echo json_encode(['success' => false, 'msg' => 'Error al eliminar la relación: ' . $e->getMessage()]);
-        }
-    }
-    // fin eliminar configuración de roles
 
 
 
@@ -307,12 +262,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
         case 'EliminarTicket':
             $id = $input['id'] ?? null; // Leer desde el cuerpo
             $controlador->EliminarTicket($id);
-            break;
-        case 'GuardarConfiguracion':
-            $controlador->GuardarConfiguracion();
-            break;
-        case 'eliminarRelacionModuloRol':
-            $controlador->eliminarRelacionModuloRol();
             break;
         default:
             echo json_encode(['success' => false, 'msg' => 'Acción POST no válida']);

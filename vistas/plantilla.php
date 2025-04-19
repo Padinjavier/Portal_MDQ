@@ -20,28 +20,28 @@ require_once __DIR__ . '/../Config/Config.php';
     
     <!-- ⭐ Estilos básicos para la interfaz, incluyendo diseño y colores -->
     <link rel="stylesheet" href="vistas/assets/dist/css/adminlte.css">
-
+    
     <!-- ⭐ Estilos adicionales específicos de la página o sistema -->
     <link rel="stylesheet" href="vistas/assets/dist/css/index.css">
-
+    
     <!-- CSS PARA DATATABLES -->
     <!-- ⭐ Estilos necesarios para el componente DataTables (tablas interactivas) -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
-
+    
     <!-- ⭐ Librería para mostrar alertas personalizadas en la página -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    
     <!-- ⭐ Librería de JavaScript para manipulación eficiente del DOM -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- ⭐ Summernote CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.css" rel="stylesheet">
-
+    
     
     <!-- Toastify JS -->
     <!-- Librería de notificaciones emergentes que aparece en la parte superior de la pantalla -->
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
+    
     <!-- Notificaciones personalizadas -->
     <!-- Funciones adicionales para personalizar las notificaciones de Toastify -->
     <script src="<?php echo BASE_URL; ?>/vistas/assets/dist/js/toastNotifications.js"></script>
