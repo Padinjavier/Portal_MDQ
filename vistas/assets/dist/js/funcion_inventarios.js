@@ -1,13 +1,13 @@
 // C:\wamp64\www\Portal_MDQ\vistas\assets\dist\js\funcion_tickets.js
 // INICIO FUNCIONAMIENTO DE TABLA Tickets
 $(document).ready(function () {
-    const table = $('#TablaTickets').DataTable({
+    const table = $('#TablaInventarios').DataTable({
         "language": {
             "url": `${BASE_URL}/vistas/assets/dist/js/Spanish.json`
         },
         "columnDefs": [
-            { "orderable": true, "targets": [0, 1, 2, 3, 4, 5, 6] }, // Columnas ordenables
-            { "orderable": false, "targets": [7] } // Columna de acciones no ordenable
+            { "orderable": true, "targets": [0, 1, 2] }, // Columnas ordenables
+            { "orderable": false, "targets": [3] } // Columna de acciones no ordenable
         ],
         "paging": true, // Habilitar paginación
         "pageLength": 10, // Número de filas por página
@@ -23,75 +23,21 @@ $(document).ready(function () {
         "lengthMenu": [5, 10, 25, 50, 100], // Opciones de longitud de página
         "order": [[0, "desc"]],
     });
-    CargarDatosTickets();
-    SelectProblemasySubproblemas();
-    SelectNombre();
+    CargarDatosInventario();
 });
 // FIN FUNCIONAMIENTO DE TABLA Tickets
 
-
-// funcion para rellenar select de departamentos
-$(document).ready(function () {
-    const jsonPath = `${BASE_URL}/vistas/assets/dist/js/datos.json`;
-    fetch(jsonPath)
-        .then(res => {
-            if (!res.ok) throw new Error("No se pudo cargar el archivo JSON.");
-            return res.json();
-        })
-        .then(data => {
-            const $select = $('#DepartamentoTicket');
-            $select.empty(); // Limpia opciones anteriores si las hay
-            $select.append('<option value="">Seleccione una opción</option>');
-            data.sub_areas?.forEach(area => {
-                area.sub_areas?.forEach(gerenciaObj => {
-                    const gerencia = gerenciaObj.Gerencia;
-                    if (!gerencia) return;
-                    // Gerencia (negrita)
-                    $select.append(`<option style="font-weight:bold; color:#000;" value="${gerencia}">${gerencia}</option>`);
-                    gerenciaObj.sub_areas?.forEach(nivel => {
-                        const tipo = Object.keys(nivel)[0];
-                        const nombre = nivel[tipo];
-                        // Subgerencia (normal)
-                        if (tipo === "Subgerencia") {
-                            $select.append(`<option style="padding-left:10px; color:#000;" value="${nombre}">${nombre}</option>`);
-                        }
-                        // Unidad (itálica)
-                        if (tipo === "Unidad") {
-                            $select.append(`<option style="padding-left:20px; font-style:italic; color:#000;" value="${nombre}">${nombre}</option>`);
-                        }
-                    });
-                });
-            });
-            $select.attr("size", 1);
-            $select.on("change", function () {
-                $(this).blur(); // Oculta lista tras seleccionar
-            });
-        })
-        .catch(err => {
-            console.error("Error al cargar JSON:", err);
-            Swal.fire({
-                title: "Error",
-                text: "No se pudo cargar la lista de departamentos.",
-                icon: "error",
-            });
-        });
-});
-// funcion para rellenar select de departamentos
-
-
 // Descripción summernote 
 $(document).ready(function () {
-    $('#DescripcionTicket').summernote({
+    $('#DescripcionInventario').summernote({
         placeholder: 'Escribe aquí tu texto...',
-        height: 150,
+        height: 200,
     });
 });
 
-
-
-// INICIO COMPLETAR TABLE Tickets 
-window.CargarDatosTickets = function () {
-    fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=CargarDatosTickets`)
+// INICIO COMPLETAR TABLE inventarios 
+window.CargarDatosInventario = function () {
+    fetch(`${BASE_URL}/controladores/inventarios/InventariosControlador.php?action=CargarDatosInventarios`)
         .then(res => res.json())
         .then(({ success, data, msg }) => {
             if (!success) {
@@ -101,133 +47,47 @@ window.CargarDatosTickets = function () {
                     icon: "error",
                 });
             }
-            const table = $('#TablaTickets').DataTable();
+            const table = $('#TablaInventarios').DataTable();
             table.clear();
-            data?.forEach(Ticket => {
-                const statusLabel = getStatusBadge(parseInt(Ticket.StatusTicket));
+            data?.forEach(Inventario => {
                 table.row.add([
-                    Ticket.CodTicket,
-                    Ticket.trabajador,
-                    Ticket.DepartamentoTicket,
-                    Ticket.NombreProblema,
-                    Ticket.NombreSubproblema,
-                    Ticket.DataCreateTicket,
-                    statusLabel,
+                    Inventario.IdInventario,
+                    Inventario.NombreInventario,
+                    Inventario.CodigoInventario,
                     `<div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown"><i class="fas fa-cog"></i> Opciones</button>
                         <div class="dropdown-menu">
-                            <button class="btn dropdown-item text-success bg-transparent" onclick="VerTicket(${Ticket.IdTicket})"><i class="fas fa-eye"></i> Ver</button>
-                            <button class="btn dropdown-item text-info bg-transparent" onclick="AtenderTicket(${Ticket.IdTicket})"><i class="bi bi-journal-check"></i> Atender</button>
-                            <button class="btn dropdown-item text-warning bg-transparent" onclick="EditarTicket(${Ticket.IdTicket})"><i class="fas fa-edit"></i> Editar</button>
-                            <button class="btn dropdown-item text-danger bg-transparent" onclick="EliminarTicket(${Ticket.IdTicket})"><i class="fas fa-trash"></i> Eliminar</button>
+                            <button class="btn dropdown-item text-success bg-transparent" onclick="VerInventario(${Inventario.IdInventario})"><i class="fas fa-eye"></i> Ver</button>
+                            <button class="btn dropdown-item text-warning bg-transparent" onclick="EditarInventario(${Inventario.IdInventario})"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="btn dropdown-item text-danger bg-transparent" onclick="EliminarInventario(${Inventario.IdInventario})"><i class="fas fa-trash"></i> Eliminar</button>
                         </div>
                     </div>`
                 ]).draw(false);
             });
         });
 };
-
-// FIN COMPLETAR TABLE Tickets
-
-
+// FIN COMPLETAR TABLE inventarios
 
 
 
 // INICIO EDITAR Ticket
 function openModal() {
-    document.getElementById('FormularioTicket').reset();
-    document.getElementById('IdTicket').value = "";
+    document.getElementById('FormularioInventario').reset();
+    document.getElementById('IdInventario').value = "";
     $('#DescripcionInventario').summernote('code', '');
-    document.getElementById('ModalFormLabelTicket').innerText = 'Nuevo Ticket';
-    $('#ModalFormTicket').modal('show');
+    document.getElementById('ModalFormLabelInventario').innerText = 'Nuevo Inventario';
+    $('#ModalFormInventario').modal('show');
 }
 // FIN EDITAR Ticket
 
 
 
 
-// inicio funcion cargar roles en select para formuladio de nuevo o editar
-let subproblemasMap = {};
-function SelectProblemasySubproblemas() {
-    return fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=SelectProblemasySubproblemas`)
-        .then(res => res.json())
-        .then(response => {
-            if (!response.success) throw new Error(response.msg);
-            const selectProblema = document.getElementById('IdProblemaTicket');
-            const selectSubproblema = document.getElementById('IdSubproblemaTicket');
-            selectProblema.innerHTML = '<option value="">Seleccione un Problema</option>';
-            selectSubproblema.innerHTML = '<option value="">Seleccione un Subproblema</option>';
-            const problemasMap = {};
-            response.data.forEach(item => {
-                if (!problemasMap[item.IdProblema]) {
-                    problemasMap[item.IdProblema] = {
-                        nombre: item.NombreProblema,
-                        subproblemas: []
-                    };
-                }
-                if (item.IdSubproblema) {
-                    problemasMap[item.IdProblema].subproblemas.push({
-                        id: item.IdSubproblema,
-                        nombre: item.NombreSubproblema
-                    });
-                }
-            });
-            subproblemasMap = problemasMap;
-            for (const id in problemasMap) {
-                const option = document.createElement('option');
-                option.value = id;
-                option.textContent = problemasMap[id].nombre;
-                selectProblema.appendChild(option);
-            }
-            selectProblema.addEventListener('change', () => {
-                const selectedId = selectProblema.value;
-                const subproblemas = subproblemasMap[selectedId]?.subproblemas || [];
-                selectSubproblema.innerHTML = '<option value="">Seleccione un Subproblema</option>';
-                subproblemas.forEach(sp => {
-                    const option = document.createElement('option');
-                    option.value = sp.id;
-                    option.textContent = sp.nombre;
-                    selectSubproblema.appendChild(option);
-                });
-            });
-        })
-        .catch(error => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: error.message
-            });
-        });
-}
-// inicio funcion cargar roles en select para formuladio de nuevo o editar
 
 
 
-function SelectNombre() {
-    return fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=SelectNombre`)
-        .then(res => res.json())
-        .then(response => {
-            if (!response.success) throw new Error(response.msg);
-            const select = document.getElementById('IdUsuarioCreadorTicket');
-            select.innerHTML = ''; // Limpiar opciones
-            if (response.data.length != 1) {
-                select.innerHTML = '<option value="">Seleccione un nombre</option>';
-            }
-            response.data.forEach(usuario => {
-                const option = document.createElement('option');
-                option.value = usuario.IdUsuario;
-                option.textContent = usuario.NombreCompleto;
-                select.appendChild(option);
-            });
-        })
-        .catch(error => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: error.message
-            });
-        });
-}
+
+
 
 
 
@@ -236,7 +96,7 @@ function GuardarTicket() {
     const formData = new FormData(document.getElementById('FormularioTicket'));
     const accion = document.getElementById('IdTicket').value ? 'EditarTicket' : 'GuardarTicket';
     document.getElementById('IdUsuarioCreadorTicket').disabled = false;
-    fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=${accion}`, {
+    fetch(`${BASE_URL}/controladores/inventarios/InventariosControlador.php?action=${accion}`, {
         method: 'POST',
         body: formData
     })
@@ -282,7 +142,7 @@ function getStatusBadge(status) {
 
 // INICIO VER Ticket
 function VerTicket(id) {
-    fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=BuscarTicket&id=${id}`)
+    fetch(`${BASE_URL}/controladores/inventarios/InventariosControlador.php?action=BuscarTicket&id=${id}`)
         .then(res => res.json())
         .then(({ success, data, msg }) => {
             if (!success) {
@@ -315,7 +175,7 @@ function VerTicket(id) {
 
 // inicio editar Ticket (llena el formulario ocn los datos del trabajdor)
 async function EditarTicket(id) {
-    const url = `${BASE_URL}/controladores/tickets/TicketsControlador.php?action=BuscarTicket&id=${id}`;
+    const url = `${BASE_URL}/controladores/inventarios/InventariosControlador.php?action=BuscarTicket&id=${id}`;
     try {
         const response = await fetch(url);
         const text = await response.text(); // no asumimos que es JSON todavía
@@ -372,7 +232,7 @@ function EliminarTicket(id) {
         cancelButtonText: "No, cancelar!",
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=EliminarTicket`, {
+            fetch(`${BASE_URL}/controladores/inventarios/InventariosControlador.php?action=EliminarTicket`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: id }),

@@ -124,7 +124,7 @@
 
                             <?php if ($_SESSION['Login_Permisos']['Gestión de Inventario']['Leer'] == 1): ?>
                                 <li class="nav-item">
-                                    <a href="index.php?ruta=gestioninventario" class="nav-link">
+                                    <a href="index.php?ruta=inventarios" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Gestión de Inventario</p>
                                     </a>
