@@ -91,11 +91,11 @@ function openModal() {
 
 
 
-// inicio guardar Ticket
-function GuardarTicket() {
-    const formData = new FormData(document.getElementById('FormularioTicket'));
-    const accion = document.getElementById('IdTicket').value ? 'EditarTicket' : 'GuardarTicket';
-    document.getElementById('IdUsuarioCreadorTicket').disabled = false;
+// inicio guardar Inventario
+function GuardarInventario() {
+    const formData = new FormData(document.getElementById('FormularioInventario'));
+    const accion = document.getElementById('IdInventario').value ? 'EditarInventario' : 'GuardarInventario';
+    document.getElementById('IdUsuarioCreadorInventario').disabled = false;
     fetch(`${BASE_URL}/controladores/inventarios/InventariosControlador.php?action=${accion}`, {
         method: 'POST',
         body: formData
@@ -109,8 +109,8 @@ function GuardarTicket() {
                     return; // Salir de la función para evitar ejecutar el éxito
                 }
                 Swal.fire("Éxito", data.msg, "success").then(() => {
-                    $('#ModalFormTicket').modal('hide');
-                    CargarDatosTickets();
+                    $('#ModalFormInventario').modal('hide');
+                    CargarDatosInventarios();
                 });
             } catch {
                 throw text; // Si no es JSON válido, lanzamos el HTML con text
@@ -122,7 +122,7 @@ function GuardarTicket() {
             icon: "error",
         }));
 }
-// inicio guardar Ticket
+// inicio guardar Inventario
 
 
 function getStatusBadge(status) {

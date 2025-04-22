@@ -37,7 +37,7 @@ class InventariosControlador
 
 
     // inicio Crear un nuevo trabajador
-    public function GuardarTrabajador()
+    public function GuardarInventario()
     {
         try {
             $datos = [
@@ -195,8 +195,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
 
     $controlador = new InventariosControlador();
     switch ($_GET['action']) {
-        case 'GuardarTrabajador':
-            $controlador->GuardarTrabajador();
+        case 'GuardarInventario':
+            $controlador->GuardarInventario();
             break;
         case 'EditarTrabajador':
             $id = $_POST['IdTrabajador'] ?? null; // Leer desde el cuerpo
