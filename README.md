@@ -15,30 +15,30 @@
 
 ```mermaid
 flowchart TD
-  %% Sección: Usuario y Dominio
+  %% Usuario y dominio
   Usuario([👤 Usuario])
   Usuario -->|Solicita acceso| Dominio[🌐 portal_mdq.local]
 
-  %% Sección: Vista principal
-  Dominio -->|Carga vista inicial| LoginView[login.php]
-  Dominio -->|Vista después de login| DashboardView[dashboard.php]
+  %% Vistas
+  Dominio -->|Carga inicial| LoginView[login.php]
+  Dominio -->|Tras login| DashboardView[dashboard.php]
 
-  %% Sección: JS y peticiones
-  LoginView -->|Validación| LoginJS[funcion_login.js]
-  DashboardView -->|Funcionalidad JS| DashboardJS[funcion_dashboard.js]
+  %% Lógica JS
+  LoginView -->|Valida usuario| LoginJS[funcion_login.js]
+  DashboardView -->|Lógica JS| DashboardJS[funcion_dashboard.js]
 
-  %% Sección: Peticiones AJAX hacia controladores
+  %% Peticiones AJAX
   LoginJS -->|AJAX| LoginControlador[LoginControlador.php]
   DashboardJS -->|AJAX| DashboardControlador[DashboardControlador.php]
 
-  %% Otras vistas que usan JS y hacen peticiones
+  %% Otras vistas del dashboard
   DashboardView --> SoporteView[soportes.php]
   DashboardView --> TrabajadoresView[trabajadores.php]
   DashboardView --> ProblemasView[problemas.php]
   DashboardView --> SubproblemasView[subproblemas.php]
   DashboardView --> RolesView[roles.php]
 
-  %% Vistas a JS
+  %% JS por vista
   SoporteView --> SoporteJS[funcion_soporte.js]
   TrabajadoresView --> TrabajadoresJS[funcion_trabajadores.js]
   ProblemasView --> ProblemasJS[funcion_problemas.js]
@@ -61,8 +61,8 @@ flowchart TD
   SubproblemasControlador --> SubproblemasModelo[SubproblemasModelos.php]
   RolesControlador --> RolesModelo[RolesModelos.php]
 
-  %% Modelos y base de datos
-  LoginModelo -->|Consulta/Inserta| BD[(🗃️ Base de Datos)]
+  %% Modelos y BD
+  LoginModelo -->|Consulta| BD[(🗃️ Base de Datos)]
   DashboardModelo -->|Consulta| BD
   SoporteModelo -->|Inserta/Consulta| BD
   TrabajadoresModelo -->|Consulta| BD
@@ -70,7 +70,7 @@ flowchart TD
   SubproblemasModelo -->|Consulta| BD
   RolesModelo -->|Consulta| BD
 
-  %% Regresos de datos
+  %% Retorno de datos
   BD --> LoginModelo
   BD --> DashboardModelo
   BD --> SoporteModelo
@@ -79,7 +79,7 @@ flowchart TD
   BD --> SubproblemasModelo
   BD --> RolesModelo
 
-  %% Flujo de regreso
+  %% Retorno por capas
   LoginModelo --> LoginControlador
   DashboardModelo --> DashboardControlador
   SoporteModelo --> SoporteControlador
@@ -103,6 +103,7 @@ flowchart TD
   ProblemasJS --> ProblemasView
   SubproblemasJS --> SubproblemasView
   RolesJS --> RolesView
+
 
 ```
 
