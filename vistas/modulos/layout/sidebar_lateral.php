@@ -219,52 +219,6 @@
 
 
 
-
-
-
-
-                <!-- Tips -->
-                <?php if ($_SESSION['Login_Permisos']['Tips']['Leer'] == 1): ?>
-                    <li class="nav-item">
-                        <a href="index.php?ruta=tips" class="nav-link">
-                            <i class="nav-icon fas fa-lightbulb"></i>
-                            <p>Tips</p>
-                        </a>
-                    </li>
-                <?php endif; ?>
-
-
-
-
-
-                <!-- Preguntas Frecuentes -->
-                <?php if ($_SESSION['Login_Permisos']['Preguntas Frecuentes']['Leer'] == 1): ?>
-                    <li class="nav-item">
-                        <a href="index.php?ruta=preguntasfrecuentes" class="nav-link">
-                            <i class="nav-icon fas fa-question-circle"></i>
-                            <p>Preguntas Frecuentes</p>
-                        </a>
-                    </li>
-                <?php endif; ?>
-
-
-
-
-
-                <!-- Manuales -->
-                <?php if ($_SESSION['Login_Permisos']['Manuales']['Leer'] == 1): ?>
-                    <li class="nav-item">
-                        <a href="index.php?ruta=manuales" class="nav-link">
-                            <i class="nav-icon fas fa-book"></i>
-                            <p>Manuales</p>
-                        </a>
-                    </li>
-                <?php endif; ?>
-
-
-
-
-
                 <!-- Papelera de Reciclaje (Menú desplegable) -->
                 <?php if ($_SESSION['Login_Permisos']['Papelera']['Leer'] == 1): ?>
                     <li class="nav-item">
@@ -274,66 +228,45 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a onclick="cargarContenido('content-wrapper','vistas/modulos/papelera_trabajadores.php')"
-                                    class="nav-link" style="cursor: pointer;">
+                            <a href="index.php?ruta=papeleratrabajadores" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Trabajadores</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a onclick="cargarContenido('content-wrapper','vistas/modulos/papelera_tecnicos.php')"
-                                    class="nav-link" style="cursor: pointer;">
+                            <a href="index.php?ruta=papeleratexnicos" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Técnicos</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a onclick="cargarContenido('content-wrapper','vistas/modulos/papelera_roles.php')"
-                                    class="nav-link" style="cursor: pointer;">
+                            <a href="index.php?ruta=papeleraroles" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Roles</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a onclick="cargarContenido('content-wrapper','vistas/modulos/papelera_inventario.php')"
-                                    class="nav-link" style="cursor: pointer;">
+                            <a href="index.php?ruta=papelerainventario" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Inventario</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a onclick="cargarContenido('content-wrapper','vistas/modulos/papelera_tickets.php')"
-                                    class="nav-link" style="cursor: pointer;">
+                            <a href="index.php?ruta=papeleratickets" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Tickets</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a onclick="cargarContenido('content-wrapper','vistas/modulos/papelera_problemas.php')"
-                                    class="nav-link" style="cursor: pointer;">
+                            <a href="index.php?ruta=papeleraproblemas" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Problemas</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a onclick="cargarContenido('content-wrapper','vistas/modulos/papelera_tips.php')"
-                                    class="nav-link" style="cursor: pointer;">
+                                    <a href="index.php?ruta=papelerasubproblemas" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Tips</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a onclick="cargarContenido('content-wrapper','vistas/modulos/papelera_preguntas_frecuentes.php')"
-                                    class="nav-link" style="cursor: pointer;">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Preguntas Frecuentes</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a onclick="cargarContenido('content-wrapper','vistas/modulos/papelera_manuales.php')"
-                                    class="nav-link" style="cursor: pointer;">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Manuales</p>
+                                    <p>Sub problemas</p>
                                 </a>
                             </li>
                         </ul>
