@@ -88,7 +88,49 @@ $(document).ready(function () {
 });
 
 
+//gestion de opciones
+function generarOpciones(ticket) {
+    const esAdmin = (Login_RolUsuario == 1);
+    const miIdUsuario = Login_IdUsuario;
+    let opciones = '';
+    if (esAdmin) {
+        opciones += `<button class="btn dropdown-item text-success bg-transparent" onclick="VerTicket(${ticket.IdTicket})"><i class="fas fa-eye"></i> Ver</button>`;
+        opciones += `<button class="btn dropdown-item text-info bg-transparent" onclick="AtenderTicket(${ticket.IdTicket})"><i class="bi bi-journal-check"></i> Atender</button>`;
+        opciones += `<button class="btn dropdown-item text-warning bg-transparent" onclick="EditarTicket(${ticket.IdTicket})"><i class="fas fa-edit"></i> Editar</button>`;
+        opciones += `<button class="btn dropdown-item text-danger bg-transparent" onclick="EliminarTicket(${ticket.IdTicket})"><i class="fas fa-trash"></i> Eliminar</button>`;
+        opciones += `<button class="btn dropdown-item text-primary bg-transparent" onclick="ComentariosTicket(${ticket.IdTicket})"><i class="fas fa-comments"></i> Comentarios</button>`;
+    } else {
+        const esSoporteAsignado = ticket.IdUsuarioSoporteTicket == miIdUsuario;
+        const ticketSinAsignar = ticket.IdUsuarioSoporteTicket == null;
+        const soyCreadorTicket = ticket.IdUsuarioCreadorTicket == miIdUsuario;
 
+        if (soyCreadorTicket) {
+            opciones += `<button class="btn dropdown-item text-success bg-transparent" onclick="VerTicket(${ticket.IdTicket})"><i class="fas fa-eye"></i> Ver</button>`;
+            opciones += `<button class="btn dropdown-item text-primary bg-transparent" onclick="ComentariosTicket(${ticket.IdTicket})"><i class="fas fa-comments"></i> Comentarios</button>`;
+
+            if (ticketSinAsignar) {
+                opciones += `<button class="btn dropdown-item text-danger bg-transparent" onclick="EliminarTicket(${ticket.IdTicket})"><i class="fas fa-trash"></i> Eliminar</button>`;
+            }
+        } else if (esSoporteAsignado) {
+            opciones += `<button class="btn dropdown-item text-success bg-transparent" onclick="VerTicket(${ticket.IdTicket})"><i class="fas fa-eye"></i> Ver</button>`;
+            opciones += `<button class="btn dropdown-item text-primary bg-transparent" onclick="ComentariosTicket(${ticket.IdTicket})"><i class="fas fa-comments"></i> Comentarios</button>`;
+        } else if (ticketSinAsignar) {
+            opciones += `<button class="btn dropdown-item text-info bg-transparent" onclick="AtenderTicket(${ticket.IdTicket})"><i class="bi bi-journal-check"></i> Atender</button>`;
+        }
+    }
+
+    return `<div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown">
+                    <i class="fas fa-cog"></i> Opciones
+                </button>
+                <div class="dropdown-menu">
+                    ${opciones}
+                </div>
+            </div>`;
+}
+//fin gestion de opciones
+
+// INICIO COMPLETAR TABLE Tickets 
 // INICIO COMPLETAR TABLE Tickets 
 window.CargarDatosTickets = function () {
     fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=CargarDatosTickets`)
@@ -103,30 +145,23 @@ window.CargarDatosTickets = function () {
             }
             const table = $('#TablaTickets').DataTable();
             table.clear();
-            data?.forEach(Ticket => {
-                const statusLabel = getStatusBadge(parseInt(Ticket.StatusTicket));
+            data?.forEach(ticket => {
+                const statusLabel = getStatusBadge(parseInt(ticket.StatusTicket));
+                const opcionesBotones = generarOpciones(ticket); // AQUÍ
+
                 table.row.add([
-                    Ticket.CodTicket,
-                    Ticket.trabajador,
-                    Ticket.DepartamentoTicket,
-                    Ticket.NombreProblema,
-                    Ticket.NombreSubproblema,
-                    Ticket.DataCreateTicket,
+                    ticket.CodTicket,
+                    ticket.trabajador,
+                    ticket.DepartamentoTicket,
+                    ticket.NombreProblema,
+                    ticket.NombreSubproblema,
+                    ticket.DataCreateTicket,
                     statusLabel,
-                    `<div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown"><i class="fas fa-cog"></i> Opciones</button>
-                        <div class="dropdown-menu">
-                            <button class="btn dropdown-item text-success bg-transparent" onclick="VerTicket(${Ticket.IdTicket})"><i class="fas fa-eye"></i> Ver</button>
-                            <button class="btn dropdown-item text-info bg-transparent" onclick="AtenderTicket(${Ticket.IdTicket})"><i class="bi bi-journal-check"></i> Atender</button>
-                            <button class="btn dropdown-item text-warning bg-transparent" onclick="EditarTicket(${Ticket.IdTicket})"><i class="fas fa-edit"></i> Editar</button>
-                            <button class="btn dropdown-item text-danger bg-transparent" onclick="EliminarTicket(${Ticket.IdTicket})"><i class="fas fa-trash"></i> Eliminar</button>
-                        </div>
-                    </div>`
+                    opcionesBotones
                 ]).draw(false);
             });
         });
 };
-
 // FIN COMPLETAR TABLE Tickets
 
 

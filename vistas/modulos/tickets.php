@@ -2,6 +2,8 @@
 <script src="<?php echo BASE_URL; ?>/vistas/assets/dist/js/funcion_tickets.js"></script>
 <script>
     const BASE_URL = "<?php echo BASE_URL; ?>";
+    const Login_RolUsuario = <?php echo $_SESSION['Login_RolUsuario']; ?>;
+    const Login_IdUsuario = <?php echo $_SESSION['Login_IdUsuario']; ?>;
 </script>
 
 <section class="content-header ml-3 mr-3">

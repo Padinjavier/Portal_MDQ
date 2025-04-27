@@ -14,12 +14,15 @@ class TicketsModelo
 
 
     // INICIO FUNCION CargarDatosTickets
-    public function CargarDatosTickets()
-    {
-        session_start();
-        $isAdmin = $_SESSION['Login_RolUsuario'] == 1;
-        $params = [':StatusTicket' => 0];
-        $sql = "SELECT 
+// INICIO FUNCION CargarDatosTickets
+public function CargarDatosTickets()
+{
+    session_start();
+    $rolUsuario = $_SESSION['Login_RolUsuario'];
+    $idUsuario = $_SESSION['Login_IdUsuario'];
+    $params = [':StatusTicket' => 0];
+    
+    $sql = "SELECT 
                 t.IdTicket, 
                 t.CodTicket, 
                 CONCAT(u.NombresUsuario, ' ', u.ApellidosUsuario) AS trabajador,
@@ -27,25 +30,34 @@ class TicketsModelo
                 p.NombreProblema, 
                 sp.NombreSubproblema, 
                 t.DataCreateTicket, 
-                t.StatusTicket
+                t.StatusTicket,
+                t.IdUsuarioCreadorTicket,
+                t.IdUsuarioSoporteTicket
             FROM tickets t
             INNER JOIN usuarios u ON t.IdUsuarioCreadorTicket = u.IdUsuario
             INNER JOIN problemas p ON t.IdProblemaTicket = p.IdProblema
             INNER JOIN subproblemas sp ON t.IdSubproblemaTicket = sp.IdSubproblema
             WHERE t.StatusTicket != :StatusTicket";
-        if (!$isAdmin) {
-            $sql .= " AND t.IdUsuarioCreadorTicket = :IdUsuarioCreadorTicket";
-            $params[':IdUsuarioCreadorTicket'] = $_SESSION['Login_IdUsuario'];
+
+    if ($rolUsuario != 1) { // NO admin
+        if ($rolUsuario == 2) { // Soporte
+            $sql .= " AND (t.IdUsuarioSoporteTicket = :IdUsuario OR t.IdUsuarioSoporteTicket IS NULL)";
+        } else { // Trabajador normal
+            $sql .= " AND t.IdUsuarioCreadorTicket = :IdUsuario";
         }
-        try {
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute($params);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            throw new Exception("Error al cargar tickets: " . $e->getMessage());
-        }
+        $params[':IdUsuario'] = $idUsuario;
     }
-    // FIN FUNCION CargarDatosTickets
+
+    try {
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        throw new Exception("Error al cargar tickets: " . $e->getMessage());
+    }
+}
+// FIN FUNCIÓN CargarDatosTickets
+
 
 
 
