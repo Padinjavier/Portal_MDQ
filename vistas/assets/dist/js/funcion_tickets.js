@@ -88,47 +88,57 @@ $(document).ready(function () {
 });
 
 
-//gestion de opciones
+// Gestión de opciones
 function generarOpciones(ticket) {
     const esAdmin = (Login_RolUsuario == 1);
     const miIdUsuario = Login_IdUsuario;
     let opciones = '';
+
     if (esAdmin) {
+        // El Admin siempre tiene TODAS las opciones
         opciones += `<button class="btn dropdown-item text-success bg-transparent" onclick="VerTicket(${ticket.IdTicket})"><i class="fas fa-eye"></i> Ver</button>`;
         opciones += `<button class="btn dropdown-item text-info bg-transparent" onclick="AtenderTicket(${ticket.IdTicket})"><i class="bi bi-journal-check"></i> Atender</button>`;
         opciones += `<button class="btn dropdown-item text-warning bg-transparent" onclick="EditarTicket(${ticket.IdTicket})"><i class="fas fa-edit"></i> Editar</button>`;
         opciones += `<button class="btn dropdown-item text-danger bg-transparent" onclick="EliminarTicket(${ticket.IdTicket})"><i class="fas fa-trash"></i> Eliminar</button>`;
         opciones += `<button class="btn dropdown-item text-primary bg-transparent" onclick="ComentariosTicket(${ticket.IdTicket})"><i class="fas fa-comments"></i> Comentarios</button>`;
     } else {
-        const esSoporteAsignado = ticket.IdUsuarioSoporteTicket == miIdUsuario;
+        // Definir quién soy respecto al ticket
+        const soyCreador = ticket.IdUsuarioCreadorTicket == miIdUsuario;
+        const soySoporteAsignado = ticket.IdUsuarioSoporteTicket == miIdUsuario;
         const ticketSinAsignar = ticket.IdUsuarioSoporteTicket == null;
-        const soyCreadorTicket = ticket.IdUsuarioCreadorTicket == miIdUsuario;
 
-        if (soyCreadorTicket) {
+        if (soyCreador) {
+            // Si yo creé el ticket (sea soporte o trabajador normal)
             opciones += `<button class="btn dropdown-item text-success bg-transparent" onclick="VerTicket(${ticket.IdTicket})"><i class="fas fa-eye"></i> Ver</button>`;
             opciones += `<button class="btn dropdown-item text-primary bg-transparent" onclick="ComentariosTicket(${ticket.IdTicket})"><i class="fas fa-comments"></i> Comentarios</button>`;
 
             if (ticketSinAsignar) {
+                // Solo puedo eliminar si todavía nadie lo atendió
                 opciones += `<button class="btn dropdown-item text-danger bg-transparent" onclick="EliminarTicket(${ticket.IdTicket})"><i class="fas fa-trash"></i> Eliminar</button>`;
             }
-        } else if (esSoporteAsignado) {
+        } else if (soySoporteAsignado) {
+            // Si yo soy el soporte asignado
             opciones += `<button class="btn dropdown-item text-success bg-transparent" onclick="VerTicket(${ticket.IdTicket})"><i class="fas fa-eye"></i> Ver</button>`;
             opciones += `<button class="btn dropdown-item text-primary bg-transparent" onclick="ComentariosTicket(${ticket.IdTicket})"><i class="fas fa-comments"></i> Comentarios</button>`;
         } else if (ticketSinAsignar) {
+            // Ticket libre, puedo atenderlo
             opciones += `<button class="btn dropdown-item text-info bg-transparent" onclick="AtenderTicket(${ticket.IdTicket})"><i class="bi bi-journal-check"></i> Atender</button>`;
         }
     }
 
-    return `<div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown">
-                    <i class="fas fa-cog"></i> Opciones
-                </button>
-                <div class="dropdown-menu">
-                    ${opciones}
-                </div>
-            </div>`;
+    return `
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown">
+                <i class="fas fa-cog"></i> Opciones
+            </button>
+            <div class="dropdown-menu">
+                ${opciones}
+            </div>
+        </div>
+    `;
 }
-//fin gestion de opciones
+// Fin gestión de opciones
+
 
 // INICIO COMPLETAR TABLE Tickets 
 // INICIO COMPLETAR TABLE Tickets 
