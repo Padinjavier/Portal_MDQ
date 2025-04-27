@@ -156,7 +156,12 @@ window.CargarDatosTickets = function () {
             const table = $('#TablaTickets').DataTable();
             table.clear();
             data?.forEach(ticket => {
-                const statusLabel = getStatusBadge(parseInt(ticket.StatusTicket));
+                var statusLabel = "";
+                if (ticket.IdUsuarioSoporteTicket != null) {
+                    statusLabel = getStatusBadge(parseInt(ticket.StatusTicket));
+                } else {
+                    statusLabel = "<span class='badge badge-secondary'>SIN ASIGNAR</span>"
+                }
                 const opcionesBotones = generarOpciones(ticket); // AQUÍ
 
                 table.row.add([
@@ -445,6 +450,48 @@ function EliminarTicket(id) {
     });
 }
 // fin eliminar Ticket 
+
+function AtenderTicket(id) {
+    Swal.fire({
+        title: "Atender Ticket",
+        text: "¿Deseas atender este ticket? Se te asignará a ti.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sí, atender!",
+        cancelButtonText: "No, cancelar!",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=AtenderTicket`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    IdTicket: id,
+                    IdSubproblemaTicket: Login_IdUsuario
+                }),
+            })
+                .then(response => response.text())
+                .then(text => {
+                    let result;
+                    try {
+                        result = JSON.parse(text);
+                    } catch {
+                        throw new Error(text);
+                    }
+                    if (!result.success) throw result.msg || "Error en el servidor";
+                    Swal.fire('¡Asignado!', 'El ticket ha sido asignado a ti y está listo para atender.', 'success')
+                        .then(() => CargarDatosTickets());
+                })
+                .catch(error => {
+                    Swal.fire({
+                        title: "Error",
+                        html: error.message || String(error),
+                        icon: "error",
+                    });
+                });
+        }
+    });
+}
+
 
 
 

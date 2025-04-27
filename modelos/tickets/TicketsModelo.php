@@ -9,20 +9,15 @@ class TicketsModelo
         $this->db = $db->getConexion();
     }
 
+// ------------------- INICIO FUNCION CargarDatosTickets -------------------
+    public function CargarDatosTickets()
+    {
+        session_start();
+        $rolUsuario = $_SESSION['Login_RolUsuario'];
+        $idUsuario = $_SESSION['Login_IdUsuario'];
+        $params = [':StatusTicket' => 0];
 
-
-
-
-    // INICIO FUNCION CargarDatosTickets
-// INICIO FUNCION CargarDatosTickets
-public function CargarDatosTickets()
-{
-    session_start();
-    $rolUsuario = $_SESSION['Login_RolUsuario'];
-    $idUsuario = $_SESSION['Login_IdUsuario'];
-    $params = [':StatusTicket' => 0];
-    
-    $sql = "SELECT 
+        $sql = "SELECT 
                 t.IdTicket, 
                 t.CodTicket, 
                 CONCAT(u.NombresUsuario, ' ', u.ApellidosUsuario) AS trabajador,
@@ -39,32 +34,25 @@ public function CargarDatosTickets()
             INNER JOIN subproblemas sp ON t.IdSubproblemaTicket = sp.IdSubproblema
             WHERE t.StatusTicket != :StatusTicket";
 
-    if ($rolUsuario != 1) { // NO admin
-        if ($rolUsuario == 2) { // Soporte
-            $sql .= " AND (t.IdUsuarioSoporteTicket = :IdUsuario OR t.IdUsuarioSoporteTicket IS NULL)";
-        } else { // Trabajador normal
-            $sql .= " AND t.IdUsuarioCreadorTicket = :IdUsuario";
+        if ($rolUsuario != 1) { // NO admin
+            if ($rolUsuario == 2) { // Soporte
+                $sql .= " AND (t.IdUsuarioSoporteTicket = :IdUsuario OR t.IdUsuarioSoporteTicket IS NULL)";
+            } else { // Trabajador normal
+                $sql .= " AND t.IdUsuarioCreadorTicket = :IdUsuario";
+            }
+            $params[':IdUsuario'] = $idUsuario;
         }
-        $params[':IdUsuario'] = $idUsuario;
+        try {
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Error al cargar tickets: " . $e->getMessage());
+        }
     }
+// ------------------- FIN FUNCION CargarDatosTickets -------------------
 
-    try {
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        throw new Exception("Error al cargar tickets: " . $e->getMessage());
-    }
-}
-// FIN FUNCIÓN CargarDatosTickets
-
-
-
-
-
-
-
-    // INICIO FUNCIÓN: Obtener todos los roles activos con su estado de asignación a módulos 
+// ------------------- INICIO FUNCIÓN SelectProblemasySubproblemas -------------------
     public function SelectProblemasySubproblemas()
     {
         try {
@@ -83,12 +71,9 @@ public function CargarDatosTickets()
             throw new Exception($e->getMessage());
         }
     }
-    // FIN FUNCIÓN: Obtener todos los roles activos con su estado de asignación a módulos
+// ------------------- FIN FUNCIÓN SelectProblemasySubproblemas -------------------
 
-
-
-
-
+// ------------------- INICIO FUNCIÓN SelectNombre -------------------
     public function SelectNombre($idUsuario, $rolUsuario)
     {
         try {
@@ -107,14 +92,14 @@ public function CargarDatosTickets()
                 $stmt = $this->db->prepare($sql);
                 $stmt->execute([':IdUsuario' => $idUsuario]);
             }
-
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             throw new Exception("Error al obtener usuarios: " . $e->getMessage());
         }
     }
+// ------------------- INICIO FUNCIÓN SelectNombre -------------------
 
-    // INICIO FUNCION GuardarTicket - Inserta un nuevo ticket generando el CodTicket antes del insert.
+// INICIO FUNCION GuardarTicket - Inserta un nuevo ticket generando el CodTicket antes del insert.
     public function GuardarTicket($datos)
     {
         try {
@@ -236,5 +221,29 @@ public function CargarDatosTickets()
     }
     // FIN ELIMINAR (DESACTIVAR) UN ticket
 
-
+    public function AtenderTicket($IdTicket, $IdUsuarioSoporte)
+    {
+        try {
+            if (empty($IdTicket) || empty($IdUsuarioSoporte)) {
+                throw new Exception("ID de ticket o usuario no proporcionado.");
+            }
+            $sql = "UPDATE tickets 
+                    SET 
+                        IdUsuarioSoporteTicket = :IdUsuarioSoporteTicket, 
+                        StatusTicket = 1 
+                    WHERE IdTicket = :IdTicket";
+            $params = [
+                ':IdUsuarioSoporteTicket' => $IdUsuarioSoporte,
+                ':IdTicket' => $IdTicket,
+            ];
+            $stmt = $this->db->prepare($sql);
+            $resultado = $stmt->execute($params);
+            if (!$resultado) {
+                throw new Exception("No se pudo asignar el ticket.");
+            }
+            return true;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
 }

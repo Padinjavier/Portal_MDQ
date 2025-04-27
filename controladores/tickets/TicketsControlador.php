@@ -166,9 +166,23 @@ class TicketsControlador
             echo json_encode(['success' => false, 'msg' => 'Error al eliminar el Ticket: <br>' . $e->getMessage()]);
         }
     }
-
-
-
+    public function AtenderTicket($IdTicket, $IdSubproblemaTicket)
+    {
+        try {
+            if (empty($IdTicket) || empty($IdSubproblemaTicket)) {
+                throw new Exception('ID o IDsoporte no proporcionado');
+            }
+            $Ticket = $this->modelo->AtenderTicket($IdTicket, $IdSubproblemaTicket);
+            if (!$Ticket) {
+                throw new Exception('No se te pudo asignar el Ticket.');
+            } else {
+                echo json_encode(['success' => true, 'msg' => 'Ticket asignado correctamente.']);
+            }
+        } catch (Exception $e) {
+            // Aquí se captura el error y se manda a frontend para mostrar
+            echo json_encode(['success' => false, 'msg' => 'Error al atignarte el ticket: <br>' . $e->getMessage()]);
+        }
+    }
 }
 
 
@@ -209,6 +223,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
         case 'EliminarTicket':
             $id = $input['id'] ?? null; // Leer desde el cuerpo
             $controlador->EliminarTicket($id);
+            break;
+        case 'AtenderTicket':
+            $IdTicket = $input['IdTicket'] ?? null; // Leer desde el cuerpo
+            $IdSubproblemaTicket = $input['IdSubproblemaTicket'] ?? null; // Leer desde el cuerpo
+            $controlador->AtenderTicket($IdTicket, $IdSubproblemaTicket);
             break;
         default:
             echo json_encode(['success' => false, 'msg' => 'Acción POST no válida']);
