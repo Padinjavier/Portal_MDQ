@@ -33,7 +33,19 @@ class TicketsControlador
     // fin Obtener todos los Tickets
 
 
-
+    public function ListarSoportes()
+    {
+        try {
+            $ListaSoporte = $this->modelo->ListarSoportes();
+            if ($ListaSoporte !== false) {
+                echo json_encode(['success' => true, 'data' => $ListaSoporte]);
+            } else {
+                echo json_encode(['success' => false, 'msg' => 'Soportes no encontrados']);
+            }
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'msg' => 'Error al Cargar datos de los Soportes: <br>' . $e->getMessage()]);
+        }
+    }
 
 
     // inicio Obtener todos los roles
@@ -192,6 +204,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     switch ($_GET['action']) {
         case 'CargarDatosTickets':
             $controlador->CargarDatosTickets();
+            break;
+        case 'ListarSoportes':
+            $controlador->ListarSoportes();
             break;
         case 'SelectNombre':
             $controlador->SelectNombre();

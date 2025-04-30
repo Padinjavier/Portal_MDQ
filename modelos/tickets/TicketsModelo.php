@@ -52,6 +52,20 @@ class TicketsModelo
     }
 // ------------------- FIN FUNCION CargarDatosTickets -------------------
 
+
+public function ListarSoportes(){
+    try{
+        $sql = "SELECT u.IdUsuario, CONCAT(u.NombresUsuario, u.ApellidosUsuario) AS NombreCompleto 
+        FROM usuarios u WHERE u.StatusUsuario != :StatusUsuario AND u.RolUsuario = :RolUsuario";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['StatusUsuario' => 0, 'RolUsuario' => 1]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        throw new Exception($e->getMessage());
+    }
+}
+
+
 // ------------------- INICIO FUNCIÓN SelectProblemasySubproblemas -------------------
     public function SelectProblemasySubproblemas()
     {
@@ -143,6 +157,7 @@ class TicketsModelo
                     p.NombreProblema,
                     sp.NombreSubproblema,
                     t.DescripcionTicket,
+                    t.IdUsuarioSoporteTicket,
                     CONCAT(us.NombresUsuario, ' ', us.ApellidosUsuario) AS Soporte,
                     t.DataCreateTicket,
                     t.DataUpdateTicket,

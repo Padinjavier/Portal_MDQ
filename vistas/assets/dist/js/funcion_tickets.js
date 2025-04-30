@@ -26,6 +26,7 @@ $(document).ready(function () {
     CargarDatosTickets();
     SelectProblemasySubproblemas();
     SelectNombre();
+    verificarAgregarSelectSoporte();
 });
 // FIN FUNCIONAMIENTO DE TABLA Tickets
 
@@ -68,7 +69,6 @@ $(document).ready(function () {
             });
         })
         .catch(err => {
-            console.error("Error al cargar JSON:", err);
             Swal.fire({
                 title: "Error",
                 text: "No se pudo cargar la lista de departamentos.",
@@ -78,7 +78,6 @@ $(document).ready(function () {
 });
 // funcion para rellenar select de departamentos
 
-
 // Descripción summernote 
 $(document).ready(function () {
     $('#DescripcionTicket').summernote({
@@ -87,45 +86,42 @@ $(document).ready(function () {
     });
 });
 
-
 // Gestión de opciones
 function generarOpciones(ticket) {
     const esAdmin = (Login_RolUsuario == 1);
     const miIdUsuario = Login_IdUsuario;
+    // Definir los botones disponibles (no se crean de nuevo)
+    const btnVer = `<button class="btn dropdown-item text-success bg-transparent" onclick="VerTicket(${ticket.IdTicket})"><i class="fas fa-eye"></i> Ver</button>`;
+    const btnAtender = `<button class="btn dropdown-item text-info bg-transparent" onclick="AtenderTicket(${ticket.IdTicket})"><i class="bi bi-journal-check"></i> Atender</button>`;
+    const btnEditar = `<button class="btn dropdown-item text-warning bg-transparent" onclick="EditarTicket(${ticket.IdTicket})"><i class="fas fa-edit"></i> Editar</button>`;
+    const btnEliminar = `<button class="btn dropdown-item text-danger bg-transparent" onclick="EliminarTicket(${ticket.IdTicket})"><i class="fas fa-trash"></i> Eliminar</button>`;
+    const btnComentarios = `<button class="btn dropdown-item text-primary bg-transparent" onclick="ComentariosTicket(${ticket.IdTicket})"><i class="fas fa-comments"></i> Comentarios</button>`;
+    const soyCreador = ticket.IdUsuarioCreadorTicket == miIdUsuario;
+    const soySoporteAsignado = ticket.IdUsuarioSoporteTicket == miIdUsuario;
+    const ticketSinAsignar = ticket.IdUsuarioSoporteTicket == null;
     let opciones = '';
-
     if (esAdmin) {
-        // El Admin siempre tiene TODAS las opciones
-        opciones += `<button class="btn dropdown-item text-success bg-transparent" onclick="VerTicket(${ticket.IdTicket})"><i class="fas fa-eye"></i> Ver</button>`;
-        opciones += `<button class="btn dropdown-item text-info bg-transparent" onclick="AtenderTicket(${ticket.IdTicket})"><i class="bi bi-journal-check"></i> Atender</button>`;
-        opciones += `<button class="btn dropdown-item text-warning bg-transparent" onclick="EditarTicket(${ticket.IdTicket})"><i class="fas fa-edit"></i> Editar</button>`;
-        opciones += `<button class="btn dropdown-item text-danger bg-transparent" onclick="EliminarTicket(${ticket.IdTicket})"><i class="fas fa-trash"></i> Eliminar</button>`;
-        opciones += `<button class="btn dropdown-item text-primary bg-transparent" onclick="ComentariosTicket(${ticket.IdTicket})"><i class="fas fa-comments"></i> Comentarios</button>`;
+        opciones += btnVer;
+        if (ticketSinAsignar) {
+            opciones += btnAtender;
+        }
+        opciones += btnEditar;
+        opciones += btnEliminar;
+        opciones += btnComentarios;
     } else {
-        // Definir quién soy respecto al ticket
-        const soyCreador = ticket.IdUsuarioCreadorTicket == miIdUsuario;
-        const soySoporteAsignado = ticket.IdUsuarioSoporteTicket == miIdUsuario;
-        const ticketSinAsignar = ticket.IdUsuarioSoporteTicket == null;
-
         if (soyCreador) {
-            // Si yo creé el ticket (sea soporte o trabajador normal)
-            opciones += `<button class="btn dropdown-item text-success bg-transparent" onclick="VerTicket(${ticket.IdTicket})"><i class="fas fa-eye"></i> Ver</button>`;
-            opciones += `<button class="btn dropdown-item text-primary bg-transparent" onclick="ComentariosTicket(${ticket.IdTicket})"><i class="fas fa-comments"></i> Comentarios</button>`;
-
+            opciones += btnVer;
+            opciones += btnComentarios;
             if (ticketSinAsignar) {
-                // Solo puedo eliminar si todavía nadie lo atendió
-                opciones += `<button class="btn dropdown-item text-danger bg-transparent" onclick="EliminarTicket(${ticket.IdTicket})"><i class="fas fa-trash"></i> Eliminar</button>`;
+                opciones += btnEliminar;
             }
         } else if (soySoporteAsignado) {
-            // Si yo soy el soporte asignado
-            opciones += `<button class="btn dropdown-item text-success bg-transparent" onclick="VerTicket(${ticket.IdTicket})"><i class="fas fa-eye"></i> Ver</button>`;
-            opciones += `<button class="btn dropdown-item text-primary bg-transparent" onclick="ComentariosTicket(${ticket.IdTicket})"><i class="fas fa-comments"></i> Comentarios</button>`;
+            opciones += btnVer;
+            opciones += btnComentarios;
         } else if (ticketSinAsignar) {
-            // Ticket libre, puedo atenderlo
-            opciones += `<button class="btn dropdown-item text-info bg-transparent" onclick="AtenderTicket(${ticket.IdTicket})"><i class="bi bi-journal-check"></i> Atender</button>`;
+            opciones += btnAtender;
         }
     }
-
     return `
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown">
@@ -140,8 +136,7 @@ function generarOpciones(ticket) {
 // Fin gestión de opciones
 
 
-// INICIO COMPLETAR TABLE Tickets 
-// INICIO COMPLETAR TABLE Tickets 
+// INICIO COMPLETAR TABLE Tickets  
 window.CargarDatosTickets = function () {
     fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=CargarDatosTickets`)
         .then(res => res.json())
@@ -351,7 +346,7 @@ function VerTicket(id) {
             set('ViewDepartamentoTicket', Ticket.DepartamentoTicket);
             set('ViewProblemaTicket', Ticket.NombreProblema);
             set('ViewSubproblemaTicket', Ticket.NombreSubproblema);
-            set('ViewSoporteTicket', Ticket.soporte || 'No asignado');
+            set('ViewSoporteTicket', Ticket.Soporte || 'No asignado');
             set('ViewDataCreateTicket', Ticket.DataCreateTicket);
             set('ViewDataUpdateTicket', Ticket.DataUpdateTicket);
             set('ViewDescripcionTicket', Ticket.DescripcionTicket, true);
@@ -396,8 +391,8 @@ async function EditarTicket(id) {
         });
         // Ahora sí asignar el subproblema
         document.getElementById('IdSubproblemaTicket').value = Ticket.IdSubproblemaTicket;
+        document.getElementById('IdSoporteAsignado').value = Ticket.IdUsuarioSoporteTicket;
         $('#DescripcionTicket').summernote('code', Ticket.DescripcionTicket);
-        console.log(Ticket.DescripcionTicket)
         document.getElementById('ModalFormLabelTicket').innerText = 'Editar Ticket';
         $('#ModalFormTicket').modal('show');
     } catch (error) {
@@ -407,6 +402,34 @@ async function EditarTicket(id) {
             icon: "error",
         });
     }
+}
+function verificarAgregarSelectSoporte() {
+    if (Login_RolUsuario == 1) {
+        return fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=ListarSoportes`)
+            .then(res => res.json())
+            .then(response => {
+                if (!response.success) throw new Error(response.msg);
+                const select = document.getElementById('IdSoporteAsignado');
+                select.innerHTML = ''; // Limpiar opciones
+                if (response.data.length != 1) {
+                    select.innerHTML = '<option value="">Seleccione un nombre</option>';
+                }
+                response.data.forEach(Soporte => {
+                    const option = document.createElement('option');
+                    option.value = Soporte.IdUsuario;
+                    option.textContent = Soporte.NombreCompleto;
+                    select.appendChild(option);
+                });
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message
+                });
+            });
+    }
+
 }
 // fin  editar Ticket (llena el formulario ocn los datos del trabajdor)
 
