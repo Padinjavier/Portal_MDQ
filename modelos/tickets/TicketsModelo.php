@@ -231,7 +231,7 @@ class TicketsModelo
         try {
             if ($datos['IdUsuarioSoporteTicket'] == null) {
                 $sql = "UPDATE tickets SET 
-            IdUsuarioSoporteTicket = NULL, 
+            IdUsuarioSoporteTicket = NULL,
             DataUpdateTicket = NOW() 
             WHERE IdTicket = :IdTicket;";
                 $params = [

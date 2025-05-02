@@ -285,13 +285,13 @@ function GuardarTicket() {
         method: 'POST',
         body: formData
     })
-    .then(response => response.text())
-    .then(text => {
-        console.log("🟡 Revisando FormData:");
+        .then(response => response.text())
+        .then(text => {
+            console.log("🟡 Revisando FormData:");
 
-for (let pair of formData.entries()) {
-    console.log(`${pair[0]}: ${pair[1]}`);
-}
+            for (let pair of formData.entries()) {
+                console.log(`${pair[0]}: ${pair[1]}`);
+            }
             try {
                 const data = JSON.parse(text);
                 if (!data.success) {
