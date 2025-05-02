@@ -95,6 +95,10 @@ class TicketsControlador
                 'IdSubproblemaTicket' => $_POST['IdSubproblemaTicket'] ?? null,
                 'DescripcionTicket' => $_POST['DescripcionTicket'] ?? null,
             ];
+            // Solo agregar soporte si el rol del usuario es 3
+            if (isset($_SESSION['Login_RolUsuario']) && $_SESSION['Login_RolUsuario'] == 1) {
+                $datos['IdUsuarioSoporteTicket'] = $_POST['IdUsuarioSoporteTicket'] ?? null;
+            }
             foreach ($datos as $key => $value) {
                 if (empty($value)) {
                     throw new Exception("El campo $key es requerido");
@@ -139,13 +143,24 @@ class TicketsControlador
             if (empty($id)) {
                 throw new Exception('ID no proporcionado');
             }
-            $datos = [
-                'IdUsuarioCreadorTicket' => $_POST['IdUsuarioCreadorTicket'] ?? null,
-                'DepartamentoTicket' => $_POST['DepartamentoTicket'] ?? null,
-                'IdProblemaTicket' => $_POST['IdProblemaTicket'] ?? null,
-                'IdSubproblemaTicket' => $_POST['IdSubproblemaTicket'] ?? null,
-                'DescripcionTicket' => $_POST['DescripcionTicket'] ?? null,
-            ];
+            if (!empty($_POST['IdUsuarioSoporteTicket'])|| $_POST['IdUsuarioSoporteTicket'] == null) {
+                $datos = [
+                    'IdUsuarioCreadorTicket' => $_POST['IdUsuarioCreadorTicket'] ?? null,
+                    'DepartamentoTicket' => $_POST['DepartamentoTicket'] ?? null,
+                    'IdProblemaTicket' => $_POST['IdProblemaTicket'] ?? null,
+                    'IdSubproblemaTicket' => $_POST['IdSubproblemaTicket'] ?? null,
+                    'IdUsuarioSoporteTicket' => $_POST['IdUsuarioSoporteTicket'] ?? null,
+                    'DescripcionTicket' => $_POST['DescripcionTicket'] ?? null,
+                ];
+            }else{
+                $datos = [
+                    'IdUsuarioCreadorTicket' => $_POST['IdUsuarioCreadorTicket'] ?? null,
+                    'DepartamentoTicket' => $_POST['DepartamentoTicket'] ?? null,
+                    'IdProblemaTicket' => $_POST['IdProblemaTicket'] ?? null,
+                    'IdSubproblemaTicket' => $_POST['IdSubproblemaTicket'] ?? null,
+                    'DescripcionTicket' => $_POST['DescripcionTicket'] ?? null,
+                ];
+            }        
             foreach ($datos as $key => $value) {
                 if ($key !== 'PasswordUsuario' && empty($value)) {
                     throw new Exception("El campo $key es requerido");

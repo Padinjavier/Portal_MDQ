@@ -136,9 +136,9 @@
                         <?php if ($_SESSION['Login_RolUsuario'] == 1) { ?>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="IdSoporteAsignado">Asignar Soporte</label>
-                                    <select class="form-control form-control-sm" id="IdSoporteAsignado"
-                                        name="IdSoporteAsignado">
+                                    <label for="IdUsuarioSoporteTicket">Asignar Soporte</label>
+                                    <select class="form-control form-control-sm" id="IdUsuarioSoporteTicket"
+                                        name="IdUsuarioSoporteTicket">
                                         <option value="">Seleccione un Soporte</option>
                                         <!-- Las opciones se cargarán dinámicamente -->
                                     </select>

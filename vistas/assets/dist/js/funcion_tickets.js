@@ -182,7 +182,7 @@ window.CargarDatosTickets = function () {
 function openModal() {
     document.getElementById('FormularioTicket').reset();
     document.getElementById('IdTicket').value = "";
-    $('#DescripcionInventario').summernote('code', '');
+    $('#DescripcionTicket').summernote('code', '');
     document.getElementById('ModalFormLabelTicket').innerText = 'Nuevo Ticket';
     $('#ModalFormTicket').modal('show');
 }
@@ -256,7 +256,7 @@ function SelectNombre() {
             const select = document.getElementById('IdUsuarioCreadorTicket');
             select.innerHTML = ''; // Limpiar opciones
             if (response.data.length != 1) {
-                select.innerHTML = '<option value="">Seleccione un nombre</option>';
+                select.innerHTML = '<option value="">Seleccione un soporte</option>';
             }
             response.data.forEach(usuario => {
                 const option = document.createElement('option');
@@ -285,8 +285,13 @@ function GuardarTicket() {
         method: 'POST',
         body: formData
     })
-        .then(response => response.text())
-        .then(text => {
+    .then(response => response.text())
+    .then(text => {
+        console.log("🟡 Revisando FormData:");
+
+for (let pair of formData.entries()) {
+    console.log(`${pair[0]}: ${pair[1]}`);
+}
             try {
                 const data = JSON.parse(text);
                 if (!data.success) {
@@ -391,7 +396,7 @@ async function EditarTicket(id) {
         });
         // Ahora sí asignar el subproblema
         document.getElementById('IdSubproblemaTicket').value = Ticket.IdSubproblemaTicket;
-        document.getElementById('IdSoporteAsignado').value = Ticket.IdUsuarioSoporteTicket;
+        document.getElementById('IdUsuarioSoporteTicket').value = Ticket.IdUsuarioSoporteTicket;
         $('#DescripcionTicket').summernote('code', Ticket.DescripcionTicket);
         document.getElementById('ModalFormLabelTicket').innerText = 'Editar Ticket';
         $('#ModalFormTicket').modal('show');
@@ -409,10 +414,10 @@ function verificarAgregarSelectSoporte() {
             .then(res => res.json())
             .then(response => {
                 if (!response.success) throw new Error(response.msg);
-                const select = document.getElementById('IdSoporteAsignado');
+                const select = document.getElementById('IdUsuarioSoporteTicket');
                 select.innerHTML = ''; // Limpiar opciones
                 if (response.data.length != 1) {
-                    select.innerHTML = '<option value="">Seleccione un nombre</option>';
+                    select.innerHTML = '<option value="NULL">Seleccione un nombre</option>';
                 }
                 response.data.forEach(Soporte => {
                     const option = document.createElement('option');

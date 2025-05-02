@@ -9,7 +9,7 @@ class TicketsModelo
         $this->db = $db->getConexion();
     }
 
-// ------------------- INICIO FUNCION CargarDatosTickets -------------------
+    // ------------------- INICIO FUNCION CargarDatosTickets -------------------
     public function CargarDatosTickets()
     {
         session_start();
@@ -50,23 +50,24 @@ class TicketsModelo
             throw new Exception("Error al cargar tickets: " . $e->getMessage());
         }
     }
-// ------------------- FIN FUNCION CargarDatosTickets -------------------
+    // ------------------- FIN FUNCION CargarDatosTickets -------------------
 
 
-public function ListarSoportes(){
-    try{
-        $sql = "SELECT u.IdUsuario, CONCAT(u.NombresUsuario, u.ApellidosUsuario) AS NombreCompleto 
+    public function ListarSoportes()
+    {
+        try {
+            $sql = "SELECT u.IdUsuario, CONCAT(u.NombresUsuario, ' ', u.ApellidosUsuario) AS NombreCompleto 
         FROM usuarios u WHERE u.StatusUsuario != :StatusUsuario AND u.RolUsuario = :RolUsuario";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute(['StatusUsuario' => 0, 'RolUsuario' => 1]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        throw new Exception($e->getMessage());
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['StatusUsuario' => 0, 'RolUsuario' => 3]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception($e->getMessage());
+        }
     }
-}
 
 
-// ------------------- INICIO FUNCIÓN SelectProblemasySubproblemas -------------------
+    // ------------------- INICIO FUNCIÓN SelectProblemasySubproblemas -------------------
     public function SelectProblemasySubproblemas()
     {
         try {
@@ -85,9 +86,9 @@ public function ListarSoportes(){
             throw new Exception($e->getMessage());
         }
     }
-// ------------------- FIN FUNCIÓN SelectProblemasySubproblemas -------------------
+    // ------------------- FIN FUNCIÓN SelectProblemasySubproblemas -------------------
 
-// ------------------- INICIO FUNCIÓN SelectNombre -------------------
+    // ------------------- INICIO FUNCIÓN SelectNombre -------------------
     public function SelectNombre($idUsuario, $rolUsuario)
     {
         try {
@@ -111,9 +112,9 @@ public function ListarSoportes(){
             throw new Exception("Error al obtener usuarios: " . $e->getMessage());
         }
     }
-// ------------------- INICIO FUNCIÓN SelectNombre -------------------
+    // ------------------- INICIO FUNCIÓN SelectNombre -------------------
 
-// INICIO FUNCION GuardarTicket - Inserta un nuevo ticket generando el CodTicket antes del insert.
+    // INICIO FUNCION GuardarTicket - Inserta un nuevo ticket generando el CodTicket antes del insert.
     public function GuardarTicket($datos)
     {
         try {
@@ -123,25 +124,37 @@ public function ListarSoportes(){
             $resultadoMax = $stmtMax->fetch(PDO::FETCH_ASSOC);
             $nuevoId = isset($resultadoMax['UltimoId']) ? (int) $resultadoMax['UltimoId'] + 1 : 1;
             $codTicket = "TK_" . $nuevoId;
-            $sql = "INSERT INTO tickets (CodTicket, IdUsuarioCreadorTicket, DepartamentoTicket, IdProblemaTicket, IdSubproblemaTicket, DescripcionTicket) 
-                VALUES (:CodTicket, :IdUsuarioCreadorTicket, :DepartamentoTicket, :IdProblemaTicket, :IdSubproblemaTicket, :DescripcionTicket)";
+            $campos = [
+                'CodTicket' => $codTicket,
+                'IdUsuarioCreadorTicket' => $datos['IdUsuarioCreadorTicket'],
+                'DepartamentoTicket' => $datos['DepartamentoTicket'],
+                'IdProblemaTicket' => $datos['IdProblemaTicket'],
+                'IdSubproblemaTicket' => $datos['IdSubproblemaTicket'],
+                'DescripcionTicket' => $datos['DescripcionTicket']
+            ];
+            $sql = "INSERT INTO tickets (CodTicket, IdUsuarioCreadorTicket, DepartamentoTicket, IdProblemaTicket, IdSubproblemaTicket, DescripcionTicket";
+            if (isset($datos['IdUsuarioSoporteTicket'])) {
+                $sql .= ", IdUsuarioSoporteTicket";
+                $campos['IdUsuarioSoporteTicket'] = $datos['IdUsuarioSoporteTicket'];
+            }
+            $sql .= ") VALUES (:CodTicket, :IdUsuarioCreadorTicket, :DepartamentoTicket, :IdProblemaTicket, :IdSubproblemaTicket, :DescripcionTicket";
+            if (isset($datos['IdUsuarioSoporteTicket'])) {
+                $sql .= ", :IdUsuarioSoporteTicket";
+            }
+            $sql .= ")";
             $stmt = $this->db->prepare($sql);
-            $resultado = $stmt->execute([
-                ':CodTicket' => $codTicket,
-                ':IdUsuarioCreadorTicket' => $datos['IdUsuarioCreadorTicket'],
-                ':DepartamentoTicket' => $datos['DepartamentoTicket'],
-                ':IdProblemaTicket' => $datos['IdProblemaTicket'],
-                ':IdSubproblemaTicket' => $datos['IdSubproblemaTicket'],
-                ':DescripcionTicket' => $datos['DescripcionTicket']
-            ]);
+            $resultado = $stmt->execute($campos);
+
             if (!$resultado) {
                 throw new Exception("No se pudo crear el ticket.");
             }
+
             return true;
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            throw new Exception($e);
         }
     }
+
     // FIN FUNCION GuardarTicket - Inserta un nuevo ticket generando el CodTicket antes del insert.
 
 
@@ -184,15 +197,15 @@ public function ListarSoportes(){
     public function EditarTicket($IdTicket, $datos)
     {
         try {
-            $sql = "UPDATE tickets 
-                SET IdUsuarioCreadorTicket = :IdUsuarioCreadorTicket,
-                    DepartamentoTicket = :DepartamentoTicket,
-                    IdProblemaTicket = :IdProblemaTicket,
-                    IdSubproblemaTicket = :IdSubproblemaTicket,
-                    DescripcionTicket = :DescripcionTicket,
-                    DataUpdateTicket = NOW()
-                WHERE IdTicket = :IdTicket";
-
+            // Campos obligatorios
+            $sql = "UPDATE tickets SET 
+                        IdUsuarioCreadorTicket = :IdUsuarioCreadorTicket,
+                        DepartamentoTicket = :DepartamentoTicket,
+                        IdProblemaTicket = :IdProblemaTicket,
+                        IdSubproblemaTicket = :IdSubproblemaTicket,
+                        DescripcionTicket = :DescripcionTicket,
+                        DataUpdateTicket = NOW()";
+    
             $params = [
                 ':IdUsuarioCreadorTicket' => $datos['IdUsuarioCreadorTicket'],
                 ':DepartamentoTicket' => $datos['DepartamentoTicket'],
@@ -201,9 +214,17 @@ public function ListarSoportes(){
                 ':DescripcionTicket' => $datos['DescripcionTicket'],
                 ':IdTicket' => $IdTicket
             ];
+    
+            if (isset($datos['IdUsuarioSoporteTicket'])) {
+                $sql .= ", IdUsuarioSoporteTicket = :IdUsuarioSoporteTicket";
+                $params[':IdUsuarioSoporteTicket'] = $datos['IdUsuarioSoporteTicket'];
+            }
+    
+            $sql .= " WHERE IdTicket = :IdTicket";
+    
             $stmt = $this->db->prepare($sql);
             $resultado = $stmt->execute($params);
-
+    
             if (!$resultado) {
                 throw new Exception("No se pudo actualizar el ticket.");
             }
@@ -212,7 +233,7 @@ public function ListarSoportes(){
             throw new Exception($e->getMessage());
         }
     }
-    // FIN FUNCION EditarTicket
+    
 
 
 
