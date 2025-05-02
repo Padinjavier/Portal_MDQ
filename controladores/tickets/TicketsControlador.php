@@ -143,24 +143,20 @@ class TicketsControlador
             if (empty($id)) {
                 throw new Exception('ID no proporcionado');
             }
-            if (!empty($_POST['IdUsuarioSoporteTicket'])|| $_POST['IdUsuarioSoporteTicket'] == null) {
+            if (!empty($_POST['IdUsuarioSoporteTicket']) || $_POST['IdUsuarioSoporteTicket'] == null) {
                 $datos = [
-                    'IdUsuarioCreadorTicket' => $_POST['IdUsuarioCreadorTicket'] ?? null,
-                    'DepartamentoTicket' => $_POST['DepartamentoTicket'] ?? null,
-                    'IdProblemaTicket' => $_POST['IdProblemaTicket'] ?? null,
-                    'IdSubproblemaTicket' => $_POST['IdSubproblemaTicket'] ?? null,
                     'IdUsuarioSoporteTicket' => $_POST['IdUsuarioSoporteTicket'] ?? null,
-                    'DescripcionTicket' => $_POST['DescripcionTicket'] ?? null,
                 ];
-            }else{
-                $datos = [
-                    'IdUsuarioCreadorTicket' => $_POST['IdUsuarioCreadorTicket'] ?? null,
-                    'DepartamentoTicket' => $_POST['DepartamentoTicket'] ?? null,
-                    'IdProblemaTicket' => $_POST['IdProblemaTicket'] ?? null,
-                    'IdSubproblemaTicket' => $_POST['IdSubproblemaTicket'] ?? null,
-                    'DescripcionTicket' => $_POST['DescripcionTicket'] ?? null,
-                ];
-            }        
+                $this->modelo->EditarSoporteTicket($id, $datos);
+            }
+            $datos = [
+                'IdUsuarioCreadorTicket' => $_POST['IdUsuarioCreadorTicket'] ?? null,
+                'DepartamentoTicket' => $_POST['DepartamentoTicket'] ?? null,
+                'IdProblemaTicket' => $_POST['IdProblemaTicket'] ?? null,
+                'IdSubproblemaTicket' => $_POST['IdSubproblemaTicket'] ?? null,
+                'DescripcionTicket' => $_POST['DescripcionTicket'] ?? null,
+            ];
+
             foreach ($datos as $key => $value) {
                 if ($key !== 'PasswordUsuario' && empty($value)) {
                     throw new Exception("El campo $key es requerido");

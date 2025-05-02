@@ -204,36 +204,61 @@ class TicketsModelo
                         IdProblemaTicket = :IdProblemaTicket,
                         IdSubproblemaTicket = :IdSubproblemaTicket,
                         DescripcionTicket = :DescripcionTicket,
-                        DataUpdateTicket = NOW()";
-    
+                        DataUpdateTicket = NOW()
+                        WHERE IdTicket = :IdTicket";
+
             $params = [
                 ':IdUsuarioCreadorTicket' => $datos['IdUsuarioCreadorTicket'],
                 ':DepartamentoTicket' => $datos['DepartamentoTicket'],
                 ':IdProblemaTicket' => $datos['IdProblemaTicket'],
                 ':IdSubproblemaTicket' => $datos['IdSubproblemaTicket'],
                 ':DescripcionTicket' => $datos['DescripcionTicket'],
-                ':IdTicket' => $IdTicket
+                ':IdTicket' => $IdTicket,
             ];
-    
-            if (isset($datos['IdUsuarioSoporteTicket'])) {
-                $sql .= ", IdUsuarioSoporteTicket = :IdUsuarioSoporteTicket";
-                $params[':IdUsuarioSoporteTicket'] = $datos['IdUsuarioSoporteTicket'];
-            }
-    
-            $sql .= " WHERE IdTicket = :IdTicket";
-    
             $stmt = $this->db->prepare($sql);
             $resultado = $stmt->execute($params);
-    
+
             if (!$resultado) {
                 throw new Exception("No se pudo actualizar el ticket.");
             }
             return true;
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            throw new Exception($e);
         }
     }
-    
+    public function EditarSoporteTicket($IdTicket, $datos)
+    {
+        try {
+            if ($datos['IdUsuarioSoporteTicket'] == null) {
+                $sql = "UPDATE tickets SET 
+            IdUsuarioSoporteTicket = NULL, 
+            DataUpdateTicket = NOW() 
+            WHERE IdTicket = :IdTicket;";
+                $params = [
+                    ':IdTicket' => $IdTicket,
+                ];
+            } else {
+                $sql = "UPDATE tickets SET 
+            IdUsuarioSoporteTicket = :IdUsuarioSoporteTicket, 
+            DataUpdateTicket = NOW() 
+            WHERE IdTicket = :IdTicket;";
+                $params = [
+                    ':IdTicket' => $IdTicket,
+                    ':IdUsuarioSoporteTicket' => $datos['IdUsuarioSoporteTicket'],
+                ];
+            }
+
+            $stmt = $this->db->prepare($sql);
+            $resultado = $stmt->execute($params);
+            if (!$resultado) {
+                throw new Exception("No se pudo actualizar el soporte del ticket.");
+            }
+            return true;
+        } catch (Exception $e) {
+            throw new Exception($e);
+        }
+    }
+
 
 
 

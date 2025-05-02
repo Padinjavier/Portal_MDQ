@@ -417,7 +417,7 @@ function verificarAgregarSelectSoporte() {
                 const select = document.getElementById('IdUsuarioSoporteTicket');
                 select.innerHTML = ''; // Limpiar opciones
                 if (response.data.length != 1) {
-                    select.innerHTML = '<option value="NULL">Seleccione un nombre</option>';
+                    select.innerHTML = '<option value="">Seleccione un nombre</option>';
                 }
                 response.data.forEach(Soporte => {
                     const option = document.createElement('option');
