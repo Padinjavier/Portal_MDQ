@@ -202,7 +202,7 @@
                 </dl>
                 <hr>
                 <h6><strong>Comentarios</strong></h6>
-                <div class="border p-2 rounded bg-light" id="ViewDescripcionTicket" style="min-height: 60px;"></div>
+                <div class="border p-2 rounded bg-light" id="ListaComentariosTicket" style="min-height: 60px;"></div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal"><i class="fas fa-times"></i>

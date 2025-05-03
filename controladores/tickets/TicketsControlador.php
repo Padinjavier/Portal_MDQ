@@ -95,14 +95,14 @@ class TicketsControlador
                 'IdSubproblemaTicket' => $_POST['IdSubproblemaTicket'] ?? null,
                 'DescripcionTicket' => $_POST['DescripcionTicket'] ?? null,
             ];
+            foreach ($datos as $key => $value) {
+                if (empty($value) || $key == "IdUsuarioSoporteTicket") {
+                    throw new Exception("El campo $key es requerido");
+                }
+            }
             // Solo agregar soporte si el rol del usuario es 3
             if (isset($_SESSION['Login_RolUsuario']) && $_SESSION['Login_RolUsuario'] == 1) {
                 $datos['IdUsuarioSoporteTicket'] = $_POST['IdUsuarioSoporteTicket'] ?? null;
-            }
-            foreach ($datos as $key => $value) {
-                if (empty($value)) {
-                    throw new Exception("El campo $key es requerido");
-                }
             }
             $resultado = $this->modelo->GuardarTicket($datos);
             echo json_encode(['success' => $resultado, 'msg' => $resultado ? 'Ticket creado exitosamente.' : 'Error al crear el Ticket.']);
@@ -125,8 +125,9 @@ class TicketsControlador
                 throw new Exception('ID no proporcionado');
             }
             $Ticket = $this->modelo->BuscarTicket($id);
+            $ComentarioTicket = $this->modelo->BuscarComentarioTicket($id);
             if ($Ticket !== false) {
-                echo json_encode(['success' => true, 'data' => $Ticket]);
+                echo json_encode(['success' => true, 'data' => $Ticket , 'comentarios'=>$ComentarioTicket]);
             } else {
                 echo json_encode(['success' => false, 'msg' => 'Ticket no encontrado']);
             }
@@ -158,7 +159,7 @@ class TicketsControlador
             ];
 
             foreach ($datos as $key => $value) {
-                if ($key !== 'PasswordUsuario' && empty($value)) {
+                if (empty($value)) {
                     throw new Exception("El campo $key es requerido");
                 }
             }

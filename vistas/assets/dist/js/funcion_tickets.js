@@ -334,7 +334,7 @@ function getStatusBadge(status) {
 function VerTicket(id) {
     fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=BuscarTicket&id=${id}`)
         .then(res => res.json())
-        .then(({ success, data, msg }) => {
+        .then(({ success, data, comentarios, msg }) => {
             if (!success) {
                 return Swal.fire({
                     title: "Error",
@@ -354,8 +354,24 @@ function VerTicket(id) {
             set('ViewSoporteTicket', Ticket.Soporte || 'No asignado');
             set('ViewDataCreateTicket', Ticket.DataCreateTicket);
             set('ViewDataUpdateTicket', Ticket.DataUpdateTicket);
-            set('ViewDescripcionTicket', Ticket.DescripcionTicket, true);
             set('ViewStatusTicket', getStatusBadge(Ticket.StatusTicket), true);
+            // Mostrar comentarios si existen
+            const contenedorComentarios = document.getElementById("ListaComentariosTicket");
+            contenedorComentarios.innerHTML = ""; // limpiar
+            console.log(comentarios);
+            if (comentarios && comentarios.length > 0) {
+                comentarios.forEach(c => {
+                    contenedorComentarios.innerHTML += `
+                        <div class="mb-2 p-2 border rounded bg-light">
+                            <strong>${c.ComentadoPor}</strong> 
+                            <small class="text-muted float-end">${c.FechaComentario}</small>
+                            <div>${c.Comentario}</div>
+                        </div>
+                    `;
+                });
+            } else {
+                contenedorComentarios.innerHTML = `<div class="text-muted">Este ticket no tiene comentarios.</div>`;
+            }
             $('#ModalViewTicket').modal('show');
         });
 }

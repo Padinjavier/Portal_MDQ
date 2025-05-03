@@ -162,30 +162,57 @@ class TicketsModelo
     public function BuscarTicket($IdTicket)
     {
         try {
-            $sql = "SELECT t.IdTicket, t.CodTicket, t.IdUsuarioCreadorTicket,
-                    CONCAT(ut.NombresUsuario, ' ', ut.ApellidosUsuario) AS Trabajador,
-                    t.DepartamentoTicket,
-                    t.IdProblemaTicket,
-                    t.IdSubproblemaTicket,
-                    p.NombreProblema,
-                    sp.NombreSubproblema,
-                    t.DescripcionTicket,
-                    t.IdUsuarioSoporteTicket,
-                    CONCAT(us.NombresUsuario, ' ', us.ApellidosUsuario) AS Soporte,
-                    t.DataCreateTicket,
-                    t.DataUpdateTicket,
-                    t.StatusTicket
-                FROM tickets t
-                INNER JOIN usuarios ut ON t.IdUsuarioCreadorTicket = ut.IdUsuario
-                LEFT JOIN usuarios us ON t.IdUsuarioSoporteTicket = us.IdUsuario
-                INNER JOIN problemas p ON t.IdProblemaTicket = p.IdProblema
-                INNER JOIN subproblemas sp ON t.IdSubproblemaTicket = sp.IdSubproblema
-                WHERE t.StatusTicket != :StatusTicket
+            $sql = "SELECT 
+                t.IdTicket,
+                t.CodTicket,
+                CONCAT(ut.NombresUsuario, ' ', ut.ApellidosUsuario) AS Trabajador,
+                t.DepartamentoTicket,
+                p.NombreProblema,
+                sp.NombreSubproblema,
+                CONCAT(us.NombresUsuario, ' ', us.ApellidosUsuario) AS Soporte,
+                t.DataCreateTicket,
+                t.DataUpdateTicket,
+                t.StatusTicket
+            FROM 
+                tickets t,
+                usuarios ut,
+                usuarios us,
+                problemas p,
+                subproblemas sp
+            WHERE 
+                t.IdUsuarioCreadorTicket = ut.IdUsuario
+                AND t.IdUsuarioSoporteTicket = us.IdUsuario
+                AND t.IdProblemaTicket = p.IdProblema
+                AND t.IdSubproblemaTicket = sp.IdSubproblema
+                AND t.StatusTicket != :StatusTicket
                 AND t.IdTicket = :IdTicket;
                 ";
             $stmt = $this->db->prepare($sql);
             $stmt->execute(['StatusTicket' => 0, 'IdTicket' => $IdTicket]);
             $Ticket = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $Ticket;
+        } catch (PDOException $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    public function BuscarComentarioTicket($IdTicket)
+    {
+        try {
+            $sql = "SELECT 
+                        ct.IdComentario,
+                        ct.Comentario,
+                        ct.FechaComentario,
+                        CONCAT(u.NombresUsuario, ' ', u.ApellidosUsuario) AS ComentadoPor
+                    FROM 
+                        comentarios_tickets ct,
+                        usuarios u
+                    WHERE 
+                        ct.IdUsuarioComentario = u.IdUsuario
+                     AND ct.IdTicket = :IdTicket;
+                     ";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['IdTicket' => $IdTicket]);
+            $Ticket = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $Ticket;
         } catch (PDOException $e) {
             throw new Exception($e->getMessage());
