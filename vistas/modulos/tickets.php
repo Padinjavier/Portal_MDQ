@@ -149,7 +149,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="DescripcionTicket">Descripción</label>
-                            <textarea id="DescripcionTicket" name="DescripcionTicket"
+                            <textarea id="DescripcionTicket" class="DescripcionTicket" name="DescripcionTicket"
                                 class="form-control summernote"></textarea>
                         </div>
 
@@ -169,46 +169,84 @@
 
 
 <!-- Inicio Modal para Ver Ticket -->
-<div class="modal fade" id="ModalViewTicket" tabindex="-1" role="dialog" aria-labelledby="ModalViewLabelTicket"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+<!-- Inicio Modal para Ver Ticket -->
+<div class="modal fade" id="ModalViewTicket" tabindex="-1" role="dialog" aria-labelledby="ModalViewLabelTicket" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success text-white">
-                <h5 class="modal-title" id="ModalViewLabelTicket"><i class="fas fa-ticket-alt"></i> Ver Ticket</h5>
+                <h5 class="modal-title" id="ModalViewLabelTicket">
+                    <i class="fas fa-ticket-alt"></i> Ver Ticket
+                </h5>
                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
             <div class="modal-body px-4">
-                <dl class="row mb-0 ">
-                    <dt class="col-sm-2">Código</dt>
-                    <dd class="col-sm-3 border rounded bg-light" id="ViewCodigoTicket"></dd>
-                    <dt class="col-sm-2">Nombre</dt>
-                    <dd class="col-sm-4 border rounded bg-light" id="ViewTrabajadorTicket"></dd>
-                    <dt class="col-sm-2">Departamento</dt>
-                    <dd class="col-sm-9 border rounded bg-light" id="ViewDepartamentoTicket"></dd>
-                    <dt class="col-sm-2">Problema</dt>
-                    <dd class="col-sm-3 border rounded bg-light" id="ViewProblemaTicket"></dd>
-                    <dt class="col-sm-2">Subproblema</dt>
-                    <dd class="col-sm-4 border rounded bg-light" id="ViewSubproblemaTicket"></dd>
-                    <dt class="col-sm-2">Creación</dt>
-                    <dd class="col-sm-3 border rounded bg-light" id="ViewDataCreateTicket"></dd>
-                    <dt class="col-sm-2">Actualización</dt>
-                    <dd class="col-sm-4 border rounded bg-light" id="ViewDataUpdateTicket"></dd>
-                    <dt class="col-sm-2">Estado</dt>
-                    <dd class="col-sm-3 border rounded bg-light" id="ViewStatusTicket"></dd>
-                    <dt class="col-sm-2">Soporte</dt>
-                    <dd class="col-sm-4 border rounded bg-light" id="ViewSoporteTicket"></dd>
-                </dl>
-                <hr>
-                <h6><strong>Comentarios</strong></h6>
-                <div class="border p-2 rounded bg-light" id="ListaComentariosTicket" style="min-height: 60px;"></div>
+                <div class="row">
+                    <!-- Columna izquierda: información del ticket -->
+                    <div class="col-md-6 mb-3">
+                        <dl class="row">
+                            <dt class="col-sm-5">Código</dt>
+                            <dd class="col-sm-7 border rounded bg-light py-1 px-2" id="ViewCodigoTicket"></dd>
+
+                            <dt class="col-sm-5">Nombre</dt>
+                            <dd class="col-sm-7 border rounded bg-light py-1 px-2" id="ViewTrabajadorTicket"></dd>
+
+                            <dt class="col-sm-5">Departamento</dt>
+                            <dd class="col-sm-7 border rounded bg-light py-1 px-2" id="ViewDepartamentoTicket"></dd>
+
+                            <dt class="col-sm-5">Problema</dt>
+                            <dd class="col-sm-7 border rounded bg-light py-1 px-2" id="ViewProblemaTicket"></dd>
+
+                            <dt class="col-sm-5">Subproblema</dt>
+                            <dd class="col-sm-7 border rounded bg-light py-1 px-2" id="ViewSubproblemaTicket"></dd>
+
+                            <dt class="col-sm-5">Creación</dt>
+                            <dd class="col-sm-7 border rounded bg-light py-1 px-2" id="ViewDataCreateTicket"></dd>
+
+                            <dt class="col-sm-5">Actualización</dt>
+                            <dd class="col-sm-7 border rounded bg-light py-1 px-2" id="ViewDataUpdateTicket"></dd>
+
+                            <dt class="col-sm-5">Estado</dt>
+                            <dd class="col-sm-7 border rounded bg-light py-1 px-2" id="ViewStatusTicket"></dd>
+
+                            <dt class="col-sm-5">Soporte</dt>
+                            <dd class="col-sm-7 border rounded bg-light py-1 px-2" id="ViewSoporteTicket"></dd>
+                        </dl>
+                    </div>
+
+                    <!-- Columna derecha: comentarios -->
+                    <div class="col-md-6">
+                        <!-- Formulario nuevo comentario -->
+                        <div id="BloqueFormularioComentario" class="d-none mb-3">
+                            <h6><strong>Nuevo Comentario:</strong></h6>
+                            <input type="hidden" id="IdTicketComent" name="IdTicketComent">
+                            <textarea id="ComentarioTexto" class="form-control DescripcionTicket summernote" rows="2" placeholder="Escriba un comentario..."></textarea>
+                            <div class="text-end mt-2">
+                                <button type="button" class="btn btn-success btn-sm" onclick="GuardarComentarioTicket()">
+                                    <i class="fas fa-comment-dots"></i> Enviar comentario
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Comentarios -->
+                        <h6><strong>Comentarios</strong></h6>
+                        <div id="ListaComentariosTicket" class="border p-2 rounded bg-light"
+                             style="max-height: 290px; overflow-y: auto; min-height: 100px;">
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div class="modal-footer">
-                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal"><i class="fas fa-times"></i>
-                    Cerrar</button>
+                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">
+                    <i class="fas fa-times"></i> Cerrar
+                </button>
             </div>
         </div>
     </div>
 </div>
+<!-- Fin Modal para Ver Ticket -->
+
 <!-- Fin Modal para Ver Ticket -->

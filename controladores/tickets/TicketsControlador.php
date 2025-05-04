@@ -171,6 +171,35 @@ class TicketsControlador
     }
     // FIN FUNCION Editar Ticket
 
+    public function GuardarComentarioTicket()
+{
+    try {
+        session_start();
+        $IdUsuario = $_SESSION['Login_IdUsuario'] ?? null;
+        $IdTicket = $_POST['IdTicketComent'] ?? null;
+        $Comentario = trim($_POST['ComentarioTexto'] ?? '');
+
+        if (!$IdUsuario || !$IdTicket || $Comentario === '') {
+            throw new Exception("Faltan datos para guardar el comentario.");
+        }
+
+        $datos = [
+            'IdTicket' => $IdTicket,
+            'IdUsuario' => $IdUsuario,
+            'Comentario' => $Comentario
+        ];
+
+        $resultado = $this->modelo->GuardarComentarioTicket($datos);
+        if ($resultado !== false) {
+            echo json_encode(['success' => true, 'msg' => 'Comentario guardado correctamente.']);
+        } else {
+            echo json_encode(['success' => false, 'msg' => 'Ticket no encontrado']);
+        }
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'msg' => 'Error al guardar comentario: ' . $e->getMessage()]);
+    }
+}
+
 
     // Eliminar un Ticket
     public function EliminarTicket($id)
@@ -243,19 +272,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
         case 'GuardarTicket':
             $controlador->GuardarTicket();
             break;
-        case 'EditarTicket':
-            $id = $_POST['IdTicket'] ?? null; // Leer desde el cuerpo
-            $controlador->EditarTicket($id);
+            case 'EditarTicket':
+                $id = $_POST['IdTicket'] ?? null; // Leer desde el cuerpo
+                $controlador->EditarTicket($id);
+                break;
+            case 'EliminarTicket':
+                $id = $input['id'] ?? null; // Leer desde el cuerpo
+                $controlador->EliminarTicket($id);
+                break;
+            case 'AtenderTicket':
+                $IdTicket = $input['IdTicket'] ?? null; // Leer desde el cuerpo
+                $IdSubproblemaTicket = $input['IdSubproblemaTicket'] ?? null; // Leer desde el cuerpo
+                $controlador->AtenderTicket($IdTicket, $IdSubproblemaTicket);
             break;
-        case 'EliminarTicket':
-            $id = $input['id'] ?? null; // Leer desde el cuerpo
-            $controlador->EliminarTicket($id);
-            break;
-        case 'AtenderTicket':
-            $IdTicket = $input['IdTicket'] ?? null; // Leer desde el cuerpo
-            $IdSubproblemaTicket = $input['IdSubproblemaTicket'] ?? null; // Leer desde el cuerpo
-            $controlador->AtenderTicket($IdTicket, $IdSubproblemaTicket);
-            break;
+            case 'GuardarComentarioTicket':
+                $controlador->GuardarComentarioTicket();
+                break;
         default:
             echo json_encode(['success' => false, 'msg' => 'Acción POST no válida']);
             break;

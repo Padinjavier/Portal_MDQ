@@ -208,7 +208,9 @@ class TicketsModelo
                         usuarios u
                     WHERE 
                         ct.IdUsuarioComentario = u.IdUsuario
-                     AND ct.IdTicket = :IdTicket;
+                     AND ct.IdTicket = :IdTicket
+                     ORDER BY 
+                     ct.FechaComentario DESC;
                      ";
             $stmt = $this->db->prepare($sql);
             $stmt->execute(['IdTicket' => $IdTicket]);
@@ -286,7 +288,23 @@ class TicketsModelo
         }
     }
 
-
+    public function GuardarComentarioTicket($datos)
+    {
+        try {
+            $sql = "INSERT INTO comentarios_tickets (IdTicket, IdUsuarioComentario, Comentario, FechaComentario)
+                    VALUES (:IdTicket, :IdUsuario, :Comentario, NOW())";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                ':IdTicket' => $datos['IdTicket'],
+                ':IdUsuario' => $datos['IdUsuario'],
+                ':Comentario' => $datos['Comentario']
+            ]);
+            return true;
+        } catch (Exception $e) {
+            throw new Exception("No se pudo insertar el comentario: " . $e->getMessage());
+        }
+    }
+    
 
 
     // INICIO ELIMINAR (DESACTIVAR) UN Ticket (CAMBIAR STATUSUSUARIO A 0)

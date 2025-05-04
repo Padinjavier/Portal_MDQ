@@ -80,7 +80,7 @@ $(document).ready(function () {
 
 // Descripción summernote 
 $(document).ready(function () {
-    $('#DescripcionTicket').summernote({
+    $('.DescripcionTicket').summernote({
         placeholder: 'Escribe aquí tu texto...',
         height: 150,
     });
@@ -355,10 +355,8 @@ function VerTicket(id) {
             set('ViewDataCreateTicket', Ticket.DataCreateTicket);
             set('ViewDataUpdateTicket', Ticket.DataUpdateTicket);
             set('ViewStatusTicket', getStatusBadge(Ticket.StatusTicket), true);
-            // Mostrar comentarios si existen
             const contenedorComentarios = document.getElementById("ListaComentariosTicket");
             contenedorComentarios.innerHTML = ""; // limpiar
-            console.log(comentarios);
             if (comentarios && comentarios.length > 0) {
                 comentarios.forEach(c => {
                     contenedorComentarios.innerHTML += `
@@ -369,6 +367,7 @@ function VerTicket(id) {
                         </div>
                     `;
                 });
+                document.getElementById('BloqueFormularioComentario').classList.add('d-none');
             } else {
                 contenedorComentarios.innerHTML = `<div class="text-muted">Este ticket no tiene comentarios.</div>`;
             }
@@ -453,6 +452,88 @@ function verificarAgregarSelectSoporte() {
 
 }
 // fin  editar Ticket (llena el formulario ocn los datos del trabajdor)
+
+// inicio editar Ticket (llena el formulario ocn los datos del trabajdor)
+function ComentariosTicket(id) {
+    fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=BuscarTicket&id=${id}`)
+        .then(res => res.json())
+        .then(({ success, data, comentarios, msg }) => {
+            if (!success) {
+                return Swal.fire({
+                    title: "Error",
+                    html: msg || "Error en el servidor",
+                    icon: "error",
+                });
+            }
+            const Ticket = data;
+            console.log(data)
+            const set = (id, val, html = false) => {
+                document.getElementById(id)[html ? 'innerHTML' : 'textContent'] = val ?? 'No asignado';
+            };
+            document.getElementById('IdTicketComent').value = Ticket.IdTicket;
+            set('ViewCodigoTicket', Ticket.CodTicket);
+            set('ViewTrabajadorTicket', Ticket.Trabajador);
+            set('ViewDepartamentoTicket', Ticket.DepartamentoTicket);
+            set('ViewProblemaTicket', Ticket.NombreProblema);
+            set('ViewSubproblemaTicket', Ticket.NombreSubproblema);
+            set('ViewSoporteTicket', Ticket.Soporte || 'No asignado');
+            set('ViewDataCreateTicket', Ticket.DataCreateTicket);
+            set('ViewDataUpdateTicket', Ticket.DataUpdateTicket);
+            set('ViewStatusTicket', getStatusBadge(Ticket.StatusTicket), true);
+            const contenedorComentarios = document.getElementById("ListaComentariosTicket");
+            contenedorComentarios.innerHTML = ""; // limpiar
+            if (comentarios && comentarios.length > 0) {
+                comentarios.forEach(c => {
+                    contenedorComentarios.innerHTML += `
+                        <div class="mb-2 p-2 border rounded bg-light">
+                            <strong>${c.ComentadoPor}</strong> 
+                            <small class="text-muted float-end">${c.FechaComentario}</small>
+                            <div>${c.Comentario}</div>
+                        </div>
+                    `;
+                });
+            } else {
+                contenedorComentarios.innerHTML = `<div class="text-muted">Este ticket no tiene comentarios.</div>`;
+            }
+            document.getElementById('BloqueFormularioComentario').classList.remove('d-none');
+            $('#ModalViewTicket').modal('show');
+        });
+}
+
+function GuardarComentarioTicket() {
+    const IdTicketComent = document.getElementById('IdTicketComent').value;
+    const ComentarioTexto = document.getElementById('ComentarioTexto').value.trim();
+    if (!ComentarioTexto) {
+        return Swal.fire("Advertencia", "El comentario no puede estar vacío", "warning");
+    }
+    const formData = new FormData();
+    formData.append("IdTicketComent", IdTicketComent); // guarda este ID al cargar el modal
+    formData.append("ComentarioTexto", ComentarioTexto);
+    fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=GuardarComentarioTicket`, {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.text())
+        .then(text => {
+            try {
+                const data = JSON.parse(text);
+                if (!data.success) {
+                    Swal.fire("Error", data.msg || "Error en el servidor", "error");
+                    return;
+                }
+                Swal.fire("Éxito", data.msg, "success");
+                $('#ComentarioTexto').summernote('code', '');
+                ComentariosTicket(IdTicketComent);
+            } catch {
+                throw text;
+            }
+        })
+        .catch(error => Swal.fire({
+            title: "Error",
+            html: typeof error === 'string' ? error : "Error desconocido",        // Si no es JSON válido, mostrar el error crudo (HTML)
+            icon: "error",
+        }));
+}
 
 
 // inicio eliminar Ticket 
