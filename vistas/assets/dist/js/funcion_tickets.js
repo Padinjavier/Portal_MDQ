@@ -523,7 +523,7 @@ function GuardarComentarioTicket() {
                 }
                 Swal.fire("Éxito", data.msg, "success");
                 $('#ComentarioTexto').summernote('code', '');
-                ComentariosTicket(IdTicketComent);
+                ComentariosTicket(IdTicketComent); 
             } catch {
                 throw text;
             }
