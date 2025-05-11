@@ -16,6 +16,16 @@ const DB_PASSWORD = "javier20";
 const DB_CHARSET = "utf8";
 
 
+
+// Información General del Reporte
+const MUNICIPALIDAD = "Municipalidad Distrital de Quilmaná";
+const UNIDAD_INFORMATICA = "Unidad de Informática";
+const DIRECCION = "Av. Principal 123, Quilmaná, Cañete";
+const TELEFONO = "(01) 555-1234";
+const EMAIL = "soporte@quilmanacanete.gob.pe";
+const LOGO_EMPRESA = BASE_URL . "/vistas/assets/dist/img/fondopdf.png";
+
+
 class Conexion {
     private $host = DB_HOST;
     private $dbname = DB_NAME;
