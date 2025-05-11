@@ -20,6 +20,7 @@ class ReporteticketsPDFModelo
                     sp.NombreSubproblema,
                     t.DepartamentoTicket,
                     t.DataCreateTicket,
+                    t.DataUpdateTicket,
                     t.StatusTicket,
                     c.Comentario,
                     c.FechaComentario,
