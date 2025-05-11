@@ -24,12 +24,12 @@ class ReporteticketsPDFControlador
             // Desactivar encabezado y pie de página
             $pdf->setPrintHeader(false);
             $pdf->setPrintFooter(false);
-            // Márgenes en 0 para usar toda la hoja
+            // Márgenes y configuración de página
             $pdf->SetMargins(25, 30, 25);
             $pdf->SetAutoPageBreak(false, 0);
             // Añadir una página
             $pdf->AddPage();
-            // Imagen de Fondo - Ocupa toda la hoja sin perder calidad
+            // Imagen de Fondo
             $pdf->Image(LOGO_EMPRESA, 0, 0, 210, 297, '', '', '', false, 300, '', false, false, 0);
             // Fecha Actual y Hora
             $fechaActual = date('d') . " de " . getMesEnEspañol(date('Y-m-d')) . " del " . date('Y');
@@ -44,7 +44,7 @@ class ReporteticketsPDFControlador
             $estado = getEstadoTicket($ticketData['StatusTicket'] ?? -1);
             $soporte = $ticketData['UsuarioSoporte'] ?? 'No asignado';
             // Título del Año
-            $nombreAño = getNombreAño($ticketData['DataCreateTicket']);
+            $nombreAño = getNombreAño($fechaCreacion);
             $pdf->SetFont('helvetica', 'I', 10);
             $pdf->Cell(0, 10, '"' . $nombreAño . '"', 0, 1, 'C');
             $pdf->Ln(10);
@@ -55,21 +55,17 @@ class ReporteticketsPDFControlador
             $pdf->Cell(0, 10, "N° " . ($ticketData['CodTicket'] ?? 'Sin Código'), 0, 1, 'C');
             $pdf->Ln(10);
             // Fecha y Lugar
-            $pdf->SetFont('helvetica', '', 12);
             $pdf->Cell(0, 10, "Quilmaná, $fechaActual", 0, 1, 'R');
             $pdf->Ln(10);
             // Descripción del Reporte
-            $descripcion = "El encargado de la Unidad de Informática de la Municipalidad Distrital de Quilmaná, siendo las $horaActual horas del día $fechaActual, emite el presente reporte identificado con el código N° {$ticketData['CodTicket']} registrado el $fechaCreacion por $creador del área $departamento. Dicho ticket fue atendido por $soporte.";
+            $descripcion = "El encargado de la Unidad de Informática de la Municipalidad Distrital de Quilmaná, siendo las $horaActual horas del día $fechaActual, emite el presente reporte identificado con el código N° {$ticketData['CodTicket']} registrado el $fechaCreacion por $creador del área $departamento.";
             $pdf->MultiCell(0, 10, $descripcion, 0, 'L');
-            $pdf->Cell(0, 10, "A continuación, se detallan los datos del ticket:", 0, 1, 'L');
-            $pdf->Ln(5);
+            $pdf->Ln(10); // Espacio para iniciar sección de comentarios
             // Tabla de Datos del Ticket
             $pdf->SetFont('helvetica', 'B', 12);
             $pdf->Cell(0, 10, "DETALLES DEL TICKET", 0, 1, 'L');
             $pdf->SetFont('helvetica', '', 12);
-            // Restablecer fuente y color para las celdas
-            $pdf->SetFont('helvetica', '', 12);
-            $pdf->SetFillColor(220, 220, 220); // Blanco
+            $pdf->SetFillColor(50, 50, 50); // Blanco
             // Datos del Ticket
             $datos = [
                 "Código:" => $ticketData['CodTicket'],
@@ -82,12 +78,52 @@ class ReporteticketsPDFControlador
                 "Subproblema:" => $subproblema,
                 "Estado:" => $estado,
             ];
-            // Iterar por los datos
             foreach ($datos as $campo => $valor) {
-                $pdf->Cell(50, 10, $campo, 1, 0, 'L', 1); // Celda del campo
-                $pdf->Cell(110, 10, $valor, 1, 1, 'L', 0); // Celda del valor
+                $pdf->Cell(50, 10, $campo, 1, 0, 'L');
+                $pdf->Cell(110, 10, $valor, 1, 1, 'L');
             }
-            $pdf->Ln(5); // Espacio al final de la tabla
+            $pdf->Ln(10); // Espacio antes de COMENTARIOS
+
+
+            // ----------------------
+            // SECCIÓN DE COMENTARIOS
+            // ----------------------
+
+            $comentarios = array_filter($data, fn($c) => !empty($c['Comentario']));
+            // Verificar si hay comentarios
+            if (!empty($comentarios)) {
+                $pdf->Ln(40); // Espacio antes de COMENTARIOS
+                $pdf->AddPage();
+                $pdf->Image(LOGO_EMPRESA, 0, 0, 210, 297, '', '', '', false, 300, '', false, false, 0);
+                $pdf->SetFont('helvetica', 'B', 14);
+                $pdf->Cell(0, 10, "COMENTARIOS", 0, 1, 'C');
+                $pdf->Ln(5);
+                $pdf->SetFont('helvetica', '', 12);
+                foreach ($comentarios as $comentario) {
+                    $usuario = $comentario['UsuarioComentario'];
+                    $fechaComentario = date('d') . " de " . getMesEnEspañol(date('Y-m-d', strtotime($comentario['FechaComentario']))) . " del " . date('Y H:i', strtotime($comentario['FechaComentario']));
+                    $pdf->SetFont('helvetica', 'B', 12);
+                    $pdf->MultiCell(0, 10, "De: $usuario\nFecha: $fechaComentario", 0, 'L');
+                    $pdf->Ln(2);
+                    $pdf->SetFont('helvetica', '', 12);
+                    // Verificar espacio disponible para el comentario
+                    $currentY = $pdf->GetY();
+                    if ($currentY > 270) {
+                        $pdf->AddPage();
+                        $pdf->Image(LOGO_EMPRESA, 0, 0, 210, 297, '', '', '', false, 300, '', false, false, 0);
+                        $pdf->SetY(30); // Espacio para nuevos comentarios
+                    }
+                    $pdf->writeHTML($comentario['Comentario'], true, false, true, false, '');
+                    $pdf->Ln(10);
+                }
+            } else {
+                $pdf->SetFont('helvetica', 'B', 14);
+                $pdf->Cell(0, 10, "COMENTARIOS", 0, 1, 'C');
+                $pdf->Ln(5);
+                $pdf->SetFont('helvetica', '', 12);
+                $pdf->Cell(0, 10, "Sin comentarios registrados.", 0, 1, 'C');
+            }
+
             ob_end_clean();
             $pdf->Output("Reporte_Ticket_{$codigo}.pdf", 'I');
 
@@ -96,13 +132,6 @@ class ReporteticketsPDFControlador
         }
     }
 }
-
-
-
-
-
-
-
 
 
 
