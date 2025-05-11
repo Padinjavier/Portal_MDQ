@@ -9,12 +9,18 @@
 <div class="container-fluid py-4">
     <div class="row">
         <!-- Card por Código de Ticket -->
-        <div class="col-md-4 mb-2">
+        <!-- Card por Código de Ticket -->
+        <div class="col-md-4 mb-3">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-primary text-white">Por Código de Ticket</div>
                 <div class="card-body d-flex flex-column justify-content-between">
                     <div>
-                        <input type="text" class="form-control mb-3" placeholder="Ingrese código de ticket">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="text" class="form-control form-control-sm" id="codigoTicket"
+                                    placeholder="Ingrese código de ticket">
+                            </div>
+                        </div>
                     </div>
                     <div class="mt-auto">
                         <div class="dropdown w-100">
@@ -22,17 +28,21 @@
                                 <i class="fas fa-file-export"></i> Reporte
                             </button>
                             <div class="dropdown-menu w-100">
-                                <button class="btn dropdown-item text-danger bg-transparent"><i
-                                        class="fas fa-file-pdf"></i>
-                                    PDF</button>
-                                <button class="btn dropdown-item text-success bg-transparent"><i
-                                        class="fas fa-file-excel"></i> Excel</button>
+                                <a href="#" class="dropdown-item text-danger"
+                                    onclick="this.href='<?php echo BASE_URL; ?>/controladores/reportetickets/ReporteticketsPDFControlador.php?action=CodigoTicketPDF&codigo=' + document.getElementById('codigoTicket').value">
+                                    <i class="fas fa-file-pdf"></i> PDF
+                                </a>
+                                <a href="#" class="dropdown-item text-success"
+                                    onclick="this.href='<?php echo BASE_URL; ?>/controladores/reportetickets/ReporteticketsEXCELControlador.php?action=CodigoTicketEXCEL&codigo=' + document.getElementById('codigoTicket').value">
+                                    <i class="fas fa-file-excel"></i> Excel
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <!-- Card por Fecha - Rango de fechas -->
         <div class="col-md-4 mb-2">
             <div class="card shadow-sm h-100">

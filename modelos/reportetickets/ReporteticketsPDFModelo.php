@@ -1,6 +1,6 @@
 <?php
 // C:\wamp64\www\Portal_MDQ\modelos\tickets\TicketsModelo.php
-class ReporteticketsModelo
+class ReporteticketsPDFModelo
 {
     private $db;
 
