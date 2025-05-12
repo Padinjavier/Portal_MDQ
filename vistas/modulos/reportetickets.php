@@ -17,8 +17,7 @@
                     <div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <input type="text" class="form-control form-control-sm" id="codigoTicket"
-                                    placeholder="Ingrese código de ticket">
+                                <input type="text" class="form-control form-control-sm" id="codigoTicket" placeholder="Ingrese código de ticket">
                             </div>
                         </div>
                     </div>
@@ -29,11 +28,11 @@
                             </button>
                             <div class="dropdown-menu w-100">
                                 <a href="#" class="dropdown-item text-danger"
-                                    onclick="this.href='<?php echo BASE_URL; ?>/controladores/reportetickets/ReporteticketsPDFControlador.php?action=CodigoTicketPDF&codigo=' + document.getElementById('codigoTicket').value">
+                                    onclick="CodigoTicketPDF('PDF')">
                                     <i class="fas fa-file-pdf"></i> PDF
                                 </a>
                                 <a href="#" class="dropdown-item text-success"
-                                    onclick="this.href='<?php echo BASE_URL; ?>/controladores/reportetickets/ReporteticketsEXCELControlador.php?action=CodigoTicketEXCEL&codigo=' + document.getElementById('codigoTicket').value">
+                                    onclick="CodigoTicketPDF('EXCEL')">
                                     <i class="fas fa-file-excel"></i> Excel
                                 </a>
                             </div>
@@ -49,8 +48,8 @@
                 <div class="card-header bg-secondary text-white">Por Fecha</div>
                 <div class="card-body d-flex flex-column justify-content-between">
                     <div>
-                        <input type="date" class="form-control mb-3" placeholder="Desde">
-                        <input type="date" class="form-control mb-3" placeholder="Hasta">
+                        <input type="datetime-local" class="form-control mb-3" placeholder="Desde" id="fechaDesde">
+                        <input type="datetime-local" class="form-control mb-3" placeholder="Hasta" id="fechaHasta">
                     </div>
                     <div class="mt-auto">
                         <div class="dropdown w-100">
@@ -58,17 +57,21 @@
                                 <i class="fas fa-file-export"></i> Reporte
                             </button>
                             <div class="dropdown-menu w-100">
-                                <button class="btn dropdown-item text-danger bg-transparent"><i
-                                        class="fas fa-file-pdf"></i>
-                                    PDF</button>
-                                <button class="btn dropdown-item text-success bg-transparent"><i
-                                        class="fas fa-file-excel"></i> Excel</button>
+                                <!-- PDF Reporte -->
+                                <a href="#" class="dropdown-item text-danger" onclick="generarReportePorFechaHora('PDF')">
+                                    <i class="fas fa-file-pdf"></i> PDF
+                                </a>
+                                <!-- Excel Reporte -->
+                                <a href="#" class="dropdown-item text-success" onclick="generarReportePorFechaHora('EXCEL')">
+                                    <i class="fas fa-file-excel"></i> Excel
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <!-- Card por Usuario Trabajador -->
         <div class="col-md-4 mb-2">
             <div class="card shadow-sm h-100">

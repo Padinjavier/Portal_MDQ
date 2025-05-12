@@ -6,7 +6,7 @@ class ReporteticketsPDFModelo
 
     public function __construct($db)
     {
-         $this->db = $db->getConexion();
+        $this->db = $db->getConexion();
     }
 
     public function ObtenerTicketYComentarios($codigo)
@@ -42,4 +42,32 @@ class ReporteticketsPDFModelo
             throw new Exception("Error al obtener datos del ticket: " . $e->getMessage());
         }
     }
+
+
+    public function ObtenerTicketsPorFechaHora($fechaDesde, $fechaHasta)
+    {
+        try {
+            $sql = "
+            SELECT 
+                t.CodTicket,
+                CONCAT(u.NombresUsuario, ' ', u.ApellidosUsuario) AS Creador,
+                t.DataCreateTicket
+            FROM tickets t
+            INNER JOIN usuarios u ON t.IdUsuarioCreadorTicket = u.IdUsuario
+            WHERE t.DataCreateTicket BETWEEN :fechaDesde AND :fechaHasta
+            ORDER BY t.DataCreateTicket ASC
+        ";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                ':fechaDesde' => $fechaDesde,
+                ':fechaHasta' => $fechaHasta
+            ]);
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        } catch (PDOException $e) {
+            throw new Exception("Error al obtener tickets por fecha y hora: " . $e->getMessage());
+        }
+    }
+
 }

@@ -131,6 +131,50 @@ class ReporteticketsPDFControlador
             echo "Error al generar el PDF: " . $e->getMessage();
         }
     }
+
+
+
+
+    
+    public function PorFechaPDF($fechaDesde, $fechaHasta)
+    {
+        try {
+            $data = $this->modelo->ObtenerTicketsPorFechaHora($fechaDesde, $fechaHasta);
+
+            if (empty($data)) {
+                echo "No se encontraron tickets en el rango de fechas.";
+                exit;
+            }
+
+            // Crear instancia TCPDF
+            $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(false);
+            $pdf->SetMargins(25, 30, 25);
+            $pdf->SetAutoPageBreak(false, 0);
+            $pdf->AddPage();
+
+            $pdf->SetFont('helvetica', 'B', 16);
+            $pdf->Cell(0, 10, "REPORTE DE TICKETS POR FECHA Y HORA", 0, 1, 'C');
+            $pdf->Ln(10);
+
+            foreach ($data as $ticket) {
+                $pdf->SetFont('helvetica', 'B', 12);
+                $pdf->Cell(0, 10, "Código: " . $ticket['CodTicket'], 0, 1, 'L');
+                $pdf->SetFont('helvetica', '', 12);
+                $pdf->Cell(0, 10, "Trabajador: " . $ticket['Creador'], 0, 1, 'L');
+                $pdf->Cell(0, 10, "Fecha: " . $ticket['DataCreateTicket'], 0, 1, 'L');
+                $pdf->Ln(5);
+            }
+
+            ob_end_clean();
+            $pdf->Output("Reporte_Tickets_Fecha.pdf", 'I');
+
+        } catch (Exception $e) {
+            echo "Error al generar el PDF: " . $e->getMessage();
+        }
+    }
+
 }
 
 
@@ -153,6 +197,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     switch ($_GET['action']) {
         case 'CodigoTicketPDF':
             $controlador->CodigoTicketPDF($codigo);
+            break;
+        case 'PorFechaPDF':
+            $fechaDesde = $_GET['fechaDesde'] ?? '';
+            $fechaHasta = $_GET['fechaHasta'] ?? '';
+            $controlador->PorFechaPDF($fechaDesde, $fechaHasta);
             break;
         default:
             echo json_encode(['success' => false, 'msg' => 'Acción GET no válida']);
