@@ -163,29 +163,29 @@ class TicketsModelo
     {
         try {
             $sql = "SELECT 
-                t.IdTicket,
-                t.CodTicket,
-                CONCAT(ut.NombresUsuario, ' ', ut.ApellidosUsuario) AS Trabajador,
-                t.DepartamentoTicket,
-                p.NombreProblema,
-                sp.NombreSubproblema,
-                CONCAT(us.NombresUsuario, ' ', us.ApellidosUsuario) AS Soporte,
-                t.DataCreateTicket,
-                t.DataUpdateTicket,
-                t.StatusTicket
-            FROM 
-                tickets t,
-                usuarios ut,
-                usuarios us,
-                problemas p,
-                subproblemas sp
-            WHERE 
-                t.IdUsuarioCreadorTicket = ut.IdUsuario
-                AND t.IdUsuarioSoporteTicket = us.IdUsuario
-                AND t.IdProblemaTicket = p.IdProblema
-                AND t.IdSubproblemaTicket = sp.IdSubproblema
-                AND t.StatusTicket != :StatusTicket
-                AND t.IdTicket = :IdTicket;
+                            t.IdTicket,
+                            t.CodTicket,
+                            t.IdUsuarioCreadorTicket,
+                            CONCAT(ut.NombresUsuario, ' ', ut.ApellidosUsuario) AS Trabajador,
+                            t.DepartamentoTicket,
+                            t.IdProblemaTicket,
+                            p.NombreProblema,
+                            t.IdSubproblemaTicket,
+                            sp.NombreSubproblema,
+                            t.IdUsuarioSoporteTicket,
+                            CONCAT(us.NombresUsuario, ' ', us.ApellidosUsuario) AS Soporte,
+                            t.DataCreateTicket,
+                            t.DataUpdateTicket,
+                            t.StatusTicket
+                        FROM 
+                            tickets t
+                            LEFT JOIN usuarios ut ON t.IdUsuarioCreadorTicket = ut.IdUsuario
+                            LEFT JOIN usuarios us ON t.IdUsuarioSoporteTicket = us.IdUsuario
+                            LEFT JOIN problemas p ON t.IdProblemaTicket = p.IdProblema
+                            LEFT JOIN subproblemas sp ON t.IdSubproblemaTicket = sp.IdSubproblema
+                        WHERE 
+                            t.StatusTicket != :StatusTicket
+                            AND t.IdTicket = :IdTicket;
                 ";
             $stmt = $this->db->prepare($sql);
             $stmt->execute(['StatusTicket' => 0, 'IdTicket' => $IdTicket]);
@@ -304,7 +304,7 @@ class TicketsModelo
             throw new Exception("No se pudo insertar el comentario: " . $e->getMessage());
         }
     }
-    
+
 
 
     // INICIO ELIMINAR (DESACTIVAR) UN Ticket (CAMBIAR STATUSUSUARIO A 0)

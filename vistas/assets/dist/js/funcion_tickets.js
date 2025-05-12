@@ -397,10 +397,8 @@ async function EditarTicket(id) {
         document.getElementById('IdUsuarioCreadorTicket').value = Ticket.IdUsuarioCreadorTicket;
         document.getElementById('DepartamentoTicket').value = Ticket.DepartamentoTicket;
         document.getElementById('IdProblemaTicket').value = Ticket.IdProblemaTicket;
-        // Simular el cambio del select de Problemas
         const selectProblema = document.getElementById('IdProblemaTicket');
         const selectSubproblema = document.getElementById('IdSubproblemaTicket');
-        // Cargar subproblemas antes de asignar el subproblema seleccionado
         const subproblemas = subproblemasMap[Ticket.IdProblemaTicket]?.subproblemas || [];
         selectSubproblema.innerHTML = '<option value="">Seleccione un Subproblema</option>';
         subproblemas.forEach(sp => {
@@ -409,8 +407,9 @@ async function EditarTicket(id) {
             option.textContent = sp.nombre;
             selectSubproblema.appendChild(option);
         });
-        // Ahora sí asignar el subproblema
         document.getElementById('IdSubproblemaTicket').value = Ticket.IdSubproblemaTicket;
+        console.log("Ticket.IdUsuarioSoporteTicket");
+        console.log("Ticket.IdUsuarioSoporteTicket", Ticket.IdUsuarioSoporteTicket);
         document.getElementById('IdUsuarioSoporteTicket').value = Ticket.IdUsuarioSoporteTicket;
         $('#DescripcionTicket').summernote('code', Ticket.DescripcionTicket);
         document.getElementById('ModalFormLabelTicket').innerText = 'Editar Ticket';
