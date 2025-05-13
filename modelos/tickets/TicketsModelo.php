@@ -232,7 +232,6 @@ class TicketsModelo
                         DepartamentoTicket = :DepartamentoTicket,
                         IdProblemaTicket = :IdProblemaTicket,
                         IdSubproblemaTicket = :IdSubproblemaTicket,
-                        DescripcionTicket = :DescripcionTicket,
                         DataUpdateTicket = NOW()
                         WHERE IdTicket = :IdTicket";
 
@@ -241,7 +240,6 @@ class TicketsModelo
                 ':DepartamentoTicket' => $datos['DepartamentoTicket'],
                 ':IdProblemaTicket' => $datos['IdProblemaTicket'],
                 ':IdSubproblemaTicket' => $datos['IdSubproblemaTicket'],
-                ':DescripcionTicket' => $datos['DescripcionTicket'],
                 ':IdTicket' => $IdTicket,
             ];
             $stmt = $this->db->prepare($sql);
@@ -352,4 +350,11 @@ class TicketsModelo
             throw new Exception($e->getMessage());
         }
     }
+    public function ActualizarComentario($idComentario, $nuevoTexto)
+    {
+        $sql = "UPDATE comentarios_tickets SET Comentario = ? WHERE IdComentario = ?";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$nuevoTexto, $idComentario]);
+    }
+
 }

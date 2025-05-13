@@ -155,7 +155,6 @@ class TicketsControlador
                 'DepartamentoTicket' => $_POST['DepartamentoTicket'] ?? null,
                 'IdProblemaTicket' => $_POST['IdProblemaTicket'] ?? null,
                 'IdSubproblemaTicket' => $_POST['IdSubproblemaTicket'] ?? null,
-                'DescripcionTicket' => $_POST['DescripcionTicket'] ?? null,
             ];
 
             foreach ($datos as $key => $value) {
@@ -163,6 +162,20 @@ class TicketsControlador
                     throw new Exception("El campo $key es requerido");
                 }
             }
+            // Justo antes del echo json_encode final
+if (!empty($_POST['comentarios'])) {
+    $comentarios = json_decode($_POST['comentarios'], true);
+    if (is_array($comentarios)) {
+        foreach ($comentarios as $comentario) {
+            $idComentario = $comentario['IdComentario'] ?? null;
+            $contenido = $comentario['Comentario'] ?? null;
+
+            if ($idComentario && $contenido) {
+                $this->modelo->ActualizarComentario($idComentario, $contenido);
+            }
+        }
+    }
+}
             $resultado = $this->modelo->EditarTicket($id, $datos);
             echo json_encode(['success' => $resultado, 'msg' => $resultado ? 'Ticket editado exitosamente.' : 'Error al editar el ticket.']);
         } catch (Exception $e) {

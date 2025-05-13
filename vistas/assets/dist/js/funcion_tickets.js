@@ -180,9 +180,23 @@ window.CargarDatosTickets = function () {
 
 // INICIO EDITAR Ticket
 function openModal() {
+    const sectionDescripcionTicket = document.getElementById('sectionDescripcionTicket');
+    sectionDescripcionTicket.innerHTML = '';
+    const newTextareaContainer = document.createElement('div');
+    newTextareaContainer.className = 'col-md-12';
+    newTextareaContainer.innerHTML = `
+        <div class="form-group">
+            <label for="DescripcionTicket_0">Descripción</label>
+            <textarea id="DescripcionTicket_0" class="form-control summernote" name="DescripcionTicket_0" data-idcomentario=""></textarea>
+        </div>
+    `;
+    sectionDescripcionTicket.appendChild(newTextareaContainer);
+    $('#DescripcionTicket_0').summernote({
+        height: 150,
+        placeholder: 'Escriba aquí...'
+    });
     document.getElementById('FormularioTicket').reset();
     document.getElementById('IdTicket').value = "";
-    $('#DescripcionTicket').summernote('code', '');
     document.getElementById('ModalFormLabelTicket').innerText = 'Nuevo Ticket';
     $('#ModalFormTicket').modal('show');
 }
@@ -278,40 +292,54 @@ function SelectNombre() {
 
 // inicio guardar Ticket
 function GuardarTicket() {
-    const formData = new FormData(document.getElementById('FormularioTicket'));
+    const form = document.getElementById('FormularioTicket');
+    const formData = new FormData(form);
     const accion = document.getElementById('IdTicket').value ? 'EditarTicket' : 'GuardarTicket';
+
+    const total = parseInt(document.getElementById('totalcomentarios').value || 0);
+    const comentarios = [];
+
+    for (let i = 0; i < total; i++) {
+        const textarea = document.getElementById(`DescripcionTicket_${i}`);
+        if (textarea) {
+            const idComentario = textarea.getAttribute('data-idcomentario');
+            const contenido = $(`#DescripcionTicket_${i}`).summernote('code');
+            comentarios.push({ IdComentario: idComentario, Comentario: contenido });
+        }
+    }
+
+    // Agrega el array como JSON string
+    formData.append('comentarios', JSON.stringify(comentarios));
+
     document.getElementById('IdUsuarioCreadorTicket').disabled = false;
+
     fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=${accion}`, {
         method: 'POST',
         body: formData
     })
-        .then(response => response.text())
-        .then(text => {
-            console.log("🟡 Revisando FormData:");
-
-            for (let pair of formData.entries()) {
-                console.log(`${pair[0]}: ${pair[1]}`);
+    .then(response => response.text())
+    .then(text => {
+        try {
+            const data = JSON.parse(text);
+            if (!data.success) {
+                Swal.fire("Error", data.msg || "Error en el servidor", "error");
+                return;
             }
-            try {
-                const data = JSON.parse(text);
-                if (!data.success) {
-                    Swal.fire("Error", data.msg || "Error en el servidor", "error");
-                    return; // Salir de la función para evitar ejecutar el éxito
-                }
-                Swal.fire("Éxito", data.msg, "success").then(() => {
-                    $('#ModalFormTicket').modal('hide');
-                    CargarDatosTickets();
-                });
-            } catch {
-                throw text; // Si no es JSON válido, lanzamos el HTML con text
-            }
-        })
-        .catch(error => Swal.fire({
-            title: "Error",
-            html: typeof error === 'string' ? error : "Error desconocido",        // Si no es JSON válido, mostrar el error crudo (HTML)
-            icon: "error",
-        }));
+            Swal.fire("Éxito", data.msg, "success").then(() => {
+                $('#ModalFormTicket').modal('hide');
+                CargarDatosTickets();
+            });
+        } catch {
+            throw text;
+        }
+    })
+    .catch(error => Swal.fire({
+        title: "Error",
+        html: typeof error === 'string' ? error : "Error desconocido",
+        icon: "error",
+    }));
 }
+
 // inicio guardar Ticket
 
 
@@ -391,12 +419,15 @@ async function EditarTicket(id) {
             throw new Error(text); // Si no es JSON válido, es HTML (probablemente error de PHP)
         }
         if (!result.success) throw new Error(result.msg || "Error en el servidor");
+
         document.getElementById('FormularioTicket').reset();
         const Ticket = result.data;
+
         document.getElementById('IdTicket').value = Ticket.IdTicket;
         document.getElementById('IdUsuarioCreadorTicket').value = Ticket.IdUsuarioCreadorTicket;
         document.getElementById('DepartamentoTicket').value = Ticket.DepartamentoTicket;
         document.getElementById('IdProblemaTicket').value = Ticket.IdProblemaTicket;
+
         const selectProblema = document.getElementById('IdProblemaTicket');
         const selectSubproblema = document.getElementById('IdSubproblemaTicket');
         const subproblemas = subproblemasMap[Ticket.IdProblemaTicket]?.subproblemas || [];
@@ -407,21 +438,44 @@ async function EditarTicket(id) {
             option.textContent = sp.nombre;
             selectSubproblema.appendChild(option);
         });
+
         document.getElementById('IdSubproblemaTicket').value = Ticket.IdSubproblemaTicket;
-        console.log("Ticket.IdUsuarioSoporteTicket");
-        console.log("Ticket.IdUsuarioSoporteTicket", Ticket.IdUsuarioSoporteTicket);
         document.getElementById('IdUsuarioSoporteTicket').value = Ticket.IdUsuarioSoporteTicket;
-        $('#DescripcionTicket').summernote('code', Ticket.DescripcionTicket);
+        // Limpiar y generar nuevas textareas con Summernote
+        const sectionDescripcionTicket = document.getElementById('sectionDescripcionTicket');
+        const totalcomentarios = document.getElementById('totalcomentarios');
+        sectionDescripcionTicket.innerHTML = '';
+        const ComentarioTicket = result.comentarios || [];
+
+        ComentarioTicket.forEach((Comentario, index) => {
+        const textareaId = `DescripcionTicket_${index}`;
+        const textarea = document.createElement('textarea');
+        textarea.id = textareaId;
+        textarea.className = 'form-control summernote';
+        textarea.name = `DescripcionTicket_${index}`;
+        textarea.setAttribute('data-idcomentario', Comentario.IdComentario);
+        sectionDescripcionTicket.appendChild(textarea);
+
+        $(`#${textareaId}`).summernote({
+            height: 150,
+            placeholder: 'Escriba aquí...'
+        }).summernote('code', Comentario.Comentario);
+    });
+
+// Guardar total de comentarios generados
+totalcomentarios.value = ComentarioTicket.length;
+
         document.getElementById('ModalFormLabelTicket').innerText = 'Editar Ticket';
         $('#ModalFormTicket').modal('show');
     } catch (error) {
         Swal.fire({
             title: "Error",
-            html: error.message || String(error), // si viene con mensaje, lo usamos
+            html: error.message || String(error),
             icon: "error",
         });
     }
 }
+
 function verificarAgregarSelectSoporte() {
     if (Login_RolUsuario == 1) {
         return fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=ListarSoportes`)
@@ -465,7 +519,6 @@ function ComentariosTicket(id) {
                 });
             }
             const Ticket = data;
-            console.log(data)
             const set = (id, val, html = false) => {
                 document.getElementById(id)[html ? 'innerHTML' : 'textContent'] = val ?? 'No asignado';
             };
@@ -522,7 +575,7 @@ function GuardarComentarioTicket() {
                 }
                 Swal.fire("Éxito", data.msg, "success");
                 $('#ComentarioTexto').summernote('code', '');
-                ComentariosTicket(IdTicketComent); 
+                ComentariosTicket(IdTicketComent);
             } catch {
                 throw text;
             }

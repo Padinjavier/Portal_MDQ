@@ -147,7 +147,8 @@
                         <?php } ?>
                     </div>
                     <div class="col-md-12">
-                        <div class="form-group">
+                        <input type="number" id="totalcomentarios" name="totalcomentarios" value="1" hidden>
+                        <div class="form-group" id="sectionDescripcionTicket">
                             <label for="DescripcionTicket">Descripción</label>
                             <textarea id="DescripcionTicket" class="DescripcionTicket" name="DescripcionTicket"
                                 class="form-control summernote"></textarea>
