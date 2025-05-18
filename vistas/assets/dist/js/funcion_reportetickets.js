@@ -162,7 +162,7 @@ function generarReportePorFechaHora(tipo) {
 function generarReportePorTrabajador(tipo) {
     const IdUsuarioCreadorTicketReporte = document.getElementById('IdUsuarioCreadorTicketReporte').value;
     if (!IdUsuarioCreadorTicketReporte) {
-        Swal.fire("Error", "Por favor, seleccione ambas fechas y horas.", "error");
+        Swal.fire("Error", "Por favor, seleccione una opcion.", "error");
         return;
     }
     if (tipo === "PDF") {
@@ -171,6 +171,21 @@ function generarReportePorTrabajador(tipo) {
     } else if (tipo === "EXCEL") {
         window.open(`${BASE_URL}/controladores/reportetickets/ReporteticketsEXCELControlador.php?action=PorTrabajadorEXCEL&IdUsuarioCreadorTicketReporte=
             ${IdUsuarioCreadorTicketReporte}`, "_blank");
+    }
+}
+
+function generarReportePorSoporte(tipo) {
+    const IdUsuarioSoporteTicketReporte = document.getElementById('IdUsuarioSoporteTicketReporte').value;
+    if (!IdUsuarioSoporteTicketReporte) {
+        Swal.fire("Error", "Por favor, seleccione una opcion.", "error");
+        return;
+    }
+    if (tipo === "PDF") {
+        window.open(`${BASE_URL}/controladores/reportetickets/ReporteticketsPDFControlador.php?action=PorSoportePDF&IdUsuarioSoporteTicketReporte=
+            ${IdUsuarioSoporteTicketReporte}`, "_blank");
+    } else if (tipo === "EXCEL") {
+        window.open(`${BASE_URL}/controladores/reportetickets/ReporteticketsEXCELControlador.php?action=PorSoporteEXCEL&IdUsuarioSoporteTicketReporte=
+            ${IdUsuarioSoporteTicketReporte}`, "_blank");
     }
 }
 

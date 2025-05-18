@@ -459,6 +459,135 @@ class ReporteticketsPDFControlador
 
 
 
+public function PorSoportePDF($IdUsuarioSoporteTicketReporte)
+{
+    try {
+        $data = $this->modelo->PorSoportePDF($IdUsuarioSoporteTicketReporte);
+
+        if (empty($data)) {
+            echo "No se encontraron tickets asignados a este soporte.";
+            exit;
+        }
+
+        $ticketsAgrupados = [];
+        foreach ($data as $fila) {
+            $cod = $fila['CodTicket'];
+            if (!isset($ticketsAgrupados[$cod])) {
+                $ticketsAgrupados[$cod] = [
+                    'CodTicket' => $fila['CodTicket'],
+                    'Creador' => $fila['Creador'],
+                    'DepartamentoTicket' => $fila['DepartamentoTicket'] ?? 'No especificado',
+                    'FechaCreacion' => $fila['DataCreateTicket'],
+                    'FechaActualizacion' => $fila['DataUpdateTicket'] ?? 'No disponible',
+                    'Soporte' => $fila['UsuarioSoporte'] ?? 'No asignado',
+                    'Problema' => $fila['NombreProblema'] ?? 'No especificado',
+                    'Subproblema' => $fila['NombreSubproblema'] ?? 'No asignado',
+                    'Estado' => getEstadoTicket($fila['StatusTicket'] ?? -1),
+                    'Comentarios' => []
+                ];
+            }
+            if (!empty($fila['Comentario'])) {
+                $ticketsAgrupados[$cod]['Comentarios'][] = [
+                    'UsuarioComentario' => $fila['UsuarioComentario'],
+                    'FechaComentario' => $fila['FechaComentario'],
+                    'Comentario' => $fila['Comentario']
+                ];
+            }
+        }
+
+        $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+        $pdf->SetMargins(25, 30, 25);
+        $pdf->SetAutoPageBreak(false, 0);
+        $pdf->AddPage();
+        $pdf->Image(LOGO_EMPRESA, 0, 0, 210, 297, '', '', '', false, 300, '', false, false, 0);
+
+        $fechaActual = date('d') . " de " . getMesEnEspañol(date('Y-m-d')) . " del " . date('Y');
+        $nombreAño = getNombreAño(date('Y-m-d'));
+
+        $pdf->SetFont('helvetica', 'I', 10);
+        $pdf->Cell(0, 10, '"' . $nombreAño . '"', 0, 1, 'C');
+        $pdf->Ln(10);
+
+        $pdf->SetFont('helvetica', 'B', 16);
+        $pdf->Cell(0, 10, "REPORTE DE TICKETS POR SOPORTE", 0, 1, 'C');
+        $pdf->Ln(5);
+
+        $pdf->SetFont('helvetica', '', 12);
+        $pdf->Cell(0, 10, "Quilmaná, $fechaActual", 0, 1, 'R');
+        $pdf->Ln(5);
+
+        $descripcion = "El presente documento registra la relación de tickets asignados al trabajador de soporte técnico seleccionado. "
+            . "Este informe ha sido generado automáticamente por el sistema de gestión de soporte técnico de la Municipalidad Distrital de Quilmaná.";
+        $pdf->MultiCell(0, 10, $descripcion, 0, 'L');
+        $pdf->Ln(10);
+
+        foreach ($ticketsAgrupados as $ticket) {
+            $pdf->SetFont('helvetica', 'B', 12);
+            $pdf->Cell(0, 10, "DETALLES DEL TICKET: " . $ticket['CodTicket'], 0, 1, 'L');
+
+            $pdf->SetFont('helvetica', '', 11);
+            $datos = [
+                "Trabajador:" => $ticket['Creador'],
+                "Departamento:" => $ticket['DepartamentoTicket'],
+                "Fecha Creación:" => $ticket['FechaCreacion'],
+                "Fecha Actualización:" => $ticket['FechaActualizacion'],
+                "Soporte:" => $ticket['Soporte'],
+                "Problema:" => $ticket['Problema'],
+                "Subproblema:" => $ticket['Subproblema'],
+                "Estado:" => $ticket['Estado'],
+            ];
+            foreach ($datos as $campo => $valor) {
+                $pdf->Cell(50, 10, $campo, 1, 0, 'L');
+                $pdf->Cell(110, 10, $valor, 1, 1, 'L');
+            }
+            $pdf->Ln(5);
+
+            if (!empty($ticket['Comentarios'])) {
+                $pdf->SetFont('helvetica', 'B', 12);
+                $pdf->Cell(0, 10, "COMENTARIOS", 0, 1, 'C');
+                foreach ($ticket['Comentarios'] as $comentario) {
+                    $fechaComentario = date('d') . " de " . getMesEnEspañol(date('Y-m-d', strtotime($comentario['FechaComentario']))) . " del " . date('Y H:i', strtotime($comentario['FechaComentario']));
+                    $pdf->SetFont('helvetica', 'B', 11);
+                    $pdf->MultiCell(0, 6, "De: {$comentario['UsuarioComentario']}\nFecha: $fechaComentario", 0, 'L');
+                    $pdf->Ln(1);
+                    $pdf->SetFont('helvetica', '', 11);
+                    $pdf->writeHTML($comentario['Comentario'], true, false, true, false, '');
+                    $pdf->Ln(6);
+
+                    if ($pdf->GetY() > 220) {
+                        $pdf->AddPage();
+                        $pdf->Image(LOGO_EMPRESA, 0, 0, 210, 297, '', '', '', false, 300, '', false, false, 0);
+                    }
+                }
+            } else {
+                $pdf->Cell(0, 10, "COMENTARIOS", 0, 1, 'C');
+                $pdf->Ln(5);
+                $pdf->SetFont('helvetica', 'I', 11);
+                $pdf->Cell(0, 8, "Sin comentarios.", 0, 1, 'L');
+                $pdf->Ln(10);
+            }
+
+            $pdf->Ln(10);
+
+            if ($pdf->GetY() > 240) {
+                $pdf->AddPage();
+                $pdf->Image(LOGO_EMPRESA, 0, 0, 210, 297, '', '', '', false, 300, '', false, false, 0);
+            }
+        }
+
+        ob_end_clean();
+        $pdf->Output("Reporte_Tickets_Soporte.pdf", 'I');
+
+    } catch (Exception $e) {
+        echo "Error al generar el PDF: " . $e->getMessage();
+    }
+}
+
+
+
+
 }
 
 
@@ -490,6 +619,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
         case 'PorTrabajadorPDF':
             $IdUsuarioCreadorTicketReporte = $_GET['IdUsuarioCreadorTicketReporte'] ?? '';
             $controlador->PorTrabajadorPDF($IdUsuarioCreadorTicketReporte);
+            break;
+        case 'PorSoportePDF':
+            $IdUsuarioSoporteTicketReporte = $_GET['IdUsuarioSoporteTicketReporte'] ?? '';
+            $controlador->PorSoportePDF($IdUsuarioSoporteTicketReporte);
             break;
         case 'SelectTrabajadores':
             $controlador->SelectTrabajadores();

@@ -190,6 +190,48 @@ public function PorTrabajadorPDF($IdUsuarioCreadorTicketReporte)
     }
 }
 
+public function PorSoportePDF($IdUsuarioSoporteTicketReporte)
+{
+    try {
+        $sql = "
+            SELECT 
+                t.IdTicket,
+                t.CodTicket,
+                CONCAT(u.NombresUsuario, ' ', u.ApellidosUsuario) AS Creador,
+                t.DataCreateTicket,
+                t.DataUpdateTicket,
+                t.DepartamentoTicket,
+                t.StatusTicket,
+                CONCAT(usop.NombresUsuario, ' ', usop.ApellidosUsuario) AS UsuarioSoporte,
+                p.NombreProblema,
+                sp.NombreSubproblema,
+                c.Comentario,
+                c.FechaComentario,
+                CONCAT(ucom.NombresUsuario, ' ', ucom.ApellidosUsuario) AS UsuarioComentario
+            FROM tickets t
+            INNER JOIN usuarios u ON t.IdUsuarioCreadorTicket = u.IdUsuario
+            INNER JOIN usuarios usop ON t.IdUsuarioSoporteTicket = usop.IdUsuario
+            LEFT JOIN problemas p ON t.IdProblemaTicket = p.IdProblema
+            LEFT JOIN subproblemas sp ON t.IdSubproblemaTicket = sp.IdSubproblema
+            LEFT JOIN comentarios_tickets c ON c.IdTicket = t.IdTicket
+            LEFT JOIN usuarios ucom ON ucom.IdUsuario = c.IdUsuarioComentario
+            WHERE t.IdUsuarioSoporteTicket = :IdUsuarioSoporteTicketReporte
+              AND t.StatusTicket != 0
+            ORDER BY t.DataCreateTicket ASC, c.FechaComentario ASC
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            ':IdUsuarioSoporteTicketReporte' => $IdUsuarioSoporteTicketReporte
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    } catch (PDOException $e) {
+        throw new Exception("Error al obtener tickets por soporte: " . $e->getMessage());
+    }
+}
+
 
 
 
