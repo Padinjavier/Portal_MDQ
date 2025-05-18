@@ -49,13 +49,19 @@ class ReporteticketsPDFModelo
         try {
             $sql = "
             SELECT 
+                t.IdTicket,
                 t.CodTicket,
                 CONCAT(u.NombresUsuario, ' ', u.ApellidosUsuario) AS Creador,
-                t.DataCreateTicket
+                t.DataCreateTicket,
+                c.Comentario,
+                c.FechaComentario,
+                CONCAT(ucom.NombresUsuario, ' ', ucom.ApellidosUsuario) AS UsuarioComentario
             FROM tickets t
             INNER JOIN usuarios u ON t.IdUsuarioCreadorTicket = u.IdUsuario
+            LEFT JOIN comentarios_tickets c ON c.IdTicket = t.IdTicket
+            LEFT JOIN usuarios ucom ON ucom.IdUsuario = c.IdUsuarioComentario
             WHERE t.DataCreateTicket BETWEEN :fechaDesde AND :fechaHasta
-            ORDER BY t.DataCreateTicket ASC
+            ORDER BY t.DataCreateTicket ASC, c.FechaComentario ASC
         ";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([
@@ -69,5 +75,88 @@ class ReporteticketsPDFModelo
             throw new Exception("Error al obtener tickets por fecha y hora: " . $e->getMessage());
         }
     }
+
+
+    public function SelectTrabajadores()
+    {
+        try {
+            $sql = "SELECT u.IdUsuario, CONCAT(u.NombresUsuario, ' ', u.ApellidosUsuario) AS NombreCompleto
+                    FROM usuarios u
+                    INNER JOIN tickets t ON u.IdUsuario = t.IdUsuarioCreadorTicket
+                    WHERE u.StatusUsuario != :StatusUsuario
+                    AND t.StatusTicket != :StatusTicket
+                    GROUP BY u.IdUsuario;";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':StatusUsuario' => 0, ':StatusTicket' => 0]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Error al obtener usuarios: " . $e->getMessage());
+        }
+    }
+
+    public function SelectSoportes()
+    {
+        try {
+            $sql = "SELECT u.IdUsuario, CONCAT(u.NombresUsuario, ' ', u.ApellidosUsuario) AS NombreCompleto
+                    FROM usuarios u
+                    INNER JOIN tickets t ON u.IdUsuario = t.IdUsuarioSoporteTicket
+                    WHERE u.StatusUsuario != :StatusUsuario
+                    AND t.StatusTicket != :StatusTicket
+                    GROUP BY u.IdUsuario;";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':StatusUsuario' => 0, ':StatusTicket' => 0]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Error al obtener usuarios: " . $e->getMessage());
+        }
+    }
+
+    public function SelectDepartamentos()
+    {
+        try {
+            $sql = "SELECT DISTINCT DepartamentoTicket
+                    FROM tickets
+                    WHERE StatusTicket != :StatusTicket;";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':StatusTicket' => 0]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Error al obtener usuarios: " . $e->getMessage());
+        }
+    }
+
+    public function SelectProblemasUsados()
+    {
+        try {
+            $sql = "SELECT DISTINCT p.IdProblema, p.NombreProblema
+                FROM tickets t
+                INNER JOIN problemas p ON t.IdProblemaTicket = p.IdProblema
+                WHERE t.StatusTicket != 0 AND p.StatusProblema = 1";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Error al obtener problemas usados: " . $e->getMessage());
+        }
+    }
+
+    public function SelectSubproblemasUsados($idProblema)
+    {
+        try {
+            $sql = "SELECT DISTINCT s.IdSubproblema, s.NombreSubproblema
+                FROM tickets t
+                INNER JOIN subproblemas s ON t.IdSubproblemaTicket = s.IdSubproblema
+                WHERE t.StatusTicket != 0
+                  AND s.StatusSubproblema = 1
+                  AND s.IdProblema = :idProblema";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':idProblema' => $idProblema]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Error al obtener subproblemas usados: " . $e->getMessage());
+        }
+    }
+
+
 
 }
