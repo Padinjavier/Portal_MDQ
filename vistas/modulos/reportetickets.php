@@ -95,12 +95,17 @@
                             <button class="btn btn-primary w-100 dropdown-toggle" data-toggle="dropdown">
                                 <i class="fas fa-file-export"></i> Reporte
                             </button>
-                            <div class="dropdown-menu w-100">
-                                <button class="btn dropdown-item text-danger bg-transparent"><i
-                                        class="fas fa-file-pdf"></i>
-                                    PDF</button>
-                                <button class="btn dropdown-item text-success bg-transparent"><i
-                                        class="fas fa-file-excel"></i> Excel</button>
+                               <div class="dropdown-menu w-100">
+                                <!-- PDF Reporte -->
+                                <a href="#" class="dropdown-item text-danger"
+                                    onclick="generarReportePorTrabajador('PDF')">
+                                    <i class="fas fa-file-pdf"></i> PDF
+                                </a>
+                                <!-- Excel Reporte -->
+                                <a href="#" class="dropdown-item text-success"
+                                    onclick="generarReportePorTrabajador('EXCEL')">
+                                    <i class="fas fa-file-excel"></i> Excel
+                                </a>
                             </div>
                         </div>
                     </div>

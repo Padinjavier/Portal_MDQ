@@ -159,6 +159,20 @@ function generarReportePorFechaHora(tipo) {
             ${fechaDesde}&fechaHasta=${fechaHasta}`, "_blank");
     }
 }
+function generarReportePorTrabajador(tipo) {
+    const IdUsuarioCreadorTicketReporte = document.getElementById('IdUsuarioCreadorTicketReporte').value;
+    if (!IdUsuarioCreadorTicketReporte) {
+        Swal.fire("Error", "Por favor, seleccione ambas fechas y horas.", "error");
+        return;
+    }
+    if (tipo === "PDF") {
+        window.open(`${BASE_URL}/controladores/reportetickets/ReporteticketsPDFControlador.php?action=PorTrabajadorPDF&IdUsuarioCreadorTicketReporte=
+            ${IdUsuarioCreadorTicketReporte}`, "_blank");
+    } else if (tipo === "EXCEL") {
+        window.open(`${BASE_URL}/controladores/reportetickets/ReporteticketsEXCELControlador.php?action=PorTrabajadorEXCEL&IdUsuarioCreadorTicketReporte=
+            ${IdUsuarioCreadorTicketReporte}`, "_blank");
+    }
+}
 
 
 
