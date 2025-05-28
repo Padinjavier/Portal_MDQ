@@ -54,7 +54,7 @@
                             <p>Dashboard</p>
                         </a>
                     </li>
-                <?php endif; ?>
+                <?php endif;?>
 
 
 

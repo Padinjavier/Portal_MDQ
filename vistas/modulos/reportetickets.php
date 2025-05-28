@@ -152,7 +152,7 @@
             </div>
         </div>
         <!-- Card por Rango de Fechas y Trabajador -->
-        <div class="col-md-4 mb-2">
+        <!-- <div class="col-md-4 mb-2">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-warning text-white">Por Estado de Ticket</div>
                 <div class="card-body d-flex flex-column justify-content-between">
@@ -186,9 +186,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- Card por Área -->
-        <div class="col-md-4 mb-2">
+        <!-- <div class="col-md-4 mb-2">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-dark text-white">Por Departamento</div>
                 <div class="card-body d-flex flex-column justify-content-between">
@@ -219,9 +219,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- Card por Problema y Subproblema -->
-        <div class="col-md-4 mb-2">
+        <!-- <div class="col-md-4 mb-2">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-danger text-white">Por Problema y Subproblema</div>
                 <div class="card-body d-flex flex-column justify-content-between">
@@ -248,6 +248,6 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>

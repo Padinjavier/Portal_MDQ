@@ -44,51 +44,8 @@ class ReporteticketsPDFModelo
         }
     }
 
-    public function SelectDepartamentos()
-    {
-        try {
-            $sql = "SELECT DISTINCT DepartamentoTicket
-                    FROM tickets
-                    WHERE StatusTicket != :StatusTicket;";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute([':StatusTicket' => 0]);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            throw new Exception("Error al obtener usuarios: " . $e->getMessage());
-        }
-    }
 
-    public function SelectProblemasUsados()
-    {
-        try {
-            $sql = "SELECT DISTINCT p.IdProblema, p.NombreProblema
-                FROM tickets t
-                INNER JOIN problemas p ON t.IdProblemaTicket = p.IdProblema
-                WHERE t.StatusTicket != 0 AND p.StatusProblema = 1";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            throw new Exception("Error al obtener problemas usados: " . $e->getMessage());
-        }
-    }
 
-    public function SelectSubproblemasUsados($idProblema)
-    {
-        try {
-            $sql = "SELECT DISTINCT s.IdSubproblema, s.NombreSubproblema
-                FROM tickets t
-                INNER JOIN subproblemas s ON t.IdSubproblemaTicket = s.IdSubproblema
-                WHERE t.StatusTicket != 0
-                  AND s.StatusSubproblema = 1
-                  AND s.IdProblema = :idProblema";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute([':idProblema' => $idProblema]);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            throw new Exception("Error al obtener subproblemas usados: " . $e->getMessage());
-        }
-    }
 
     public function ObtenerTicketYComentarios($codigo)
     {

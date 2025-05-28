@@ -36,15 +36,7 @@ class ReporteticketsPDFControlador
         }
     }
 
-    public function SelectDepartamentos()
-    {
-        try {
-            $Departamento = $this->modelo->SelectDepartamentos();
-            echo json_encode(['success' => true, 'data' => $Departamento]);
-        } catch (Exception $e) {
-            echo json_encode(['success' => false, 'msg' => 'Error al obtener usuarios: ' . $e->getMessage()]);
-        }
-    }
+
 
 
     public function SelectProblemas()
@@ -629,15 +621,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             break;
         case 'SelectSoportes':
             $controlador->SelectSoportes();
-            break;
-        case 'SelectDepartamentos':
-            $controlador->SelectDepartamentos();
-            break;
-        case 'SelectProblemas':
-            $controlador->SelectProblemas();
-            break;
-        case 'SelectSubproblemas':
-            $controlador->SelectSubproblemas();
             break;
         default:
             echo json_encode(['success' => false, 'msg' => 'Acción GET no válida']);
