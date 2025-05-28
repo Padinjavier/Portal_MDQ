@@ -114,7 +114,7 @@
 
 
                 <!-- Inventario (Menú desplegable) -->
-                <?php if ($_SESSION['Login_Permisos']['Gestión de Inventario']['Leer'] == 1 && $_SESSION['Login_Permisos']['Reportes de Inventario']['Leer'] == 1): ?>
+                <!-- <?php if ($_SESSION['Login_Permisos']['Gestión de Inventario']['Leer'] == 1 && $_SESSION['Login_Permisos']['Reportes de Inventario']['Leer'] == 1): ?>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-boxes"></i>
@@ -143,7 +143,7 @@
 
                         </ul>
                     </li>
-                <?php endif; ?>
+                <?php endif; ?> -->
 
 
 
