@@ -14,7 +14,6 @@ function cargarResumenGeneral() {
             document.getElementById("total_trabajadores").textContent = data.total_trabajadores;
             document.getElementById("total_soporte").textContent = data.total_soporte;
             document.getElementById("total_roles").textContent = data.total_roles;
-            document.getElementById("total_inventario").textContent = data.total_inventario;
             document.getElementById("total_problemas").textContent = data.total_problemas;
             document.getElementById("total_tickets").textContent = data.total_tickets;
         })

@@ -40,13 +40,6 @@
             </div>
             <div class="col">
                 <div class="card text-center p-2 shadow-sm">
-                    <i class="fas fa-box-open fa-2x"></i>
-                    <p>Inventario</p>
-                    <p id="total_inventario">0</p>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card text-center p-2 shadow-sm">
                     <i class="fas fa-exclamation-triangle fa-2x"></i>
                     <p>Problemas</p>
                     <p id="total_problemas">0</p>

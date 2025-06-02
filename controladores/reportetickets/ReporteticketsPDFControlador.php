@@ -39,29 +39,6 @@ class ReporteticketsPDFControlador
 
 
 
-    public function SelectProblemas()
-    {
-        try {
-            $data = $this->modelo->SelectProblemasUsados();
-            echo json_encode(['success' => true, 'data' => $data]);
-        } catch (Exception $e) {
-            echo json_encode(['success' => false, 'msg' => 'Error al obtener problemas: ' . $e->getMessage()]);
-        }
-    }
-
-    public function SelectSubproblemas()
-    {
-        try {
-            $id = $_GET['idProblema'] ?? null;
-            if (!$id)
-                throw new Exception("ID de problema no válido");
-            $data = $this->modelo->SelectSubproblemasUsados($id);
-            echo json_encode(['success' => true, 'data' => $data]);
-        } catch (Exception $e) {
-            echo json_encode(['success' => false, 'msg' => 'Error al obtener subproblemas: ' . $e->getMessage()]);
-        }
-    }
-
     public function CodigoTicketPDF($codigo)
     {
         try {
