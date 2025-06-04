@@ -150,8 +150,7 @@
                         <input type="number" id="totalcomentarios" name="totalcomentarios" value="1" hidden>
                         <div class="form-group" id="sectionDescripcionTicket">
                             <label for="DescripcionTicket">Descripción</label>
-                            <textarea id="DescripcionTicket" class="DescripcionTicket" name="DescripcionTicket"
-                                class="form-control summernote"></textarea>
+                            <textarea id="DescripcionTicket_0" class="DescripcionTicket form-control summernote" name="DescripcionTicket_0"></textarea>
                         </div>
 
                     </div>

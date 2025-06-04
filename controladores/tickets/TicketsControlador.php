@@ -95,9 +95,10 @@ class TicketsControlador
                 'DepartamentoTicket' => $_POST['DepartamentoTicket'] ?? null,
                 'IdProblemaTicket' => $_POST['IdProblemaTicket'] ?? null,
                 'IdSubproblemaTicket' => $_POST['IdSubproblemaTicket'] ?? null,
-                'DescripcionTicket' => $primerComentario, // ✅ Cambiado aquí
+                'DescripcionTicket' => $primerComentario,
             ];
 
+            $datos['comentarios'] = $comentarios; // ✅ <- ESTA LÍNEA ES CLAVE
             foreach ($datos as $key => $value) {
                 if (empty($value) || $key == "IdUsuarioSoporteTicket") {
                     throw new Exception("El campo $key es requerido");
