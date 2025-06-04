@@ -12,39 +12,41 @@ require_once __DIR__ . '/../Config/Config.php';
     <link rel="icon" type="image/x-icon" href="<?php echo BASE_URL; ?>/vistas/assets/dist/img/escudo.png">
 
     <!-- ⭐ Fuente de Google utilizada para estilizar el texto de la página -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
     <!-- ⭐ Biblioteca de iconos de Bootstrap que se usa en la interfaz para representar acciones -->
     <link rel="stylesheet" href="vistas/assets/plugins/fontawesome-free/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    
+
     <!-- ⭐ Estilos básicos para la interfaz, incluyendo diseño y colores -->
     <link rel="stylesheet" href="vistas/assets/dist/css/adminlte.css">
-    
+
     <!-- ⭐ Estilos adicionales específicos de la página o sistema -->
     <link rel="stylesheet" href="vistas/assets/dist/css/index.css">
-    
+
     <!-- CSS PARA DATATABLES -->
     <!-- ⭐ Estilos necesarios para el componente DataTables (tablas interactivas) -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
-    
+
     <!-- ⭐ Librería para mostrar alertas personalizadas en la página -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <!-- ⭐ Librería de JavaScript para manipulación eficiente del DOM -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- ⭐ Summernote CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.css" rel="stylesheet">
-    
-    
+
+
     <!-- Toastify JS -->
     <!-- Librería de notificaciones emergentes que aparece en la parte superior de la pantalla -->
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    
+
     <!-- Notificaciones personalizadas -->
     <!-- Funciones adicionales para personalizar las notificaciones de Toastify -->
     <script src="<?php echo BASE_URL; ?>/vistas/assets/dist/js/toastNotifications.js"></script>
+
 </head>
 
 <body class="hold-transition sidebar-mini">

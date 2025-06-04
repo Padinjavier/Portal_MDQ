@@ -118,30 +118,34 @@ class TicketsModelo
     public function GuardarTicket($datos)
     {
         try {
+            // Obtener el nuevo código del ticket
             $sqlUltimoId = "SELECT MAX(IdTicket) AS UltimoId FROM tickets";
             $stmtMax = $this->db->prepare($sqlUltimoId);
             $stmtMax->execute();
             $resultadoMax = $stmtMax->fetch(PDO::FETCH_ASSOC);
             $nuevoId = isset($resultadoMax['UltimoId']) ? (int) $resultadoMax['UltimoId'] + 1 : 1;
             $codTicket = "TK_" . $nuevoId;
+
+            // Datos del ticket
             $campos = [
                 'CodTicket' => $codTicket,
                 'IdUsuarioCreadorTicket' => $datos['IdUsuarioCreadorTicket'],
                 'DepartamentoTicket' => $datos['DepartamentoTicket'],
                 'IdProblemaTicket' => $datos['IdProblemaTicket'],
-                'IdSubproblemaTicket' => $datos['IdSubproblemaTicket'],
-                'DescripcionTicket' => $datos['DescripcionTicket']
+                'IdSubproblemaTicket' => $datos['IdSubproblemaTicket']
             ];
-            $sql = "INSERT INTO tickets (CodTicket, IdUsuarioCreadorTicket, DepartamentoTicket, IdProblemaTicket, IdSubproblemaTicket, DescripcionTicket";
-            if (isset($datos['IdUsuarioSoporteTicket'])) {
-                $sql .= ", IdUsuarioSoporteTicket";
+
+            if (!empty($datos['IdUsuarioSoporteTicket'])) {
                 $campos['IdUsuarioSoporteTicket'] = $datos['IdUsuarioSoporteTicket'];
             }
-            $sql .= ") VALUES (:CodTicket, :IdUsuarioCreadorTicket, :DepartamentoTicket, :IdProblemaTicket, :IdSubproblemaTicket, :DescripcionTicket";
-            if (isset($datos['IdUsuarioSoporteTicket'])) {
-                $sql .= ", :IdUsuarioSoporteTicket";
-            }
+
+            // Generar SQL dinámico
+            $sql = "INSERT INTO tickets (CodTicket, IdUsuarioCreadorTicket, DepartamentoTicket, IdProblemaTicket, IdSubproblemaTicket";
+            $sql .= isset($campos['IdUsuarioSoporteTicket']) ? ", IdUsuarioSoporteTicket" : "";
+            $sql .= ") VALUES (:CodTicket, :IdUsuarioCreadorTicket, :DepartamentoTicket, :IdProblemaTicket, :IdSubproblemaTicket";
+            $sql .= isset($campos['IdUsuarioSoporteTicket']) ? ", :IdUsuarioSoporteTicket" : "";
             $sql .= ")";
+
             $stmt = $this->db->prepare($sql);
             $resultado = $stmt->execute($campos);
 
@@ -149,11 +153,73 @@ class TicketsModelo
                 throw new Exception("No se pudo crear el ticket.");
             }
 
+            // Obtener ID del ticket recién creado
+            $idTicket = $this->db->lastInsertId();
+
+            // Guardar comentarios si vienen
+            if (!empty($datos['comentarios']) && is_array($datos['comentarios'])) {
+                foreach ($datos['comentarios'] as $comentario) {
+                    if (!empty($comentario['Comentario'])) {
+                        $this->GuardarComentarioTicket([
+                            'IdTicket' => $idTicket,
+                            'IdUsuario' => $datos['IdUsuarioCreadorTicket'],
+                            'Comentario' => $comentario['Comentario']
+                        ]);
+                    }
+                }
+            }
+            // Enviar notificación
+            $this->Notificar();
+
             return true;
         } catch (Exception $e) {
-            throw new Exception($e);
+            throw new Exception("Error al guardar ticket: " . $e->getMessage());
         }
     }
+
+    public function Notificar()
+    {
+        try {
+            $sql = "SELECT MAX(IdTicket) AS UltimoId FROM tickets";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+            $IdTicket = $stmt->fetch(PDO::FETCH_ASSOC);
+            $sql = "
+            SELECT 
+                t.CodTicket,
+                CONCAT(u.NombresUsuario, ' ', u.ApellidosUsuario) AS nombre,
+                t.DepartamentoTicket AS departamento,
+                p.NombreProblema AS problema,
+                sp.NombreSubproblema AS subproblema,
+                t.DataCreateTicket AS fecha
+            FROM tickets t, usuarios u, problemas p, subproblemas sp
+            WHERE 
+                t.IdUsuarioCreadorTicket = u.IdUsuario
+                AND t.IdProblemaTicket = p.IdProblema
+                AND t.IdSubproblemaTicket = sp.IdSubproblema
+                AND t.IdTicket = :IdTicket
+        ";
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':IdTicket' => $IdTicket['UltimoId']]);
+            $datos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($datos) {
+                notificarNuevoTicket(
+                    codigo: $datos['CodTicket'],
+                    nombre: $datos['nombre'],
+                    area: $datos['departamento'],
+                    problema: $datos['problema'],
+                    subproblema: $datos['subproblema'],
+                    fecha: $datos['fecha']
+                );
+            }
+
+        } catch (Exception $e) {
+            throw new Exception("Error al notificar ticket: " . $e->getMessage());
+        }
+    }
+
 
     // FIN FUNCION GuardarTicket - Inserta un nuevo ticket generando el CodTicket antes del insert.
 

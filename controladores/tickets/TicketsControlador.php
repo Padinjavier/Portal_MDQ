@@ -88,13 +88,16 @@ class TicketsControlador
     public function GuardarTicket()
     {
         try {
+            $comentarios = json_decode($_POST['comentarios'] ?? '[]', true);
+            $primerComentario = isset($comentarios[0]['Comentario']) ? trim($comentarios[0]['Comentario']) : null;
             $datos = [
                 'IdUsuarioCreadorTicket' => $_POST['IdUsuarioCreadorTicket'] ?? null,
                 'DepartamentoTicket' => $_POST['DepartamentoTicket'] ?? null,
                 'IdProblemaTicket' => $_POST['IdProblemaTicket'] ?? null,
                 'IdSubproblemaTicket' => $_POST['IdSubproblemaTicket'] ?? null,
-                'DescripcionTicket' => $_POST['DescripcionTicket'] ?? null,
+                'DescripcionTicket' => $primerComentario, // ✅ Cambiado aquí
             ];
+
             foreach ($datos as $key => $value) {
                 if (empty($value) || $key == "IdUsuarioSoporteTicket") {
                     throw new Exception("El campo $key es requerido");
@@ -107,7 +110,7 @@ class TicketsControlador
             $resultado = $this->modelo->GuardarTicket($datos);
             echo json_encode(['success' => $resultado, 'msg' => $resultado ? 'Ticket creado exitosamente.' : 'Error al crear el Ticket.']);
         } catch (Exception $e) {
-            echo json_encode(['success' => false, 'msg' => 'Error al Guardar el Ticket: <br>' . $e->getMessage()]);
+            echo json_encode(['success' => false, 'msg' => 'Error al Guardar el Ticket: <br>' . $e]);
         }
     }
     // fin Crear un nuevo Ticket
@@ -127,7 +130,7 @@ class TicketsControlador
             $Ticket = $this->modelo->BuscarTicket($id);
             $ComentarioTicket = $this->modelo->BuscarComentarioTicket($id);
             if ($Ticket !== false) {
-                echo json_encode(['success' => true, 'data' => $Ticket , 'comentarios'=>$ComentarioTicket]);
+                echo json_encode(['success' => true, 'data' => $Ticket, 'comentarios' => $ComentarioTicket]);
             } else {
                 echo json_encode(['success' => false, 'msg' => 'Ticket no encontrado']);
             }
@@ -163,19 +166,19 @@ class TicketsControlador
                 }
             }
             // Justo antes del echo json_encode final
-if (!empty($_POST['comentarios'])) {
-    $comentarios = json_decode($_POST['comentarios'], true);
-    if (is_array($comentarios)) {
-        foreach ($comentarios as $comentario) {
-            $idComentario = $comentario['IdComentario'] ?? null;
-            $contenido = $comentario['Comentario'] ?? null;
+            if (!empty($_POST['comentarios'])) {
+                $comentarios = json_decode($_POST['comentarios'], true);
+                if (is_array($comentarios)) {
+                    foreach ($comentarios as $comentario) {
+                        $idComentario = $comentario['IdComentario'] ?? null;
+                        $contenido = $comentario['Comentario'] ?? null;
 
-            if ($idComentario && $contenido) {
-                $this->modelo->ActualizarComentario($idComentario, $contenido);
+                        if ($idComentario && $contenido) {
+                            $this->modelo->ActualizarComentario($idComentario, $contenido);
+                        }
+                    }
+                }
             }
-        }
-    }
-}
             $resultado = $this->modelo->EditarTicket($id, $datos);
             echo json_encode(['success' => $resultado, 'msg' => $resultado ? 'Ticket editado exitosamente.' : 'Error al editar el ticket.']);
         } catch (Exception $e) {
@@ -185,33 +188,33 @@ if (!empty($_POST['comentarios'])) {
     // FIN FUNCION Editar Ticket
 
     public function GuardarComentarioTicket()
-{
-    try {
-        session_start();
-        $IdUsuario = $_SESSION['Login_IdUsuario'] ?? null;
-        $IdTicket = $_POST['IdTicketComent'] ?? null;
-        $Comentario = trim($_POST['ComentarioTexto'] ?? '');
+    {
+        try {
+            session_start();
+            $IdUsuario = $_SESSION['Login_IdUsuario'] ?? null;
+            $IdTicket = $_POST['IdTicketComent'] ?? null;
+            $Comentario = trim($_POST['ComentarioTexto'] ?? '');
 
-        if (!$IdUsuario || !$IdTicket || $Comentario === '') {
-            throw new Exception("Faltan datos para guardar el comentario.");
+            if (!$IdUsuario || !$IdTicket || $Comentario === '') {
+                throw new Exception("Faltan datos para guardar el comentario.");
+            }
+
+            $datos = [
+                'IdTicket' => $IdTicket,
+                'IdUsuario' => $IdUsuario,
+                'Comentario' => $Comentario
+            ];
+
+            $resultado = $this->modelo->GuardarComentarioTicket($datos);
+            if ($resultado !== false) {
+                echo json_encode(['success' => true, 'msg' => 'Comentario guardado correctamente.']);
+            } else {
+                echo json_encode(['success' => false, 'msg' => 'Ticket no encontrado']);
+            }
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'msg' => 'Error al guardar comentario: ' . $e->getMessage()]);
         }
-
-        $datos = [
-            'IdTicket' => $IdTicket,
-            'IdUsuario' => $IdUsuario,
-            'Comentario' => $Comentario
-        ];
-
-        $resultado = $this->modelo->GuardarComentarioTicket($datos);
-        if ($resultado !== false) {
-            echo json_encode(['success' => true, 'msg' => 'Comentario guardado correctamente.']);
-        } else {
-            echo json_encode(['success' => false, 'msg' => 'Ticket no encontrado']);
-        }
-    } catch (Exception $e) {
-        echo json_encode(['success' => false, 'msg' => 'Error al guardar comentario: ' . $e->getMessage()]);
     }
-}
 
 
     // Eliminar un Ticket
@@ -285,22 +288,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
         case 'GuardarTicket':
             $controlador->GuardarTicket();
             break;
-            case 'EditarTicket':
-                $id = $_POST['IdTicket'] ?? null; // Leer desde el cuerpo
-                $controlador->EditarTicket($id);
-                break;
-            case 'EliminarTicket':
-                $id = $input['id'] ?? null; // Leer desde el cuerpo
-                $controlador->EliminarTicket($id);
-                break;
-            case 'AtenderTicket':
-                $IdTicket = $input['IdTicket'] ?? null; // Leer desde el cuerpo
-                $IdSubproblemaTicket = $input['IdSubproblemaTicket'] ?? null; // Leer desde el cuerpo
-                $controlador->AtenderTicket($IdTicket, $IdSubproblemaTicket);
+        case 'EditarTicket':
+            $id = $_POST['IdTicket'] ?? null; // Leer desde el cuerpo
+            $controlador->EditarTicket($id);
             break;
-            case 'GuardarComentarioTicket':
-                $controlador->GuardarComentarioTicket();
-                break;
+        case 'EliminarTicket':
+            $id = $input['id'] ?? null; // Leer desde el cuerpo
+            $controlador->EliminarTicket($id);
+            break;
+        case 'AtenderTicket':
+            $IdTicket = $input['IdTicket'] ?? null; // Leer desde el cuerpo
+            $IdSubproblemaTicket = $input['IdSubproblemaTicket'] ?? null; // Leer desde el cuerpo
+            $controlador->AtenderTicket($IdTicket, $IdSubproblemaTicket);
+            break;
+        case 'GuardarComentarioTicket':
+            $controlador->GuardarComentarioTicket();
+            break;
         default:
             echo json_encode(['success' => false, 'msg' => 'Acción POST no válida']);
             break;

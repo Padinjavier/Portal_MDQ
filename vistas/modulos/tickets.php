@@ -171,7 +171,8 @@
 
 <!-- Inicio Modal para Ver Ticket -->
 <!-- Inicio Modal para Ver Ticket -->
-<div class="modal fade" id="ModalViewTicket" tabindex="-1" role="dialog" aria-labelledby="ModalViewLabelTicket" aria-hidden="true">
+<div class="modal fade" id="ModalViewTicket" tabindex="-1" role="dialog" aria-labelledby="ModalViewLabelTicket"
+    aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success text-white">
@@ -223,9 +224,11 @@
                         <div id="BloqueFormularioComentario" class="d-none mb-3">
                             <h6><strong>Nuevo Comentario:</strong></h6>
                             <input type="hidden" id="IdTicketComent" name="IdTicketComent">
-                            <textarea id="ComentarioTexto" class="form-control DescripcionTicket summernote" rows="2" placeholder="Escriba un comentario..."></textarea>
+                            <textarea id="ComentarioTexto" class="form-control DescripcionTicket summernote" rows="2"
+                                placeholder="Escriba un comentario..."></textarea>
                             <div class="text-end mt-2">
-                                <button type="button" class="btn btn-success btn-sm" onclick="GuardarComentarioTicket()">
+                                <button type="button" class="btn btn-success btn-sm"
+                                    onclick="GuardarComentarioTicket()">
                                     <i class="fas fa-comment-dots"></i> Enviar comentario
                                 </button>
                             </div>
@@ -234,7 +237,7 @@
                         <!-- Comentarios -->
                         <h6><strong>Comentarios</strong></h6>
                         <div id="ListaComentariosTicket" class="border p-2 rounded bg-light"
-                             style="max-height: 290px; overflow-y: auto; min-height: 100px;">
+                            style="max-height: 290px; overflow-y: auto; min-height: 100px;">
                         </div>
                     </div>
                 </div>

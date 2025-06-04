@@ -127,4 +127,67 @@ function getMesEnEspañol($fecha)
     $mesIngles = date('F', strtotime($fecha));
     return $meses[$mesIngles] ?? "Mes no definido";
 }
+
+
+// === CONFIGURACIÓN DE TELEGRAM ===
+// https://api.telegram.org/bot7305105868:AAFAsyi659mdD38j60Dr2KCK6TY6yhiQpRY/getUpdates
+// Recomendado: mueve esto a un archivo Config.php y usa require_once.
+const TELEGRAM_BOT_TOKEN = '7305105868:AAFAsyi659mdD38j60Dr2KCK6TY6yhiQpRY';
+const TELEGRAM_CHAT_IDS = [5944039606]; // Puedes agregar más chat IDs si deseas
+const TELEGRAM_LINK = 'https://muniquilmana.gob.pe/';
+const TELEGRAM_IMG = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_gSH4DE2XkSQ9o2hGttoKRK3cQ6tH2YXL5g&s';
+
+// === FUNCIÓN PARA ESCAPAR TEXTO EN MARKDOWNV2 DE TELEGRAM ===
+function escaparMarkdown($texto)
+{
+    if ($texto === null)
+        return '';
+    $caracteres = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'];
+    foreach ($caracteres as $c) {
+        $texto = str_replace($c, '\\' . $c, $texto);
+    }
+    return $texto;
+}
+
+
+// === FUNCIÓN PRINCIPAL PARA ENVIAR LA NOTIFICACIÓN ===
+function notificarNuevoTicket($codigo, $nombre, $area, $problema, $subproblema, $fecha)
+{
+    $mensaje = "🎫 *Nuevo Ticket Creado en Portal MDQ*\n\n" .
+        "🆔 *Código:* " . escaparMarkdown($codigo) . "\n" .
+        "🙍‍♂️ *Usuario:* " . escaparMarkdown($nombre) . "\n" .
+        "🏢 *Área:* " . escaparMarkdown($area) . "\n" .
+        "❗ *Problema:* " . escaparMarkdown($problema) . "\n" .
+        "🔍 *Subproblema:* " . escaparMarkdown($subproblema) . "\n\n" .
+        "📆 *Fecha:* " . escaparMarkdown($fecha) . "\n\n" .
+        "👉 [Ver en Portal MDQ](" . TELEGRAM_LINK . ")";
+
+    foreach (TELEGRAM_CHAT_IDS as $chat_id) {
+        $data = [
+            'chat_id' => $chat_id,
+            'photo' => TELEGRAM_IMG,
+            'caption' => $mensaje,
+            'parse_mode' => 'MarkdownV2'
+        ];
+
+        $url = 'https://api.telegram.org/bot' . TELEGRAM_BOT_TOKEN . '/sendPhoto';
+        $options = [
+            'http' => [
+                'method' => 'POST',
+                'header' => 'Content-Type: application/json',
+                'content' => json_encode($data),
+                'timeout' => 5
+            ]
+        ];
+
+        $context = stream_context_create($options);
+        $resultado = @file_get_contents($url, false, $context);
+
+        // Registro de errores (log local si falla)
+        if ($resultado === false) {
+            error_log("Error al enviar notificación a Telegram. Chat ID: {$chat_id}");
+        }
+    }
+}
+
 ?>
