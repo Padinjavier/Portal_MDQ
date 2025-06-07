@@ -21,7 +21,7 @@ $(document).ready(function () {
         "bDestroy": true,
         "iDisplayLength": 10,
         "lengthMenu": [5, 10, 25, 50, 100], // Opciones de longitud de página
-        "order": [[0, "desc"]],
+        "order": [[5, "desc"]],
     });
     CargarDatosTickets();
     SelectProblemasySubproblemas();
