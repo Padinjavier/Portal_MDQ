@@ -84,54 +84,7 @@ $(document).ready(function () {
 });
 // FIN FUNCIONAMIENTO DE TABLA Tickets
 
-// Gestión de opciones
-function generarOpciones(ticket) {
-    const esAdmin = (Login_RolUsuario == 1);
-    const miIdUsuario = Login_IdUsuario;
-    // Definir los botones disponibles (no se crean de nuevo)
-    const btnVer = `<button class="btn dropdown-item text-success bg-transparent" onclick="VerTicket(${ticket.IdTicket})"><i class="fas fa-eye"></i> Ver</button>`;
-    const btnAtender = `<button class="btn dropdown-item text-info bg-transparent" onclick="AtenderTicket(${ticket.IdTicket})"><i class="bi bi-journal-check"></i> Atender</button>`;
-    const btnEditar = `<button class="btn dropdown-item text-warning bg-transparent" onclick="EditarTicket(${ticket.IdTicket})"><i class="fas fa-edit"></i> Editar</button>`;
-    const btnEliminar = `<button class="btn dropdown-item text-danger bg-transparent" onclick="EliminarTicket(${ticket.IdTicket})"><i class="fas fa-trash"></i> Eliminar</button>`;
-    const btnComentarios = `<button class="btn dropdown-item text-primary bg-transparent" onclick="ComentariosTicket(${ticket.IdTicket})"><i class="fas fa-comments"></i> Comentarios</button>`;
-    const soyCreador = ticket.IdUsuarioCreadorTicket == miIdUsuario;
-    const soySoporteAsignado = ticket.IdUsuarioSoporteTicket == miIdUsuario;
-    const ticketSinAsignar = ticket.IdUsuarioSoporteTicket == null;
-    let opciones = '';
-    if (esAdmin) {
-        opciones += btnVer;
-        if (ticketSinAsignar) {
-            opciones += btnAtender;
-        }
-        opciones += btnEditar;
-        opciones += btnEliminar;
-        opciones += btnComentarios;
-    } else {
-        if (soyCreador) {
-            opciones += btnVer;
-            opciones += btnComentarios;
-            if (ticketSinAsignar) {
-                opciones += btnEliminar;
-            }
-        } else if (soySoporteAsignado) {
-            opciones += btnVer;
-            opciones += btnComentarios;
-        } else if (ticketSinAsignar) {
-            opciones += btnAtender;
-        }
-    }
-    return `
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown">
-                <i class="fas fa-cog"></i> Opciones
-            </button>
-            <div class="dropdown-menu">
-                ${opciones}
-            </div>
-        </div>
-    `;
-}
-// Fin gestión de opciones
+
 
 
 // INICIO COMPLETAR TABLE Tickets  
@@ -155,8 +108,6 @@ window.CargarDatosTickets = function () {
                 } else {
                     statusLabel = "<span class='badge badge-secondary'>SIN ASIGNAR</span>"
                 }
-                const opcionesBotones = generarOpciones(ticket); // AQUÍ
-
                 table.row.add([
                     ticket.CodTicket,
                     ticket.trabajador,
@@ -165,7 +116,7 @@ window.CargarDatosTickets = function () {
                     ticket.NombreSubproblema,
                     ticket.DataCreateTicket,
                     statusLabel,
-                    opcionesBotones
+                    ticket.opciones
                 ]).draw(false);
             });
         });

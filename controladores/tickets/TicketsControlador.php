@@ -17,19 +17,66 @@ class TicketsControlador
 
 
     // inicio Obtener todos los Tickets
-    public function CargarDatosTickets()
-    {
-        try {
-            $Tickets = $this->modelo->CargarDatosTickets();
-            if ($Tickets !== false) {
-                echo json_encode(['success' => true, 'data' => $Tickets]);
-            } else {
-                echo json_encode(['success' => false, 'msg' => 'Tickets no encontrados']);
+public function CargarDatosTickets()
+{
+    try {
+        $Tickets = $this->modelo->CargarDatosTickets();
+        
+        if ($Tickets !== false) {
+            $IdUsuario = $_SESSION['Login_IdUsuario'];
+            $RolUsuario = $_SESSION['Login_RolUsuario'];
+
+            foreach ($Tickets as &$ticket) {
+                $esAdmin = ($RolUsuario == 1);
+                $soyCreador = ($ticket['IdUsuarioCreadorTicket'] == $IdUsuario);
+                $soySoporteAsignado = ($ticket['IdUsuarioSoporteTicket'] == $IdUsuario);
+                $ticketSinAsignar = is_null($ticket['IdUsuarioSoporteTicket']);
+
+                $id = $ticket['IdTicket'];
+                $btnVer = "<button class='btn dropdown-item text-success bg-transparent' onclick='VerTicket($id)'><i class='fas fa-eye'></i> Ver</button>";
+                $btnAtender = "<button class='btn dropdown-item text-info bg-transparent' onclick='AtenderTicket($id)'><i class='bi bi-journal-check'></i> Atender</button>";
+                $btnEditar = "<button class='btn dropdown-item text-warning bg-transparent' onclick='EditarTicket($id)'><i class='fas fa-edit'></i> Editar</button>";
+                $btnEliminar = "<button class='btn dropdown-item text-danger bg-transparent' onclick='EliminarTicket($id)'><i class='fas fa-trash'></i> Eliminar</button>";
+                $btnComentarios = "<button class='btn dropdown-item text-primary bg-transparent' onclick='ComentariosTicket($id)'><i class='fas fa-comments'></i> Comentarios</button>";
+
+                $opciones = '';
+                if ($esAdmin) {
+                    $opciones .= $btnVer;
+                    if ($ticketSinAsignar) $opciones .= $btnAtender;
+                    $opciones .= $btnEditar . $btnEliminar . $btnComentarios;
+                } else {
+                    if ($soyCreador) {
+                        $opciones .= $btnVer . $btnComentarios;
+                        if ($ticketSinAsignar) $opciones .= $btnEliminar;
+                    } elseif ($soySoporteAsignado) {
+                        $opciones .= $btnVer . $btnComentarios;
+                    } elseif ($ticketSinAsignar) {
+                        $opciones .= $btnAtender;
+                    }
+                }
+
+                $ticket['opciones'] = "
+                    <div class='dropdown'>
+                        <button class='btn btn-secondary dropdown-toggle btn-sm' data-toggle='dropdown'>
+                            <i class='fas fa-cog'></i> Opciones
+                        </button>
+                        <div class='dropdown-menu'>
+                            $opciones
+                        </div>
+                    </div>
+                ";
+                
             }
-        } catch (Exception $e) {
-            echo json_encode(['success' => false, 'msg' => 'Error al Cargar datos de los Tickets: <br>' . $e->getMessage()]);
+
+            echo json_encode(['success' => true, 'data' => $Tickets]);
+        } else {
+            echo json_encode(['success' => false, 'msg' => 'Tickets no encontrados']);
         }
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'msg' => 'Error al cargar los tickets: <br>' . $e->getMessage()]);
     }
+}
+
     // fin Obtener todos los Tickets
 
 
