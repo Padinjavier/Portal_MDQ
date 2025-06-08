@@ -150,7 +150,8 @@
                         <input type="number" id="totalcomentarios" name="totalcomentarios" value="1" hidden>
                         <div class="form-group" id="sectionDescripcionTicket">
                             <label for="DescripcionTicket">Descripción</label>
-                            <textarea id="DescripcionTicket_0" class="DescripcionTicket form-control summernote" name="DescripcionTicket_0"></textarea>
+                            <textarea id="DescripcionTicket_0" class="DescripcionTicket form-control summernote"
+                                name="DescripcionTicket_0"></textarea>
                         </div>
 
                     </div>
@@ -210,8 +211,17 @@
                             <dd class="col-sm-7 border rounded bg-light py-1 px-2" id="ViewDataUpdateTicket"></dd>
 
                             <dt class="col-sm-5">Estado</dt>
-                            <dd class="col-sm-7 border rounded bg-light py-1 px-2" id="ViewStatusTicket"></dd>
-
+                            <dd class="col-sm-7 border rounded bg-light py-1 px-2">
+                                <select class="form-control form-control-sm" id="ViewStatusTicket"
+                                    name="ViewStatusTicket">
+                                    <option value="1" class="">Abierto</option>
+                                    <option value="2" class="">En Atención</option>
+                                    <option value="3" class="">Resuelto</option>
+                                    <option value="4" class="">Reabierto</option>
+                                    <option value="5" class="">Cerrado</option>
+                                    <option value="6" class="">Desestimado</option>
+                                </select>
+                            </dd>
                             <dt class="col-sm-5">Soporte</dt>
                             <dd class="col-sm-7 border rounded bg-light py-1 px-2" id="ViewSoporteTicket"></dd>
                         </dl>

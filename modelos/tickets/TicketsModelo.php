@@ -355,19 +355,37 @@ class TicketsModelo
     public function GuardarComentarioTicket($datos)
     {
         try {
-            $sql = "INSERT INTO comentarios_tickets (IdTicket, IdUsuarioComentario, Comentario, FechaComentario)
-                    VALUES (:IdTicket, :IdUsuario, :Comentario, NOW())";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute([
+            $this->db->beginTransaction();
+
+            $sqlInsert = "INSERT INTO comentarios_tickets 
+                        (IdTicket, IdUsuarioComentario, Comentario, FechaComentario)
+                      VALUES 
+                        (:IdTicket, :IdUsuario, :Comentario, NOW())";
+            $stmtInsert = $this->db->prepare($sqlInsert);
+            $stmtInsert->execute([
                 ':IdTicket' => $datos['IdTicket'],
                 ':IdUsuario' => $datos['IdUsuario'],
                 ':Comentario' => $datos['Comentario']
             ]);
+
+            $sqlUpdate = "UPDATE tickets 
+                      SET StatusTicket = :ViewStatusTicket,
+                          DataUpdateTicket = NOW()
+                      WHERE IdTicket = :IdTicket";
+            $stmtUpdate = $this->db->prepare($sqlUpdate);
+            $stmtUpdate->execute([
+                ':IdTicket' => $datos['IdTicket'],
+                ':ViewStatusTicket' => $datos['ViewStatusTicket']
+            ]);
+
+            $this->db->commit();
             return true;
         } catch (Exception $e) {
-            throw new Exception("No se pudo insertar el comentario: " . $e->getMessage());
+            $this->db->rollBack();
+            throw new Exception("Error al guardar comentario o actualizar ticket: " . $e->getMessage());
         }
     }
+
 
 
 

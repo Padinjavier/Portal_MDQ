@@ -195,6 +195,7 @@ class TicketsControlador
             $IdUsuario = $_SESSION['Login_IdUsuario'] ?? null;
             $IdTicket = $_POST['IdTicketComent'] ?? null;
             $Comentario = trim($_POST['ComentarioTexto'] ?? '');
+            $ViewStatusTicket = $_POST['ViewStatusTicket'] ?? null;
 
             if (!$IdUsuario || !$IdTicket || $Comentario === '') {
                 throw new Exception("Faltan datos para guardar el comentario.");
@@ -203,7 +204,8 @@ class TicketsControlador
             $datos = [
                 'IdTicket' => $IdTicket,
                 'IdUsuario' => $IdUsuario,
-                'Comentario' => $Comentario
+                'Comentario' => $Comentario,
+                'ViewStatusTicket' => $ViewStatusTicket
             ];
 
             $resultado = $this->modelo->GuardarComentarioTicket($datos);

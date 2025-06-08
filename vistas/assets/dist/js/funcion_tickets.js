@@ -23,16 +23,8 @@ $(document).ready(function () {
         "lengthMenu": [5, 10, 25, 50, 100], // Opciones de longitud de página
         "order": [[5, "desc"]],
     });
-    CargarDatosTickets();
-    SelectProblemasySubproblemas();
-    SelectNombre();
-    verificarAgregarSelectSoporte();
-});
-// FIN FUNCIONAMIENTO DE TABLA Tickets
 
 
-// funcion para rellenar select de departamentos
-$(document).ready(function () {
     const jsonPath = `${BASE_URL}/vistas/assets/dist/js/datos.json`;
     fetch(jsonPath)
         .then(res => {
@@ -75,16 +67,22 @@ $(document).ready(function () {
                 icon: "error",
             });
         });
-});
-// funcion para rellenar select de departamentos
 
-// Descripción summernote 
-$(document).ready(function () {
+
+
     $('.DescripcionTicket').summernote({
         placeholder: 'Escribe aquí tu texto...',
         height: 150,
     });
+
+
+    CargarDatosTickets();
+    SelectProblemasySubproblemas();
+    SelectNombre();
+    verificarAgregarSelectSoporte();
+
 });
+// FIN FUNCIONAMIENTO DE TABLA Tickets
 
 // Gestión de opciones
 function generarOpciones(ticket) {
@@ -317,27 +315,27 @@ function GuardarTicket() {
         method: 'POST',
         body: formData
     })
-    .then(response => response.text())
-    .then(text => {
-        try {
-            const data = JSON.parse(text);
-            if (!data.success) {
-                Swal.fire("Error", data.msg || "Error en el servidor", "error");
-                return;
+        .then(response => response.text())
+        .then(text => {
+            try {
+                const data = JSON.parse(text);
+                if (!data.success) {
+                    Swal.fire("Error", data.msg || "Error en el servidor", "error");
+                    return;
+                }
+                Swal.fire("Éxito", data.msg, "success").then(() => {
+                    $('#ModalFormTicket').modal('hide');
+                    CargarDatosTickets();
+                });
+            } catch {
+                throw text;
             }
-            Swal.fire("Éxito", data.msg, "success").then(() => {
-                $('#ModalFormTicket').modal('hide');
-                CargarDatosTickets();
-            });
-        } catch {
-            throw text;
-        }
-    })
-    .catch(error => Swal.fire({
-        title: "Error",
-        html: typeof error === 'string' ? error : "Error desconocido",
-        icon: "error",
-    }));
+        })
+        .catch(error => Swal.fire({
+            title: "Error",
+            html: typeof error === 'string' ? error : "Error desconocido",
+            icon: "error",
+        }));
 }
 
 // inicio guardar Ticket
@@ -356,6 +354,14 @@ function getStatusBadge(status) {
     return `<span class="badge badge-${color}">${label}</span>`;
 }
 
+const colorMap = {
+    1: 'bg-primary text-white',
+    2: 'bg-info text-white',
+    3: 'bg-success text-white',
+    4: 'bg-warning text-dark',
+    5: 'bg-dark text-white',
+    6: 'bg-secondary text-white'
+};
 
 
 // INICIO VER Ticket
@@ -448,22 +454,22 @@ async function EditarTicket(id) {
         const ComentarioTicket = result.comentarios || [];
 
         ComentarioTicket.forEach((Comentario, index) => {
-        const textareaId = `DescripcionTicket_${index}`;
-        const textarea = document.createElement('textarea');
-        textarea.id = textareaId;
-        textarea.className = 'form-control summernote';
-        textarea.name = `DescripcionTicket_${index}`;
-        textarea.setAttribute('data-idcomentario', Comentario.IdComentario);
-        sectionDescripcionTicket.appendChild(textarea);
+            const textareaId = `DescripcionTicket_${index}`;
+            const textarea = document.createElement('textarea');
+            textarea.id = textareaId;
+            textarea.className = 'form-control summernote';
+            textarea.name = `DescripcionTicket_${index}`;
+            textarea.setAttribute('data-idcomentario', Comentario.IdComentario);
+            sectionDescripcionTicket.appendChild(textarea);
 
-        $(`#${textareaId}`).summernote({
-            height: 150,
-            placeholder: 'Escriba aquí...'
-        }).summernote('code', Comentario.Comentario);
-    });
+            $(`#${textareaId}`).summernote({
+                height: 150,
+                placeholder: 'Escriba aquí...'
+            }).summernote('code', Comentario.Comentario);
+        });
 
-// Guardar total de comentarios generados
-totalcomentarios.value = ComentarioTicket.length;
+        // Guardar total de comentarios generados
+        totalcomentarios.value = ComentarioTicket.length;
 
         document.getElementById('ModalFormLabelTicket').innerText = 'Editar Ticket';
         $('#ModalFormTicket').modal('show');
@@ -531,7 +537,7 @@ function ComentariosTicket(id) {
             set('ViewSoporteTicket', Ticket.Soporte || 'No asignado');
             set('ViewDataCreateTicket', Ticket.DataCreateTicket);
             set('ViewDataUpdateTicket', Ticket.DataUpdateTicket);
-            set('ViewStatusTicket', getStatusBadge(Ticket.StatusTicket), true);
+            document.getElementById('ViewStatusTicket').value = Ticket.StatusTicket;
             const contenedorComentarios = document.getElementById("ListaComentariosTicket");
             contenedorComentarios.innerHTML = ""; // limpiar
             if (comentarios && comentarios.length > 0) {
@@ -555,12 +561,14 @@ function ComentariosTicket(id) {
 function GuardarComentarioTicket() {
     const IdTicketComent = document.getElementById('IdTicketComent').value;
     const ComentarioTexto = document.getElementById('ComentarioTexto').value.trim();
+    const ViewStatusTicket = document.getElementById('ViewStatusTicket').value;
     if (!ComentarioTexto) {
         return Swal.fire("Advertencia", "El comentario no puede estar vacío", "warning");
     }
     const formData = new FormData();
     formData.append("IdTicketComent", IdTicketComent); // guarda este ID al cargar el modal
     formData.append("ComentarioTexto", ComentarioTexto);
+    formData.append("ViewStatusTicket", ViewStatusTicket);
     fetch(`${BASE_URL}/controladores/tickets/TicketsControlador.php?action=GuardarComentarioTicket`, {
         method: 'POST',
         body: formData
@@ -576,6 +584,8 @@ function GuardarComentarioTicket() {
                 Swal.fire("Éxito", data.msg, "success");
                 $('#ComentarioTexto').summernote('code', '');
                 ComentariosTicket(IdTicketComent);
+                CargarDatosTickets();
+                console.log("Comentario guardado correctamente");
             } catch {
                 throw text;
             }
@@ -668,11 +678,3 @@ function AtenderTicket(id) {
         }
     });
 }
-
-
-
-
-
-
-
-
