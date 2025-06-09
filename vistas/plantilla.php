@@ -47,6 +47,7 @@ require_once __DIR__ . '/../Config/Config.php';
     <!-- Funciones adicionales para personalizar las notificaciones de Toastify -->
     <script src="<?php echo BASE_URL; ?>/vistas/assets/dist/js/toastNotifications.js"></script>
 
+
 </head>
 
 <body class="hold-transition sidebar-mini">

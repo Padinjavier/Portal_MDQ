@@ -93,26 +93,61 @@
 
         <!-- Gráficos inicio-->
         <!-- ----------------- Gráfico de Tickets inicio ----------------- -->
-        <div class="col-md-6">
-            <div class="card card-navy">
-                <div class="card-header">
-                    <h3 class="card-title">Gráfico de Tickets</h3>
-                </div>
-                <div class="mt-1 mb-1 d-flex align-items-center justify-content-around">
-                    <button id="downloadPNG" class="btn btn-primary btn-sm">
-                        <i class="bi bi-image"></i> PNG
-                    </button>
-                    <button id="downloadJPG" class="btn btn-success btn-sm">
-                        <i class="bi bi-file-earmark-image"></i> JPG
-                    </button>
-                    <button id="downloadPDF" class="btn btn-danger btn-sm">
-                        <i class="bi bi-file-earmark-pdf"></i> PDF
-                    </button>
-                </div>
-                <div class="card-body text-center">
-                    <canvas id="tickets" style="max-width: 100%; height: 300px;"></canvas>
+        <div class="row">
+            <!-- Gráfico de Donut -->
+            <div class="col-md-6  mt-4">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Gráfico de Tickets</h3>
+                    </div>
+                    <div class="card-body text-center">
+                        <canvas id="tickets"></canvas>
+                    </div>
                 </div>
             </div>
+
+            <!-- Gráfico de Líneas -->
+            <div class="col-md-6  mt-4">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Tickets por Día (últimos 30 días)</h3>
+                    </div>
+                    <div class="card-body text-center">
+                        <canvas id="ticketsPorDiaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-md-6 mt-4">
+                <div class="card card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">Tickets por Técnico</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="ticketsPorTecnicoChart" style="max-width: 100%; height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mt-4">
+                <div class="card card-warning">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h3 class="card-title">Tickets por Tipo de Problema</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="ticketsPorProblemaChart" style="max-width: 100%; height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+       
+
         </div>
     </div>
 </section>

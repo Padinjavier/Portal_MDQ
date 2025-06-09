@@ -43,5 +43,47 @@ class DashboardModelo
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+
+ public function TicketsPorDia()
+{
+    $sql = "SELECT DATE(DataCreateTicket) AS fecha, COUNT(*) AS total 
+            FROM tickets 
+            GROUP BY DATE(DataCreateTicket) 
+            ORDER BY fecha DESC 
+            LIMIT 30";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+public function TicketsPorTecnico()
+{
+    $sql = "SELECT u.NombresUsuario AS tecnico, COUNT(*) AS total 
+            FROM tickets t
+            JOIN usuarios u ON t.IdUsuarioSoporteTicket= u.IdUsuario
+            GROUP BY u.NombresUsuario
+            ORDER BY total DESC
+            LIMIT 10";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function TicketsPorProblema()
+{
+    $sql = "SELECT p.NombreProblema AS problema, COUNT(*) AS total
+            FROM tickets t
+            JOIN problemas p ON t.IdProblemaTicket= p.IdProblema
+            GROUP BY p.NombreProblema
+            ORDER BY total DESC
+            LIMIT 10";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
 }
 ?>
